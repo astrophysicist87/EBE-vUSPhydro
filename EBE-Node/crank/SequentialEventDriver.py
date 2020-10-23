@@ -89,7 +89,7 @@ def hydroWithInitialCondition(aFile):
     print hydroResultsDirectory
     print hydroExecutable
     
-    print 1/0
+    #print 1/0
 
     # check executable
     checkExistenceOfExecutable(path.join(hydroDirectory, hydroExecutable))
