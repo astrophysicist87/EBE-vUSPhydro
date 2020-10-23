@@ -124,7 +124,8 @@ for i in range(1, numberOfJobs+1):
 #SBATCH -t %s
 #SBATCH -A qgp
 #SBATCH -p qgp
-#SBATCH -oe EBE_vUSPhydro.o%s
+#SBATCH -o EBE_vUSPhydro.o%s
+#SBATCH -e EBE_vUSPhydro.e%s
 cd %s
 (cd %s
     ulimit -n 1000
@@ -132,7 +133,7 @@ cd %s
     cp RunRecord.txt ErrorRecord.txt ../finalResults/
 )
 mv ./finalResults %s/job-%d
-""" % (i, walltime, '%j', targetWorkingFolder, crankFolderName, numberOfEventsPerJob, resultsFolder, i)
+""" % (i, walltime, '%j', '%j', targetWorkingFolder, crankFolderName, numberOfEventsPerJob, resultsFolder, i)
     )
 
 #from importlib import import_module
