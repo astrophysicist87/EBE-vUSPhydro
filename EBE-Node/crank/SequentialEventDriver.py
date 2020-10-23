@@ -109,6 +109,7 @@ def hydroWithInitialCondition(aFile):
 
     # form assignment string
     assignments = formAssignmentStringFromDict(hydroParameters)
+    assignments = ' inputtrentoPbPb2_211_0.dat PbPb2_211_0 0'
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + hydroExecutable + assignments)
