@@ -104,7 +104,7 @@ def hydroWithInitialCondition(aFile):
                              % aFile)
 
     # move initial condition to the designated folder
-    move(aFile, path.join(hydroICDirectory, 
+    copy(aFile, path.join(hydroICDirectory, 
                           hydroControl['initialConditionFile']))
 
     # form assignment string
