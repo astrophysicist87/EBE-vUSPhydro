@@ -188,9 +188,6 @@ def sequentialEventDriverShell():
         Parameters are read from dictionaries given by allParameterList.
     """
     try:
-        
-        print 'Successfully made it here'
-        print 1/0
         # read parameters
         readInParameters()
 
