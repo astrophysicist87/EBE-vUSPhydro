@@ -41,7 +41,7 @@ controlParameterList = {
 hydroControl = {
     'mainDir'               :   'v-USPhydro',  # options - 'v-USPhydro', 'vusphydro'
     'initialConditionDir'   :   'inputfiles', # hydro initial condition folder, relative
-    'initialConditionFile'  :   'InitialSd.dat', # IC filename
+    'initialConditionFile'  :   'inputtrentoPbPb2_211_0.dat', # IC filename
     'resultDir'             :   'results', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
     'saveICFile'            :   True, # whether to save initial condition file
@@ -255,7 +255,7 @@ def sequentialEventDriverShell():
 	
 	generate_vUSPhydro_input_from_dict()
     
-        copy(aInitialConditionFile, controlParameterList['eventResultDir'])
+        #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
         print('Associating ' + aInitialConditionFile + ' with event ' + str(event_id))
         
         print(controlParameterList['rootDir'])
