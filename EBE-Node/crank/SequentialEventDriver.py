@@ -224,7 +224,7 @@ def sequentialEventDriverShell():
         # print current progress to terminal
         print("Starting event %d..." % event_id)
         
-        aInitialConditionFile = ''
+        aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/inputtrentoPbPb2_211_0.dat'
 			
     
         copy(aInitialConditionFile, controlParameterList['eventResultDir'])
