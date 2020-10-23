@@ -47,7 +47,7 @@ try:
     else:
         parameterDictFilename = "ParameterDict.py"
 except:
-    print('Usage: generateJobs.py number_of_jobs number_of_events_per_job cluster_name [working_folder="./PlayGround"] [results_folder="./RESULTS"] [walltime="03:00:00" (per event)] [parameterDictFilename="ParameterDict.py"]')
+    print('Usage: ./generateJobs_cluster.py number_of_jobs number_of_events_per_job cluster_name [working_folder="./PlayGround"] [results_folder="./RESULTS"] [walltime="03:00:00" (per event)] [parameterDictFilename="ParameterDict.py"]')
     exit()
 
 # save config files
