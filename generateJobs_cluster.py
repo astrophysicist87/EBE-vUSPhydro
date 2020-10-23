@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-    This script duplicates the EBE-Node folder and generate a collection of pbs
+    This script duplicates the EBE-Node folder and generate a collection of sbatch
     files to be batch-submitted. For efficiency all codes inside EBE-Node should
     be compiled.
 """
@@ -112,12 +112,12 @@ copy(parameterDictFilename,
 copy(path.join(crankFolder, "SequentialEventDriver.py"), resultsFolder)
 copy(path.join(crankFolder, "ParameterDict.py"), resultsFolder)
 
-# duplicate EBE-Node folder to working directory, write .pbs file
+# duplicate EBE-Node folder to working directory, write .sbatch file
 for i in range(1, numberOfJobs+1):
     targetWorkingFolder = path.join(workingFolder, "job-%d" % i)
     # copy folder
     copytree(ebeNodeFolder, targetWorkingFolder)
-    open(path.join(targetWorkingFolder, "job-%d.pbs" % i), "w").write(
+    open(path.join(targetWorkingFolder, "job-%d.sbatch" % i), "w").write(
 """
 #!/bin/bash
 #SBATCH -N 1                        # Number of nodes
@@ -125,7 +125,7 @@ for i in range(1, numberOfJobs+1):
 #SBATCH -t %s
 #SBATCH -A qgp
 #SBATCH -p qgp
-#SBATCH -oe serial.o%s              # Name of batch job output file
+#SBATCH -oe EBE_vUSPhydro.o%s
 cd %s
 (cd %s
     ulimit -n 1000
@@ -153,5 +153,3 @@ print("Jobs generated. Submit them using submitJobs scripts.")
 
 
 ###########################################################################
-# 05-23-2013:
-#   Bugfix: "cd %s" added to the pbs files.

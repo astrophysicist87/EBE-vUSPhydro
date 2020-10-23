@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-    Search and submit (torque) all pbs files inside direct subdirectories under
+    Search and submit (slurm) all sbatch files inside direct subdirectories under
     the given path.
 """
 
@@ -31,8 +31,8 @@ from subprocess import call
 for aFolder in listdir(targetWorkingDirectory):
     subFolder = path.join(targetWorkingDirectory, aFolder)
     for aFile in listdir(subFolder):
-        if path.splitext(aFile)[1].lower() == '.pbs':
-            commandString = "qsub %s" % aFile
+        if path.splitext(aFile)[1].lower() == '.sbatch':
+            commandString = "sbatch %s" % aFile
             print("Submitting %s in %s..." % (aFile, subFolder))
             call(commandString, shell=True, cwd=subFolder)
 
