@@ -43,17 +43,11 @@ try:
 
     argId += 1
     if len(argv)>=argId+1: # whether to compress final results folder
-        compressResultsFolderAnswer = argv[argId]
-    else:
-        compressResultsFolderAnswer = "yes"
-
-    argId += 1
-    if len(argv)>=argId+1: # whether to compress final results folder
         parameterDictFilename = argv[argId]
     else:
         parameterDictFilename = "ParameterDict.py"
 except:
-    print('Usage: generateJobs.py number_of_jobs number_of_events_per_job cluster_name [working_folder="./PlayGround"] [results_folder="./RESULTS"] [walltime="03:00:00" (per event)] [compress_results_folder="yes"] [compress_results_folder="yes"]')
+    print('Usage: generateJobs.py number_of_jobs number_of_events_per_job cluster_name [working_folder="./PlayGround"] [results_folder="./RESULTS"] [walltime="03:00:00" (per event)] [parameterDictFilename="ParameterDict.py"]')
     exit()
 
 # save config files
@@ -64,10 +58,9 @@ iEbeConfigs = {
     "working_folder"            :   "%s",
     "results_folder"            :   "%s",
     "walltime"                  :   "%s",
-    "compress_results_folder"   :   "%s",
     "parameter_dict_filename"   :   "%s",
 }
-""" % (numberOfJobs, numberOfEventsPerJob, workingFolder, resultsFolder, walltime, compressResultsFolderAnswer, parameterDictFilename)
+""" % (numberOfJobs, numberOfEventsPerJob, workingFolder, resultsFolder, walltime, parameterDictFilename)
 )
 
 # define colors
@@ -126,12 +119,13 @@ for i in range(1, numberOfJobs+1):
     copytree(ebeNodeFolder, targetWorkingFolder)
     open(path.join(targetWorkingFolder, "job-%d.pbs" % i), "w").write(
 """
-#!/usr/bin/env bash
-#PBS -N iEBE-%d
-#PBS -l walltime=%s
-#PBS -l nodes=1:ppn=1
-#PBS -j oe
-#PBS -S /bin/bash
+#!/bin/bash
+#SBATCH -N 1                        # Number of nodes
+#SBATCH -J EBE_vUSPhydro-%d
+#SBATCH -t %s
+#SBATCH -A qgp
+#SBATCH -p qgp
+#SBATCH -oe serial.o%j              # Name of batch job output file
 cd %s
 (cd %s
     ulimit -n 1000
@@ -140,39 +134,6 @@ cd %s
 )
 mv ./finalResults %s/job-%d
 """ % (i, walltime, targetWorkingFolder, crankFolderName, numberOfEventsPerJob, resultsFolder, i)
-    )
-    if compressResultsFolderAnswer == "yes":
-        open(path.join(targetWorkingFolder, "job-%d.pbs" % i), "a").write(
-"""
-(cd %s
-    tar -zcf job-%d.tar.gz job-%d
-    rm -fr job-%d
-)
-""" % (resultsFolder, i, i, i)
-        )
-
-# add a data collector watcher
-if compressResultsFolderAnswer == "yes":
-    EbeCollectorFolder = "EbeCollector"
-    utilitiesFolder = "utilities"
-    watcherDirectory = path.join(workingFolder, "watcher")
-    makedirs(path.join(watcherDirectory, ebeNodeFolder))
-    copytree(path.join(ebeNodeFolder, EbeCollectorFolder), path.join(watcherDirectory, ebeNodeFolder, EbeCollectorFolder))
-    copytree(utilitiesFolder, path.join(watcherDirectory, utilitiesFolder))
-    open(path.join(watcherDirectory, "watcher.pbs"), "w").write(
-"""
-#!/usr/bin/env bash
-#PBS -N watcher
-#PBS -l walltime=%s
-#PBS -l nodes=1:ppn=1
-#PBS -j oe
-#PBS -S /bin/bash
-cd %s
-(cd %s
-    python autoZippedResultsCombiner.py %s %d "job-(\d*).tar.gz" 60 1> WatcherReport.txt
-    mv WatcherReport.txt %s
-)
-""" % (walltime, watcherDirectory, utilitiesFolder, resultsFolder, numberOfJobs, resultsFolder)
     )
 
 from importlib import import_module

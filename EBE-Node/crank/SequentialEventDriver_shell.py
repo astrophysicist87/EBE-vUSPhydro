@@ -9,8 +9,5 @@ except:
 
 # call the real shell
 import SequentialEventDriver
-if SequentialEventDriver.superMCParameters["operation"] == 3:
-	SequentialEventDriver.controlParameterList["numberOfEvents"] = 1
-else:
-	SequentialEventDriver.controlParameterList["numberOfEvents"] = numberOfEvents
+SequentialEventDriver.controlParameterList["numberOfEvents"] = numberOfEvents
 SequentialEventDriver.sequentialEventDriverShell()
