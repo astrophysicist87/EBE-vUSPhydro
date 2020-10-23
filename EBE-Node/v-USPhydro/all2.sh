@@ -49,6 +49,7 @@ echo First event $2 and final event $3
 echo outputfiles/"$t"/"$dec""$4"/"$5"/
 for ((m="$2"; m<="$3"; m++)) 
 do 
+   echo 'Running ./vusphydro input'"$6""$1".dat "$1" "$m"'...'
    ./vusphydro input"$6""$1".dat "$1" "$m"
    mv outputfiles/"$t"/"$dec""$4"/"$5"/"$v"freezeout_ev"$m".dat    df/input/"$t"/"$dec""$4"/"$5"/"$v"freezeout_ev"$m".dat
    cd df

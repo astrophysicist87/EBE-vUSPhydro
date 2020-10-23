@@ -819,7 +819,7 @@ void Output<D>::do_mkdir(const char *path, int mode)
         /* Directory does not exist */
       //  if (mkdir(path, mode) != 0)
         //    status = -1;
-	cout << "Directory path doesn't exist" << endl;
+	cout << "Directory path = " << path << " doesn't exist" << endl;
     }
     else if (!S_ISDIR(st.st_mode))
     {

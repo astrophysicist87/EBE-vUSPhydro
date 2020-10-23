@@ -27,6 +27,7 @@ void printstart(string ofolder,string ev,string &out1, string &out2,  SPH<D,DD> 
 	if (!OUT2.is_open())
 	{
 		cout << "Error: cannot open corrected spectra file!" << endl;
+		cout << out2 << endl;
 		exit(1);
 	}
 	

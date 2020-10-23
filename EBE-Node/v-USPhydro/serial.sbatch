@@ -10,10 +10,10 @@
 ##                                                                           ##
 ###############################################################################
 #                                                                            
-#SBATCH -t 03:00:00                  # Job run time (hh:mm:ss)
+#SBATCH -t 06:00:00                  # Job run time (hh:mm:ss)
 #SBATCH -N 1                        # Number of nodes
 #SBATCH -J serial_job            # Name of batch job
-#SBATCH -A jnorhos
+#SBATCH -A qgp
 #SBATCH -p qgp
 #SBATCH -o serial.o%j              # Name of batch job output file
 ##SBATCH --error=serial.e%j              # Name of batch job error file
@@ -30,4 +30,4 @@
 
 # Run the serial code
 #./vusphydro inputtrentoPbPb2_EOS21_0.dat 2 0 0 > vusphydro.out
-./all2.sh 2 0 0 shear 0 glb rhic
+./all2.sh PbPb2_211_0 0 0 shear 0 trento

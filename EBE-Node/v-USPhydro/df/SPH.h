@@ -196,6 +196,7 @@ void SPH<D,DD>::readin(_inputIC ics)
         if(myfile3== NULL)
         {
   		cout << "Error: decay/input/numbers.dat does not exist. \n";
+		cout << "Error: " << hadclist.c_str() << " does not exist. \n";
 		exit(1);	
   	}	
   		
@@ -960,7 +961,7 @@ void SPH<D,DD>::readweights(string ptpoints, string phipoints)
 
 	FILE * myfile2 = fopen (phipoints.c_str(),"r");
 	
-	//cout << phipoints << endl;
+	cout << phipoints << endl;
 	double sub;
 	while (fscanf(myfile2,"%lf %*f",&sub)==1)
 	{
@@ -974,7 +975,8 @@ void SPH<D,DD>::readweights(string ptpoints, string phipoints)
 
 	FILE * myfile = fopen (ptpoints.c_str(),"r");
 	 
-	
+
+	cout << ptpoints << "\n";	
 	while (fscanf(myfile,"%lf %*f",&sub)==1)
 	{
 	pt.push_back(sub); 
