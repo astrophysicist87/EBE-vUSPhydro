@@ -139,6 +139,32 @@ def formAssignmentStringFromDict(aDict):
         result += " {}={}".format(aParameter, aDict[aParameter])
     return result
 
+def generate_vUSPhydro_input_from_dict():
+    print """h: %f  dt: %f
+equationsofmotion: %s EOS: %s
+%s
+%s
+low: %s
+etaconst: %d
+viscfac_bulk_shear: %f %f
+t0: %f
+freezeoutT: %f
+%s %f
+ICs: %s
+QM_fluc: %d
+output_folder: %s
+%d %d
+freezeout: %d
+dfinputfilename: %s
+df_cor_file: %s
+range(ptmax,ptstepsize,phisteps): %s
+hadronl_list: %s
+had_check: %s
+""" % (0.3, 0.05, 'shear+bulk', 'table', 'tempcharm.dat', 'dervcharm.dat',
+       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, 'trento/PbPb5020TeV/0',
+       3, 'trento/PbPb5020TeV/shear/EOS211/0', 5, 5, 1, 'trentoinputPbPb2_211_0.dat',
+       'input/MHlistall.dat', 'input/ptphipoints.dat', 'input/resoweakPDG2016Plus.dat',
+       'input/numbers16p.dat')
 
 def cleanUpFolder(aDir):
     """ Delete all data files in the given directory. """
@@ -225,7 +251,8 @@ def sequentialEventDriverShell():
         print("Starting event %d..." % event_id)
         
         aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/inputtrentoPbPb2_211_0.dat'
-			
+	
+	generate_vUSPhydro_input_from_dict()
     
         copy(aInitialConditionFile, controlParameterList['eventResultDir'])
         print('Associating ' + aInitialConditionFile + ' with event ' + str(event_id))
