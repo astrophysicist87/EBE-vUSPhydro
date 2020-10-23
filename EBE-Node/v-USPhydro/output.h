@@ -54,9 +54,10 @@ public:
 template <int D>
 Output<D>::Output(LinkList<D> &linklist)
 {
+bool flatStorage = true;
    if (linklist.fcount!=0) 
    {
-   	cfolder=ofolder+linklist.ebe_folder+("/");
+   	cfolder=(flatStorage) ? "results/" : ofolder+linklist.ebe_folder+("/");
    	if (linklist.cevent==0) 
    	{
    	  if (linklist.fcount!=0) do_mkdir(cfolder.c_str(), 0777);
@@ -68,7 +69,7 @@ Output<D>::Output(LinkList<D> &linklist)
    
    if (linklist.average==1) 
    {
-   	cfolder=ofolder+linklist.ebe_folder+("/");
+   	cfolder=(flatStorage) ? "results/" : ofolder+linklist.ebe_folder+("/");
    	do_mkdir(cfolder.c_str(), 0777);
    }
    
