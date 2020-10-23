@@ -136,17 +136,17 @@ mv ./finalResults %s/job-%d
 """ % (i, walltime, '%j', targetWorkingFolder, crankFolderName, numberOfEventsPerJob, resultsFolder, i)
     )
 
-from importlib import import_module
-#import ParameterDict
-parameterDictModule = import_module(path.splitext(parameterDictFilename)[0])
-initial_condition_type = (
-    parameterDictModule.initial_condition_control['initial_condition_type'])
-if initial_condition_type == 'pre-generated':
-    initial_file_path = (parameterDictModule.initial_condition_control[
-                             'pre-generated_initial_file_path'])
-    call("./copy_pre_generated_initial_conditions.sh %d %d %s %s" 
-         % (numberOfJobs, numberOfEventsPerJob, initial_file_path, 
-            workingFolder), shell=True)
+#from importlib import import_module
+##import ParameterDict
+#parameterDictModule = import_module(path.splitext(parameterDictFilename)[0])
+#initial_condition_type = (
+#    parameterDictModule.initial_condition_control['initial_condition_type'])
+#if initial_condition_type == 'pre-generated':
+#    initial_file_path = (parameterDictModule.initial_condition_control[
+#                             'pre-generated_initial_file_path'])
+#    call("./copy_pre_generated_initial_conditions.sh %d %d %s %s" 
+#         % (numberOfJobs, numberOfEventsPerJob, initial_file_path, 
+#            workingFolder), shell=True)
 
 print("Jobs generated. Submit them using submitJobs scripts.")
 
