@@ -118,9 +118,8 @@ for i in range(1, numberOfJobs+1):
     # copy folder
     copytree(ebeNodeFolder, targetWorkingFolder)
     open(path.join(targetWorkingFolder, "job-%d.sbatch" % i), "w").write(
-"""
-#!/bin/bash
-#SBATCH -N 1                        # Number of nodes
+"""#!/bin/bash
+#SBATCH -N 1
 #SBATCH -J EBE_vUSPhydro-%d
 #SBATCH -t %s
 #SBATCH -A qgp
