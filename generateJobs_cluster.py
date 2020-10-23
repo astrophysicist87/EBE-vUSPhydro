@@ -125,7 +125,7 @@ for i in range(1, numberOfJobs+1):
 #SBATCH -t %s
 #SBATCH -A qgp
 #SBATCH -p qgp
-#SBATCH -oe serial.o%j              # Name of batch job output file
+#SBATCH -oe serial.o%s              # Name of batch job output file
 cd %s
 (cd %s
     ulimit -n 1000
@@ -133,7 +133,7 @@ cd %s
     cp RunRecord.txt ErrorRecord.txt ../finalResults/
 )
 mv ./finalResults %s/job-%d
-""" % (i, walltime, targetWorkingFolder, crankFolderName, numberOfEventsPerJob, resultsFolder, i)
+""" % (i, walltime, '%j', targetWorkingFolder, crankFolderName, numberOfEventsPerJob, resultsFolder, i)
     )
 
 from importlib import import_module
