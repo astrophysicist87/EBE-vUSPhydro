@@ -95,22 +95,22 @@ def hydroWithInitialCondition(aFile):
     checkExistenceOfExecutable(path.join(hydroDirectory, hydroExecutable))
 
     # clean up initial and results folder
-    cleanUpFolder(hydroICDirectory)
-    cleanUpFolder(hydroResultsDirectory)
+    #cleanUpFolder(hydroICDirectory)
+    #cleanUpFolder(hydroResultsDirectory)
 
     # check existence of the initial conditions
     if not path.exists(aFile):
         raise ExecutionError("Hydro initial condition file %s not found!" 
                              % aFile)
 
-    eosfile1 = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/tempcharm.dat'
-    eosfile2 = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/dervcharm.dat'
+    #eosfile1 = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/tempcharm.dat'
+    #eosfile2 = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/dervcharm.dat'
 
     # move initial condition to the designated folder
     copy(aFile, path.join(hydroICDirectory, 
                           hydroControl['initialConditionFile']))
-    copy(eosfile1, path.join(hydroICDirectory, 'tempcharm.dat'))
-    copy(eosfile2, path.join(hydroICDirectory, 'dervcharm.dat'))
+    #copy(eosfile1, path.join(hydroICDirectory, 'tempcharm.dat'))
+    #copy(eosfile2, path.join(hydroICDirectory, 'dervcharm.dat'))
 
     # form assignment string
     assignments = formAssignmentStringFromDict(hydroParameters)
