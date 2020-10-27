@@ -225,7 +225,9 @@ def formAssignmentStringFromDict(aDict):
     return result
 
 def generate_vUSPhydro_input_from_dict():
-    open(path.join(hydroControl['initialConditionDir'], hydroControl['initialConditionFile']), "w").write(
+    hydroDirectory = path.join(controlParameterList['rootDir'], hydroControl['mainDir'])
+    open(path.join(hydroDirectory, hydroControl['initialConditionDir'],
+                   hydroControl['initialConditionFile']), "w").write(
     """h: %f  dt: %f
 equationsofmotion: %s EOS: %s
 %s
