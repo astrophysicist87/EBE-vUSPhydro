@@ -50,6 +50,7 @@ initialConditionControl = {
     #'pre-generated_initial_file_read_in_mode': 2, # read in mode for VISH2+1
     'mainDir'                       :   'jaki_trento',
     'dataDir'                       :   'data', # where initial conditions are stored, relative
+    'initialFiles'                  :   'ic*.dat',  #initial density profile filenames
     'saveICFile'                    :   True, # whether to save initial condition file
     'numberOfEventsParameterName'   :   'nev',
     'executable'                    :   'bin/trento',
