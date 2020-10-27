@@ -63,6 +63,7 @@ hydroControl = {
     'mainDir'               :   'v-USPhydro',  # options - 'v-USPhydro', 'vusphydro'
     'initialConditionDir'   :   'inputfiles', # hydro initial condition folder, relative
     'initialConditionFile'  :   'settings.inp', # IC filename
+    'runNumber'             :   0,
     'resultDir'             :   'results', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
     'saveICFile'            :   True, # whether to save initial condition file
@@ -117,7 +118,7 @@ def generateInitialConditions(numberOfEvents):
     print initialConditionDataDirectory
     print initialConditionExecutable
     
-    print 1/0
+    #print 1/0
 
     # clean up the data subfolder for output
     cleanUpFolder(initialConditionDataDirectory)
@@ -128,7 +129,9 @@ def generateInitialConditions(numberOfEvents):
     initialConditionParameters[initialConditionControl['numberOfEventsParameterName']] = (
                                                                 numberOfEvents)
     # form assignment string
-    assignments = formAssignmentStringFromDict(initialConditionParameters)
+    #assignments = formAssignmentStringFromDict(initialConditionParameters)
+    assignments = ' Pb Pb ' + numberOfEvents + ' --output ' + initialConditionDataDirectory
+    print 'assignments = ', assignments
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + initialConditionExecutable + assignments)
@@ -182,14 +185,14 @@ def hydroWithInitialCondition(aFile):
     #eosfile2 = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/dervcharm.dat'
 
     # move initial condition to the designated folder
-    copy(aFile, path.join(hydroICDirectory, 
-                          hydroControl['initialConditionFile']))
+    #copy(aFile, path.join(hydroICDirectory, 
+    #                      hydroControl['initialConditionFile']))
     #copy(eosfile1, path.join(hydroICDirectory, 'tempcharm.dat'))
     #copy(eosfile2, path.join(hydroICDirectory, 'dervcharm.dat'))
 
     # form assignment string
     assignments = formAssignmentStringFromDict(hydroParameters)
-    assignments = ' inputtrentoPbPb2_211_0.dat PbPb2_211_0 0'
+    assignments = ' settings.inp ' + hydroControl['runNumber'] + ' 0'
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + hydroExecutable + assignments)
@@ -331,34 +334,35 @@ def sequentialEventDriverShell():
         #print(initial_condition_list)
 
         # loop over initial conditions
-        event_id += 1
-        eventResultDir = path.join(resultDir, 
-            controlParameterList['eventResultDirPattern'] % event_id)
-        controlParameterList['eventResultDir'] = eventResultDir
-        if path.exists(eventResultDir):
-            rmtree(eventResultDir)
-        makedirs(eventResultDir)
-			
-        # print current progress to terminal
-        print("Starting event %d..." % event_id)
+        for aInitialConditionFile in initial_condition_list:
+            event_id += 1
+            eventResultDir = path.join(resultDir, 
+                controlParameterList['eventResultDirPattern'] % event_id)
+            controlParameterList['eventResultDir'] = eventResultDir
+            if path.exists(eventResultDir):
+                rmtree(eventResultDir)
+            makedirs(eventResultDir)
+ 			
+            # print current progress to terminal
+            print("Starting event %d..." % event_id)
+            
+            aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
+   	
+   	generate_vUSPhydro_input_from_dict()
         
-        aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
-	
-	generate_vUSPhydro_input_from_dict()
+            #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
+            print('Associating ' + aInitialConditionFile + ' with event ' + str(event_id))
+            
+            print(controlParameterList['rootDir'])
+            
+            hydroResultFiles = [aFile for aFile in hydroWithInitialCondition(aInitialConditionFile)]
+            print(controlParameterList['rootDir'])
     
-        #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
-        print('Associating ' + aInitialConditionFile + ' with event ' + str(event_id))
-        
-        print(controlParameterList['rootDir'])
-        
-        hydroResultFiles = [aFile for aFile in hydroWithInitialCondition(aInitialConditionFile)]
-        print(controlParameterList['rootDir'])
-
-        # print current progress to terminal
-        stdout.write("PROGRESS: %d events out of %d finished.\n" 
-                        % (event_id, nev))
-        stdout.flush()
-
+            # print current progress to terminal
+            stdout.write("PROGRESS: %d events out of %d finished.\n" 
+                            % (event_id, nev))
+            stdout.flush()
+    
         # collect mostly used data into a database
         #collectEbeResultsToDatabaseFrom(resultDir)
 

@@ -73,8 +73,8 @@ normal = "\033[0m"
 
 # print welcome message
 print(yellow)
-greetings(3)
-print(purple + "\n" + "-"*80 + "\n>>>>> Welcome to the event generator! <<<<<\n" + "-"*80 + normal)
+greetings(1)
+print(purple + "\n" + "-"*80 + "\n>>>>> Welcome to the v-USPhydro event generator! <<<<<\n" + "-"*80 + normal)
 
 # check prerequisites
 print(green + "\n>>>>> Checking for required libraries <<<<<\n" + normal)
