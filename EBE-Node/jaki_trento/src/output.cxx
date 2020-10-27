@@ -214,6 +214,7 @@ Output::Output(const VarMap& var_map) {
   if (var_map.count("output")) {
   
     const auto& output_path = var_map["output"].as<fs::path>();
+std::cout << "CHECK OUTPUT_PATH: " << var_map["output"].as<fs::path>() << std::endl;
 
     if (hdf5::filename_is_hdf5(output_path)) {
 #ifdef TRENTO_HDF5
