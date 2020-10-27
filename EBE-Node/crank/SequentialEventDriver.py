@@ -67,7 +67,8 @@ initialConditionParameters = {
 hydroControl = {
     'mainDir'               :   'v-USPhydro',  # options - 'v-USPhydro', 'vusphydro'
     'initialConditionDir'   :   'inputfiles', # hydro initial condition folder, relative
-    'initialConditionFile'  :   'settings.inp', # IC filename
+    'initialConditionFile'  :   'ic0.dat', # IC filename
+    'settingsFile'          :   'settings.inp', # settings filename
     'runNumber'             :   0,
     'resultDir'             :   'outputfiles', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
@@ -192,7 +193,8 @@ def hydroWithInitialCondition(aFile):
 
     # form assignment string
     assignments = formAssignmentStringFromDict(hydroParameters)
-    assignments = ' settings.inp ' + str(hydroControl['runNumber']) + ' 0'
+    assignments = ' ' + hydroControl['settingsFile'] + ' '\
+                      + str(hydroControl['runNumber']) + ' 0'
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + hydroExecutable + assignments)
@@ -226,7 +228,7 @@ def formAssignmentStringFromDict(aDict):
 def generate_vUSPhydro_input_from_dict():
     hydroDirectory = path.join(controlParameterList['rootDir'], hydroControl['mainDir'])
     open(path.join(hydroDirectory, hydroControl['initialConditionDir'],
-                   hydroControl['initialConditionFile']), "w").write(
+                   hydroControl['settingsFile']), "w").write(
     """h: %f  dt: %f
 equationsofmotion: %s EOS: %s
 %s
@@ -348,7 +350,7 @@ def sequentialEventDriverShell():
             # print current progress to terminal
             print("Starting event %d..." % event_id)
                         
-            aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
+            #aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
    	
    	    generate_vUSPhydro_input_from_dict()
         
