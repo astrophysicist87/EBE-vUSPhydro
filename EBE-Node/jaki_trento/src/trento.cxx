@@ -218,8 +218,6 @@ int main(int argc, char* argv[]) {
     // Exceptions may occur here.
     po::notify(var_map);
 
-std::cout << "CHECK OUTPUT: " << var_map["output"].as<fs::path>() << std::endl;
-
     // Go!
     Collider collider{var_map};
     collider.run_events();

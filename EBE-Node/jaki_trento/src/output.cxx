@@ -88,6 +88,8 @@ void write_text_vUSPhydro(const fs::path& output_dir, int width,
   padded_fname <<  "ic" << num << ".dat";
   fs::ofstream ofs{output_dir / padded_fname.str()};
 
+std::cout << "CHECK ALSO: " << output_dir / padded_fname.str() << std::endl;
+
   if (header) {
     // Write a commented header of event properties as key = value pairs.
 //    ofs << std::setprecision(10)
