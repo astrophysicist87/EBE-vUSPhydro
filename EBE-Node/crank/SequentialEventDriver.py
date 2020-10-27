@@ -21,6 +21,7 @@ class ExecutionError(Exception): pass # used to signal my own exception
 # set global default parameters
 allParameterLists = [
     'controlParameterList',
+    'initialConditionControl',
     'hydroControl',
     'hydroParameters',
 ]
@@ -37,11 +38,31 @@ controlParameterList = {
     'cleanCMD'              :   'make clean',
 }
 
+initialConditionControl = {
+    #'centrality': '0-5%',  # centrality bin
+    # centrality cut variable: total_entropy or Npart
+    #'cut_type': 'total_entropy',
+    #'initial_condition_type': 'trento', # type of initial conditions
+    # file path for the pre-generated initial condition files
+    #'pre-generated_initial_file_path': 'initial_conditions', 
+    # name pattern for the initial condition files
+    #'pre-generated_initial_file_pattern': 'sd_event_[0-9]*_block.dat',  
+    #'pre-generated_initial_file_read_in_mode': 2, # read in mode for VISH2+1
+    'mainDir'                       :   'jaki_trento',
+    'dataDir'                       :   'data', # where initial conditions are stored, relative
+    'saveICFile'                    :   True, # whether to save initial condition file
+    'numberOfEventsParameterName'   :   'nev',
+    'executable'                    :   'bin/trento',
+}
+
+initialConditionParameters = {
+    #
+}
 
 hydroControl = {
     'mainDir'               :   'v-USPhydro',  # options - 'v-USPhydro', 'vusphydro'
     'initialConditionDir'   :   'inputfiles', # hydro initial condition folder, relative
-    'initialConditionFile'  :   'inputtrentoPbPb2_211_0.dat', # IC filename
+    'initialConditionFile'  :   'settings.inp', # IC filename
     'resultDir'             :   'results', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
     'saveICFile'            :   True, # whether to save initial condition file
@@ -66,6 +87,60 @@ def readInParameters():
         raise ExecutionError("Errors trying to open/read the ParameterDict.py file!")
 
 
+
+def get_initial_condition_list():
+    """
+        return a list of initial condition file
+    """
+    file_list = []
+    nev = controlParameterList['numberOfEvents']
+    file_list = [afile for afile in generateInitialConditions(nev)]
+    return(file_list)
+
+
+
+
+def generateInitialConditions(numberOfEvents):
+    """
+        Generate initial conditions using Trento. It then yield the absolute
+        path for all the initial conditions.
+    """
+    ProcessNiceness = controlParameterList['niceness']
+    # set directory strings
+    initialConditionDirectory = path.join(controlParameterList['rootDir'], 
+                                 initialConditionControl['mainDir'])
+    initialConditionDataDirectory = path.join(initialConditionDirectory, 
+                                     initialConditionControl['dataDir'])
+    initialConditionExecutable = initialConditionControl['executable']
+    
+    print initialConditionDirectory
+    print initialConditionDataDirectory
+    print initialConditionExecutable
+    
+    print 1/0
+
+    # clean up the data subfolder for output
+    cleanUpFolder(initialConditionDataDirectory)
+
+    # check executable
+    checkExistenceOfExecutable(path.join(initialConditionDirectory, initialConditionExecutable))
+    
+    initialConditionParameters[initialConditionControl['numberOfEventsParameterName']] = (
+                                                                numberOfEvents)
+    # form assignment string
+    assignments = formAssignmentStringFromDict(initialConditionParameters)
+    # form executable string
+    executableString = ("nice -n %d ./" % (ProcessNiceness) 
+                        + initialConditionExecutable + assignments)
+    # execute!
+    run(executableString, cwd=initialConditionDirectory)
+
+    # yield initial conditions
+    file_list = glob(path.join(initialConditionDataDirectory, 
+                               initialConditionControl['initialFiles']))
+    for aFile in file_list:
+        # then yield it
+        yield path.join(initialConditionDataDirectory, aFile)
 
 
 def hydroWithInitialCondition(aFile):
@@ -146,7 +221,8 @@ def formAssignmentStringFromDict(aDict):
     return result
 
 def generate_vUSPhydro_input_from_dict():
-    print """h: %f  dt: %f
+    open(path.join(hydroControl['initialConditionDir'], hydroControl['initialConditionFile']), "w").write(
+    """h: %f  dt: %f
 equationsofmotion: %s EOS: %s
 %s
 %s
@@ -167,10 +243,16 @@ range(ptmax,ptstepsize,phisteps): %s
 hadronl_list: %s
 had_check: %s
 """ % (0.3, 0.05, 'shear+bulk', 'table', 'tempcharm.dat', 'dervcharm.dat',
-       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, 'trento/PbPb5020TeV/0',
-       3, 'trento/PbPb5020TeV/shear/EOS211/0', 5, 5, 1, 'trentoinputPbPb2_211_0.dat',
-       'input/MHlistall.dat', 'input/ptphipoints.dat', 'input/resoweakPDG2016Plus.dat',
-       'input/numbers16p.dat')
+       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, '.', 3, '.', 5, 5, 1,
+       'trentoinputPbPb2_211_0.dat', 'input/MHlistall.dat', 'input/ptphipoints.dat',
+       'input/resoweakPDG2016Plus.dat', 'input/numbers16p.dat'))
+       
+
+#(0.3, 0.05, 'shear+bulk', 'table', 'tempcharm.dat', 'dervcharm.dat',
+#       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, 'trento/PbPb5020TeV/0',
+#       3, 'trento/PbPb5020TeV/shear/EOS211/0', 5, 5, 1, 'trentoinputPbPb2_211_0.dat',
+#       'input/MHlistall.dat', 'input/ptphipoints.dat', 'input/resoweakPDG2016Plus.dat',
+#       'input/numbers16p.dat')
 
 def cleanUpFolder(aDir):
     """ Delete all data files in the given directory. """
@@ -236,7 +318,11 @@ def sequentialEventDriverShell():
 
         event_id = 0
         
-        nev = 1
+        # generate initial conditions then loop over initial conditions
+        initial_condition_list = get_initial_condition_list()
+        print('initial_condition_list =', initial_condition_list)
+        nev = len(initial_condition_list)
+
 
         # printcurrent progress to terminal
         stdout.write("PROGRESS: %d events out of %d finished.\n" 
@@ -256,7 +342,7 @@ def sequentialEventDriverShell():
         # print current progress to terminal
         print("Starting event %d..." % event_id)
         
-        aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/inputtrentoPbPb2_211_0.dat'
+        aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
 	
 	generate_vUSPhydro_input_from_dict()
     
