@@ -130,7 +130,7 @@ def generateInitialConditions(numberOfEvents):
                                                                 numberOfEvents)
     # form assignment string
     #assignments = formAssignmentStringFromDict(initialConditionParameters)
-    assignments = ' Pb Pb ' + numberOfEvents + ' --output ' + initialConditionDataDirectory
+    assignments = ' Pb Pb ' + str(numberOfEvents) + ' --output ' + initialConditionDataDirectory
     print 'assignments = ', assignments
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
@@ -192,7 +192,7 @@ def hydroWithInitialCondition(aFile):
 
     # form assignment string
     assignments = formAssignmentStringFromDict(hydroParameters)
-    assignments = ' settings.inp ' + hydroControl['runNumber'] + ' 0'
+    assignments = ' settings.inp ' + str(hydroControl['runNumber']) + ' 0'
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + hydroExecutable + assignments)
