@@ -216,7 +216,6 @@ Output::Output(const VarMap& var_map) {
   if (var_map.count("output")) {
   
     const auto& output_path = var_map["output"].as<fs::path>();
-std::cout << "CHECK OUTPUT_PATH: " << var_map["output"].as<fs::path>() << std::endl;
 
     if (hdf5::filename_is_hdf5(output_path)) {
 #ifdef TRENTO_HDF5
@@ -249,7 +248,8 @@ std::cout << "CHECK OUTPUT_PATH: " << var_map["output"].as<fs::path>() << std::e
         	
 							     int num, double impact_param, const Event& event) {
 			      static int i=0; 
-     	       if (event.multiplicity()>59.6){
+     	       //if (event.multiplicity()>59.6){
+     	       if (event.multiplicity()>0.0){
 										//			      			      if (event.multiplicity()>60){ 
           write_text_vUSPhydro(output_path, width, i, impact_param, event, header);
           i++;
