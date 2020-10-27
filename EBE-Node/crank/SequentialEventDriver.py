@@ -21,7 +21,7 @@ class ExecutionError(Exception): pass # used to signal my own exception
 # set global default parameters
 allParameterLists = [
     'controlParameterList',
-    'initialConditionControl',
+    'initialConditionGeneratorControl',
     'hydroControl',
     'hydroParameters',
 ]
@@ -38,7 +38,11 @@ controlParameterList = {
     'cleanCMD'              :   'make clean',
 }
 
-initialConditionControl = {
+initial_condition_control = {
+    #
+}
+
+initialConditionGeneratorControl = {
     #'centrality': '0-5%',  # centrality bin
     # centrality cut variable: total_entropy or Npart
     #'cut_type': 'total_entropy',
@@ -65,7 +69,7 @@ hydroControl = {
     'initialConditionDir'   :   'inputfiles', # hydro initial condition folder, relative
     'initialConditionFile'  :   'settings.inp', # IC filename
     'runNumber'             :   0,
-    'resultDir'             :   'results', # hydro results folder, relative
+    'resultDir'             :   'outputfiles', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
     'saveICFile'            :   True, # whether to save initial condition file
     'saveResultGlobs'       :   ['*'], 
@@ -110,10 +114,10 @@ def generateInitialConditions(numberOfEvents):
     ProcessNiceness = controlParameterList['niceness']
     # set directory strings
     initialConditionDirectory = path.join(controlParameterList['rootDir'], 
-                                 initialConditionControl['mainDir'])
+                                 initialConditionGeneratorControl['mainDir'])
     initialConditionDataDirectory = path.join(initialConditionDirectory, 
-                                     initialConditionControl['dataDir'])
-    initialConditionExecutable = initialConditionControl['executable']
+                                     initialConditionGeneratorControl['dataDir'])
+    initialConditionExecutable = initialConditionGeneratorControl['executable']
     
     print initialConditionDirectory
     print initialConditionDataDirectory
@@ -127,7 +131,7 @@ def generateInitialConditions(numberOfEvents):
     # check executable
     checkExistenceOfExecutable(path.join(initialConditionDirectory, initialConditionExecutable))
     
-    initialConditionParameters[initialConditionControl['numberOfEventsParameterName']] = (
+    initialConditionParameters[initialConditionGeneratorControl['numberOfEventsParameterName']] = (
                                                                 numberOfEvents)
     # form assignment string
     #assignments = formAssignmentStringFromDict(initialConditionParameters)
@@ -141,7 +145,7 @@ def generateInitialConditions(numberOfEvents):
 
     # yield initial conditions
     file_list = glob(path.join(initialConditionDataDirectory, 
-                               initialConditionControl['initialFiles']))
+                               initialConditionGeneratorControl['initialFiles']))
     for aFile in file_list:
         # then yield it
         yield path.join(initialConditionDataDirectory, aFile)
@@ -174,22 +178,17 @@ def hydroWithInitialCondition(aFile):
     checkExistenceOfExecutable(path.join(hydroDirectory, hydroExecutable))
 
     # clean up initial and results folder
-    #cleanUpFolder(hydroICDirectory)
-    #cleanUpFolder(hydroResultsDirectory)
+    #DON'T DO THIScleanUpFolder(hydroICDirectory)
+    cleanUpFolder(hydroResultsDirectory)
 
     # check existence of the initial conditions
     if not path.exists(aFile):
         raise ExecutionError("Hydro initial condition file %s not found!" 
                              % aFile)
 
-    #eosfile1 = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/tempcharm.dat'
-    #eosfile2 = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/dervcharm.dat'
-
     # move initial condition to the designated folder
-    #copy(aFile, path.join(hydroICDirectory, 
-    #                      hydroControl['initialConditionFile']))
-    #copy(eosfile1, path.join(hydroICDirectory, 'tempcharm.dat'))
-    #copy(eosfile2, path.join(hydroICDirectory, 'dervcharm.dat'))
+    move(aFile, path.join(hydroICDirectory, 
+                          hydroControl['initialConditionFile']))
 
     # form assignment string
     assignments = formAssignmentStringFromDict(hydroParameters)
@@ -348,7 +347,7 @@ def sequentialEventDriverShell():
  			
             # print current progress to terminal
             print("Starting event %d..." % event_id)
-            
+                        
             aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
    	
    	    generate_vUSPhydro_input_from_dict()
