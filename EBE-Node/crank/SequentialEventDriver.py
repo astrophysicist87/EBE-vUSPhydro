@@ -348,7 +348,7 @@ def sequentialEventDriverShell():
             
             aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
    	
-   	generate_vUSPhydro_input_from_dict()
+   	    generate_vUSPhydro_input_from_dict()
         
             #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
             print('Associating ' + aInitialConditionFile + ' with event ' + str(event_id))
