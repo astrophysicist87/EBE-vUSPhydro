@@ -286,7 +286,7 @@ def freezeOutWithHydroResultFiles(fileList):
         copy( hydroResultFile, FOInputDirectory )
 
     # execute!
-    assignments = " " + freezeOutControl['inputFile'] + " 0"
+    assignments = " " + freezeOutControl['inputFile'] + " 0 0 0"
     #./decays/reso out/trento/shear/0/ev0sbvc_dNdphidpp.dat out/trento/shear/0/ev0dsbvc_dNdphidpp.dat reso.inp
     run("nice -n %d ./" % (ProcessNiceness) + FOExecutable + assignments, cwd=FODirectory)
 
