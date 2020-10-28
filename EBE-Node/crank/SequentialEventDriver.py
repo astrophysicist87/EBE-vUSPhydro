@@ -298,7 +298,7 @@ def freezeOutWithHydroResultFiles(fileList):
             move(aFile, controlParameterList['eventResultDir'])
             
         # execute!
-    assignments = ' ' + glob(path.join('out', '*dNdphidpp.dat')) + ' reso16p.inp'
+    assignments = ' out/ev0sbv_dNdphidpp.dat out/ev0sbvc_dNdphidpp.dat reso16p.inp'
     #./decays/reso out/trento/shear/0/ev0sbvc_dNdphidpp.dat out/trento/shear/0/ev0dsbvc_dNdphidpp.dat reso.inp
     run("nice -n %d ./" % (ProcessNiceness) + './decays/reso' + assignments, cwd=FODirectory)
 
