@@ -281,6 +281,9 @@ def freezeOutWithHydroResultFiles(fileList):
     #move( path.join( hydroDirectory, freezeOutControl['inputFile'] ),
     #      path.join( FOInputDirectory, freezeOutControl['inputFile'] ) )
     #print "CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable
+    
+    for hydroResultFile in fileList:
+        copy( hydroResultFile, FOInputDirectory )
 
     # execute!
     assignments = " " + freezeOutControl['inputFile'] + " 0"
