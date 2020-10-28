@@ -77,7 +77,6 @@ hydroControl = {
     'resultDir'             :   'outputfiles', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
     'freezeOutInputFile'    :   'dfinput.dat',
-    'saveICFile'            :   True, # whether to save initial condition file
     'saveResultGlobs'       :   ['*'], 
                                 # files match these globs will be saved
     'executable'            :   'vusphydro',
@@ -298,6 +297,20 @@ def freezeOutWithHydroResultFiles(fileList):
         if aFile in worthStoring:
             move(aFile, controlParameterList['eventResultDir'])
             
+        # execute!
+    assignments = ' ' + glob(path.join('out', '*dNdphidpp.dat')) + ' reso16p.inp'
+    #./decays/reso out/trento/shear/0/ev0sbvc_dNdphidpp.dat out/trento/shear/0/ev0dsbvc_dNdphidpp.dat reso.inp
+    run("nice -n %d ./" % (ProcessNiceness) + './decays/reso' + assignments, cwd=FODirectory)
+
+    # save some of the important result files
+    worthStoring = []
+    for aGlob in freezeOutControl['saveResultGlobs']:
+        worthStoring.extend(glob(path.join(FOResultsDirectory, aGlob)))
+    for aFile in glob(path.join(FOResultsDirectory, "*")):
+        if aFile in worthStoring:
+            move(aFile, controlParameterList['eventResultDir'])
+
+            
             
             
 
@@ -435,7 +448,15 @@ def sequentialEventDriverShell():
  			
             # print current progress to terminal
             print("Starting event %d..." % event_id)
-                        
+            if initialConditionGeneratorControl['saveICFile']:
+                ICGenDataDirectory = path.join(
+                    controlParameterList['rootDir'], 
+                    initialConditionGeneratorControl['mainDir'],
+                    initialConditionGeneratorControl['dataDir'] )
+                file_list = glob(path.join(ICGenDataDirectory,
+                    initialConditionGeneratorControl['initialFiles']))
+                for aFile in file_list:
+                    copy(aFile, controlParameterList['eventResultDir'])
             #aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
    	
    	    generate_vUSPhydro_input_from_dict()
