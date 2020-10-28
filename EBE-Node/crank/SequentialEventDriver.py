@@ -254,7 +254,7 @@ def freezeOutWithHydroResultFiles(fileList):
     print FOExecutable
 	
     # check executable
-    checkExistenceOfExecutables( path.join(FODirectory, FOExecutable) )
+    checkExistenceOfExecutable( path.join(FODirectory, FOExecutable) )
 
     # clean up operation folder
     #cleanUpFolder(FOOperationDirectory)
@@ -273,9 +273,10 @@ def freezeOutWithHydroResultFiles(fileList):
     #copy(path.join(iSDirectory, 'EOS', 'EOS_tables', 's95p-v1', 'EOS_particletable.dat'), 
     #     path.join(iSDirectory, 'EOS', 'EOS_particletable.dat'))
 
+    print "CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable
+
     # execute!
-    run("nice -n %d ./" % (ProcessNiceness) + FOExecutable, 
-        cwd=FODirectory)
+    run("nice -n %d ./" % (ProcessNiceness) + FOExecutable, cwd=FODirectory)
 
     # save some of the important result files
     worthStoring = []
