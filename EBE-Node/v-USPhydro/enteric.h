@@ -182,15 +182,19 @@ void manualenter(_inputIC &ics, LinkList<D> &linklist)
   	   	ic2=charin;
            }
            }
-           fscanf(openmanf,"%*s %i \n",&df);  
+           fscanf(openmanf,"%*s %d \n",&df);  
            if (df!=0) // for df, analytical solution - no decays
   	   {
   	   	fscanf(openmanf,"%*s %s \n",charin);
   	   	string dfpre,dffile=charin;
-  	   	if (df==1) dfpre="df/input/";  
-  	   	else if (df==2) dfpre="sampling/input/"; 
-  	   	else cout << "Error: undefined df calcualtion type" << endl;
-  	   	string dfout=dfpre+dffile;
+
+        // Added by Christopher Plumberg - 10/28/2020
+        // If df < 0, assume df is one level higher in directory structure
+        string directoryPrefix = (df < 0) ? "../" : "";
+  	   	if (abs(df)==1) dfpre="df/input/";  
+  	   	else if (abs(df)==2) dfpre="sampling/input/"; 
+  	   	else cout << "Error: undefined df = " << df << " calculation type" << endl;
+  	   	string dfout=directoryPrefix+dfpre+dffile;
   	   	
   	   	
   	   	

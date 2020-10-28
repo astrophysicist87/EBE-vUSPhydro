@@ -22,8 +22,11 @@ class ExecutionError(Exception): pass # used to signal my own exception
 allParameterLists = [
     'controlParameterList',
     'initialConditionGeneratorControl',
+    'initialConditionGeneratorParameters',
     'hydroControl',
     'hydroParameters',
+    'freezeOutControl',
+    'freezeOutParameters',
 ]
 
 controlParameterList = {
@@ -60,8 +63,9 @@ initialConditionGeneratorControl = {
     'executable'                    :   'bin/trento',
 }
 
-initialConditionParameters = {
-    #
+initialConditionGeneratorParameters = {
+    'projectile'                    :   'Pb',
+    'target'                        :   'Pb',
 }
 
 hydroControl = {
@@ -72,6 +76,7 @@ hydroControl = {
     'runNumber'             :   0,
     'resultDir'             :   'outputfiles', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
+    'freezeOutInputFile'    :   'dfinput.dat',
     'saveICFile'            :   True, # whether to save initial condition file
     'saveResultGlobs'       :   ['*'], 
                                 # files match these globs will be saved
@@ -79,7 +84,22 @@ hydroControl = {
 }
 
 hydroParameters = {
-    
+    #
+}
+
+freezeOutControl = {
+    'mainDir'               :   'df',
+    'inputDir'              :   'input', # hydro initial condition folder, relative
+    'inputFile'             :   'dfinput.dat', # settings filename
+    'resultDir'             :   'out', # hydro results folder, relative
+    'resultFiles'           :   '*', # results files
+    'saveResultGlobs'       :   ['*'], 
+                                # files match these globs will be saved
+    'executable'            :   'fo',
+}
+
+freezeOutParameters = {
+    #
 }
 
 
@@ -132,11 +152,13 @@ def generateInitialConditions(numberOfEvents):
     # check executable
     checkExistenceOfExecutable(path.join(initialConditionDirectory, initialConditionExecutable))
     
-    initialConditionParameters[initialConditionGeneratorControl['numberOfEventsParameterName']] = (
-                                                                numberOfEvents)
+    nevParamName = initialConditionGeneratorControl['numberOfEventsParameterName']
+    initialConditionGeneratorParameters[nevParamName] = (numberOfEvents)
     # form assignment string
-    #assignments = formAssignmentStringFromDict(initialConditionParameters)
-    assignments = ' Pb Pb ' + str(numberOfEvents) + ' --output ' + initialConditionDataDirectory
+    #assignments = formAssignmentStringFromDict(initialConditionGeneratorParameters)
+    assignments = ' ' + initialConditionGeneratorParameters['projectile'] + ' '\
+                  + initialConditionGeneratorParameters['target'] + ' '\
+                  + str(numberOfEvents) + ' --output ' + initialConditionDataDirectory
     print 'assignments = ', assignments
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
@@ -214,6 +236,57 @@ def hydroWithInitialCondition(aFile):
         # yield it
         yield path.join(hydroResultsDirectory, aFile)
 
+def freezeOutWithHydroResultFiles(fileList):
+    """
+        Perform freeze-out calculation using the given list of hydro result files,
+        followed by resonance calculations.
+    """
+    ProcessNiceness = controlParameterList['niceness']
+    # set directory strings
+    FODirectory = path.join(controlParameterList['rootDir'], 
+                            freezeOutControl['mainDir'])
+    FOResultsDirectory = path.join(FODirectory, freezeOutControl['resultDir'])
+    FOExecutable = freezeOutControl['executable']
+    
+    print 'Check 2'
+    print FODirectory
+    print FOResultsDirectory
+    print FOExecutable
+	
+    # check executable
+    checkExistenceOfExecutables( path.join(FODirectory, FOExecutable) )
+
+    # clean up operation folder
+    #cleanUpFolder(FOOperationDirectory)
+
+    # check existence of hydro result files and move them to operation folder
+    #for aFile in fileList:
+    #    if not path.exists(aFile):
+    #        raise ExecutionError("Hydro result file %s not found!" % aFile)
+    #    else:
+    #        move(aFile, FOOperationDirectory)
+    #copy(path.join(iSDirectory, 'EOS', 'chosen_particles_s95pv1.dat'), 
+    #     path.join(iSDirectory, 'EOS', 'chosen_particles.dat'))
+    # N.B. - The 'withDecayPhotons' option is now apparently necessary
+    #copy(path.join(iSDirectory, 'EOS', 'pdg-s95pv1_withDecayPhotons.dat'), 
+    #     path.join(iSDirectory, 'EOS', 'pdg.dat'))
+    #copy(path.join(iSDirectory, 'EOS', 'EOS_tables', 's95p-v1', 'EOS_particletable.dat'), 
+    #     path.join(iSDirectory, 'EOS', 'EOS_particletable.dat'))
+
+    # execute!
+    run("nice -n %d ./" % (ProcessNiceness) + FOExecutable, 
+        cwd=FODirectory)
+
+    # save some of the important result files
+    worthStoring = []
+    for aGlob in freezeOutControl['saveResultGlobs']:
+        worthStoring.extend(glob(path.join(FOResultsDirectory, aGlob)))
+    for aFile in glob(path.join(FOResultsDirectory, "*")):
+        if aFile in worthStoring:
+            move(aFile, controlParameterList['eventResultDir'])
+            
+            
+            
 
 def formAssignmentStringFromDict(aDict):
     """
@@ -250,8 +323,8 @@ range(ptmax,ptstepsize,phisteps): %s
 hadronl_list: %s
 had_check: %s
 """ % (0.3, 0.05, 'shear+bulk', 'table', 'tempcharm.dat', 'dervcharm.dat',
-       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, '.', 3, '.', 5, 5, 1,
-       'trentoinputPbPb2_211_0.dat', 'input/MHlistall.dat', 'input/ptphipoints.dat',
+       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, '.', 3, '.', 5, 5, -1,
+       hydroControl['freezeOutInputFile'], 'input/MHlistall.dat', 'input/ptphipoints.dat',
        'input/resoweakPDG2016Plus.dat', 'input/numbers16p.dat'))
        
 
@@ -360,7 +433,9 @@ def sequentialEventDriverShell():
             print(controlParameterList['rootDir'])
             
             hydroResultFiles = [aFile for aFile in hydroWithInitialCondition(aInitialConditionFile)]
-            print(controlParameterList['rootDir'])
+            
+            print 'hydroResultFiles:', hydroResultFiles
+            freezeOutWithHydroResultFiles(hydroResultFiles)
     
             # print current progress to terminal
             stdout.write("PROGRESS: %d events out of %d finished.\n" 
