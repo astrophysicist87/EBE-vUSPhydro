@@ -274,12 +274,12 @@ def freezeOutWithHydroResultFiles(fileList):
     #copy(path.join(iSDirectory, 'EOS', 'EOS_tables', 's95p-v1', 'EOS_particletable.dat'), 
     #     path.join(iSDirectory, 'EOS', 'EOS_particletable.dat'))
 
-    hydroDirectory = path.join( controlParameterList['rootDir'], hydroControl['mainDir'] )
-    print 'Check 3'
-    print path.join( hydroDirectory, freezeOutControl['inputFile'] )
-    print path.join( FOInputDirectory, freezeOutControl['inputFile'] )
-    move( path.join( hydroDirectory, freezeOutControl['inputFile'] ),
-          path.join( FOInputDirectory, freezeOutControl['inputFile'] ) )
+    #hydroDirectory = path.join( controlParameterList['rootDir'], hydroControl['mainDir'] )
+    #print 'Check 3'
+    #print path.join( hydroDirectory, freezeOutControl['inputFile'] )
+    #print path.join( FOInputDirectory, freezeOutControl['inputFile'] )
+    #move( path.join( hydroDirectory, freezeOutControl['inputFile'] ),
+    #      path.join( FOInputDirectory, freezeOutControl['inputFile'] ) )
     #print "CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable
 
     # execute!
