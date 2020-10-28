@@ -93,7 +93,7 @@ freezeOutControl = {
     'inputFile'             :   'dfinput.dat', # settings filename
     'resultDir'             :   'out', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
-    'saveResultGlobs'       :   ['*'], # files match these globs will be saved
+    'saveResultGlobs'       :   ['*dNdphidpp.dat'], # files match these globs will be saved
     'executable'            :   'fo',
 }
 
