@@ -93,8 +93,7 @@ freezeOutControl = {
     'inputFile'             :   'dfinput.dat', # settings filename
     'resultDir'             :   'out', # hydro results folder, relative
     'resultFiles'           :   '*', # results files
-    'saveResultGlobs'       :   ['*'], 
-                                # files match these globs will be saved
+    'saveResultGlobs'       :   ['*'], # files match these globs will be saved
     'executable'            :   'fo',
 }
 
@@ -245,11 +244,13 @@ def freezeOutWithHydroResultFiles(fileList):
     # set directory strings
     FODirectory = path.join(controlParameterList['rootDir'], 
                             freezeOutControl['mainDir'])
+    FOInputDirectory = path.join(FODirectory, freezeOutControl['inputDir'])
     FOResultsDirectory = path.join(FODirectory, freezeOutControl['resultDir'])
     FOExecutable = freezeOutControl['executable']
     
     print 'Check 2'
     print FODirectory
+    print FOInputDirectory
     print FOResultsDirectory
     print FOExecutable
 	
@@ -273,10 +274,15 @@ def freezeOutWithHydroResultFiles(fileList):
     #copy(path.join(iSDirectory, 'EOS', 'EOS_tables', 's95p-v1', 'EOS_particletable.dat'), 
     #     path.join(iSDirectory, 'EOS', 'EOS_particletable.dat'))
 
-    print "CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable
+    hydroDirectory = path.join( controlParameterList['rootDir'], hydroControl['mainDir'] )
+    move( path.join( hydroDirectory, freezeOutControl['inputFile'] ),
+          path.join( FOInputDirectory, freezeOutControl['inputFile'] ) )
+    #print "CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable
 
     # execute!
-    run("nice -n %d ./" % (ProcessNiceness) + FOExecutable, cwd=FODirectory)
+    assignments = " " + freezeOutControl['inputFile'] + " 0"
+    #./decays/reso out/trento/shear/0/ev0sbvc_dNdphidpp.dat out/trento/shear/0/ev0dsbvc_dNdphidpp.dat reso.inp
+    run("nice -n %d ./" % (ProcessNiceness) + FOExecutable + assignments, cwd=FODirectory)
 
     # save some of the important result files
     worthStoring = []
