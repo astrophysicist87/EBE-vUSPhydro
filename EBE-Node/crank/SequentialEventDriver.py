@@ -290,12 +290,12 @@ def freezeOutWithHydroResultFiles(fileList):
     run("nice -n %d ./" % (ProcessNiceness) + FOExecutable + assignments, cwd=FODirectory)
 
     # save some of the important result files
-    worthStoring = []
-    for aGlob in freezeOutControl['saveResultGlobs']:
-        worthStoring.extend(glob(path.join(FOResultsDirectory, aGlob)))
-    for aFile in glob(path.join(FOResultsDirectory, "*")):
-        if aFile in worthStoring:
-            move(aFile, controlParameterList['eventResultDir'])
+    #worthStoring = []
+    #for aGlob in freezeOutControl['saveResultGlobs']:
+    #    worthStoring.extend(glob(path.join(FOResultsDirectory, aGlob)))
+    #for aFile in glob(path.join(FOResultsDirectory, "*")):
+    #    if aFile in worthStoring:
+    #        move(aFile, controlParameterList['eventResultDir'])
             
         # execute!
     assignments = ' out/ev0sbv_dNdphidpp.dat out/ev0sbvc_dNdphidpp.dat reso16p.inp'
