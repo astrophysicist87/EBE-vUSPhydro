@@ -82,8 +82,32 @@ hydroControl = {
     'executable'            :   'vusphydro',
 }
 
-hydroParameters = {
-    #
+hydroParameters = {       
+    'h'                    :    0.3,
+    'dt'                   :    0.05,
+    'equationsofmotion'    :    'shear+bulk',
+    'EOS'                  :    'table',
+    'tempFile'             :    'tempcharm.dat',
+    'dervFile'             :    'dervcharm.dat',
+    'low'                  :    'off',
+    'etaconst'             :    1,
+    'viscfac_bulk'         :    0,
+    'viscfac_shear'        :    0.04,
+    't0'                   :    0.6,
+    'freezeoutT'           :    150,
+    'ICtype'               :    'trento',
+    'ICscale'              :    120,
+    'ICdirectory'          :    '.',
+    'QM_fluc'              :    3,
+    'output_folder'        :    '.',
+    'firstEventIdx'        :    5,
+    'lastEventIdx'         :    5,
+    'freezeoutMode'        :   -1,
+    'dfinputfilename'      :    hydroControl['freezeOutInputFile'],
+    'df_cor_file'          :    'input/MHlistall.dat',
+    'ptphiGridFile'        :    'input/ptphipoints.dat',
+    'hadronl_list'         :    'input/resoweakPDG2016Plus.dat',
+    'had_check'            :    'input/numbers16p.dat',
 }
 
 freezeOutControl = {
@@ -328,31 +352,27 @@ def generate_vUSPhydro_input_from_dict():
     hydroDirectory = path.join(controlParameterList['rootDir'], hydroControl['mainDir'])
     open(path.join(hydroDirectory, hydroControl['initialConditionDir'],
                    hydroControl['settingsFile']), "w").write(
-    """h: %f  dt: %f
-equationsofmotion: %s EOS: %s
-%s
-%s
-low: %s
-etaconst: %d
-viscfac_bulk_shear: %f %f
-t0: %f
-freezeoutT: %f
-%s %f
-ICs: %s
-QM_fluc: %d
-output_folder: %s
-%d %d
-freezeout: %d
-dfinputfilename: %s
-df_cor_file: %s
-range(ptmax,ptstepsize,phisteps): %s
-hadronl_list: %s
-had_check: %s
-""" % (0.3, 0.05, 'shear+bulk', 'table', 'tempcharm.dat', 'dervcharm.dat',
-       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, '.', 3, '.', 5, 5, -1,
-       hydroControl['freezeOutInputFile'], 'input/MHlistall.dat', 'input/ptphipoints.dat',
-       'input/resoweakPDG2016Plus.dat', 'input/numbers16p.dat'))
-       
+    """h: %(h)f  dt: %(dt)f
+equationsofmotion: %(equationsofmotion)s EOS: %(EOS)s
+%(tempFile)s
+%(dervFile)s
+low: %(low)s
+etaconst: %(etaconst)d
+viscfac_bulk_shear: %(viscfac_bulk)f %(viscfac_shear)f
+t0: %(t0)f
+freezeoutT: %(freezeoutT)f
+%(ICtype)s %(ICscale)f
+ICs: %(ICdirectory)s
+QM_fluc: %(QM_fluc)d
+output_folder: %(output_folder)s
+%(firstEventIdx)d %(lastEventIdx)d
+freezeout: %(freezeoutMode)d
+dfinputfilename: %(dfinputfilename)s
+df_cor_file: %(df_cor_file)s
+range(ptmax,ptstepsize,phisteps): %(ptphiGridFile)s
+hadronl_list: %(hadronl_list)s
+had_check: %(had_check)s
+""" % hydroParameters)
 
 #(0.3, 0.05, 'shear+bulk', 'table', 'tempcharm.dat', 'dervcharm.dat',
 #       'off', 1, 0, 0.04, 0.6, 150, 'trento', 120, 'trento/PbPb5020TeV/0',
@@ -468,7 +488,7 @@ def sequentialEventDriverShell():
             
             hydroResultFiles = [aFile for aFile in hydroWithInitialCondition(aInitialConditionFile)]
             
-            print 'hydroResultFiles:', hydroResultFiles
+            #print 'hydroResultFiles:', hydroResultFiles
             freezeOutWithHydroResultFiles(hydroResultFiles)
     
             # print current progress to terminal
