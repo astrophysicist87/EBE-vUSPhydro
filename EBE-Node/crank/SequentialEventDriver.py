@@ -41,19 +41,19 @@ controlParameterList = {
     'cleanCMD'              :   'make clean',
 }
 
-initial_condition_control = {
-    #
-}
+#initial_condition_control = {
+#    #
+#}
 
 initialConditionGeneratorControl = {
     #'centrality': '0-5%',  # centrality bin
     # centrality cut variable: total_entropy or Npart
     #'cut_type': 'total_entropy',
-    #'initial_condition_type': 'trento', # type of initial conditions
+    'initial_condition_type': 'trento', # type of initial conditions
     # file path for the pre-generated initial condition files
-    #'pre-generated_initial_file_path': 'initial_conditions', 
+    'pre-generated_initial_file_path': 'initial_conditions', 
     # name pattern for the initial condition files
-    #'pre-generated_initial_file_pattern': 'sd_event_[0-9]*_block.dat',  
+    'pre-generated_initial_file_pattern': 'ic*.dat',  
     #'pre-generated_initial_file_read_in_mode': 2, # read in mode for VISH2+1
     'mainDir'                       :   'jaki_trento',
     'dataDir'                       :   'data', # where initial conditions are stored, relative
@@ -143,11 +143,31 @@ def get_initial_condition_list():
     """
     file_list = []
     nev = controlParameterList['numberOfEvents']
-    file_list = [afile for afile in generateInitialConditions(nev)]
+    initial_type = initialConditionGeneratorControl['initial_condition_type']
+    if initial_type == 'trento':
+        file_list = [afile for afile in generateInitialConditions(nev)]
+    elif initial_type == 'pre-generated':
+        file_list = [ afile for afile in get_pre_generated_initial_conditions_list()]
+        nev = len(file_list)
     return(file_list)
 
 
-
+def get_pre_generated_initial_conditions_list():
+    """
+        Yield the pre-generated initial conditions absolute path
+    """
+    # set directory strings
+    initial_condition_path = path.join(controlParameterList['rootDir'], 
+                                       'initial_conditions')
+    print 'Initial conditions path:', initial_condition_path
+    
+    # yield initial conditions
+    file_list = glob(path.join(initial_condition_path,
+              initialConditionGeneratorControl['pre-generated_initial_file_pattern']))
+    for afile in file_list:
+        # then yield it
+        yield path.join(initial_condition_path, afile)
+        
 
 def generateInitialConditions(numberOfEvents):
     """
