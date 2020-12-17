@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/plumberg/.local")
+  set(CMAKE_INSTALL_PREFIX "/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/jaki_trento")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
