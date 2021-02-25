@@ -110,6 +110,8 @@ public:
 	void readin(_inputIC ics);
 	void readin2(int cev);
 	double dNdpdphi(double p, double phi, HAD cur);
+	double dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
+						double Q0, double QX, double QY, double QZ );
 	void Iout(double &I1, double &I2, double p, double phi, HAD cur,int nsph);
 	void IoutFT(double &I1, double &I2, double pT, double phi, double pRap,
 				HAD cur,int nsph, double Q0, double QX, double QY, double QZ);
@@ -812,8 +814,8 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur)
 
 
 template <int D,int DD>
-double SPH<D,DD>::dNdpdphi_FT(double p, double phi, double pRap, HAD cur,
-								double Q0, double QX, double QY, double QZ)
+double SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
+								double Q0, double QX, double QY, double QZ )
 {
 	double vfac=cur.vfac;
 	double out=0,outsc=0;
