@@ -8,5 +8,5 @@ initialConditionGeneratorControl = {
 }
 
 hydroParameters = {
-    'equationsofmotion'    :    'ideal',
+    'equationsofmotion'    :    'shear+bulk',
 }
