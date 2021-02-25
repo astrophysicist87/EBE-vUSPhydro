@@ -1069,6 +1069,8 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		b0 = ck0;
 		b1 = ck1;
 
+		cout << "Check Bessel: " << bsub << "   " << z << "   " << b0 <<     << b1 << endl;
+
 		complex<double> I0_CP = 2.0*b0;
 		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z;
 		complex<double> I2_CP = 2.0*( at_m_i_bt*at_m_i_bt*b0/z2
