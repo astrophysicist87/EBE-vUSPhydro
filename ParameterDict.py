@@ -4,5 +4,5 @@ controlParameterList = {
 }
 
 hydroParameters = {
-
+    'equationsofmotion'    :    'ideal',
 }
