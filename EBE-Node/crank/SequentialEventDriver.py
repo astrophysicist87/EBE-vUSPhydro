@@ -159,7 +159,7 @@ def get_pre_generated_initial_conditions_list():
     # set directory strings
     initial_condition_path = path.join(controlParameterList['rootDir'], 
                                        'initial_conditions')
-    #print 'Initial conditions path:', initial_condition_path
+    #print('Initial conditions path:', initial_condition_path)
     
     # yield initial conditions
     file_list = glob(path.join(initial_condition_path,
@@ -182,13 +182,13 @@ def generateInitialConditions(numberOfEvents):
                                      initialConditionGeneratorControl['dataDir'])
     initialConditionExecutable = initialConditionGeneratorControl['executable']
     
-    print '='*80
-    print 'initialConditionDirectory =', initialConditionDirectory
-    print 'initialConditionDataDirectory =', initialConditionDataDirectory
-    print 'initialConditionExecutable =', initialConditionExecutable
-    print '='*80
+    print('='*80)
+    print('initialConditionDirectory =', initialConditionDirectory)
+    print('initialConditionDataDirectory =', initialConditionDataDirectory)
+    print('initialConditionExecutable =', initialConditionExecutable)
+    print('='*80)
     
-    #print 1/0
+    #print(1/0)
 
     # clean up the data subfolder for output
     cleanUpFolder(initialConditionDataDirectory)
@@ -203,9 +203,9 @@ def generateInitialConditions(numberOfEvents):
     assignments = ' ' + initialConditionGeneratorParameters['projectile'] + ' '\
                   + initialConditionGeneratorParameters['target'] + ' '\
                   + str(numberOfEvents) + ' --output ' + initialConditionDataDirectory
-    print '='*80
-    print 'assignments = ', assignments
-    print '='*80
+    print('='*80)
+    print('assignments = ', assignments)
+    print('='*80)
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + initialConditionExecutable + assignments)
@@ -235,15 +235,15 @@ def hydroWithInitialCondition(aFile):
                                       hydroControl['resultDir'])
     hydroExecutable = hydroControl['executable']
     
-    #print 'Check 1'
-    print '='*80
-    print 'hydroDirectory =', hydroDirectory
-    print 'hydroICDirectory =', hydroICDirectory
-    print 'hydroResultsDirectory =', hydroResultsDirectory
-    print 'hydroExecutable =', hydroExecutable
-    print '='*80
+    #print('Check 1')
+    print('='*80)
+    print('hydroDirectory =', hydroDirectory)
+    print('hydroICDirectory =', hydroICDirectory)
+    print('hydroResultsDirectory =', hydroResultsDirectory)
+    print('hydroExecutable) =', hydroExecutable)
+    print('='*80
     
-    #print 1/0
+    #print(1/0)
 
     # check executable
     checkExistenceOfExecutable(path.join(hydroDirectory, hydroExecutable))
@@ -297,13 +297,13 @@ def freezeOutWithHydroResultFiles(fileList):
     FOResultsDirectory = path.join(FODirectory, freezeOutControl['resultDir'])
     FOExecutable = freezeOutControl['executable']
     
-    #print 'Check 2'
-    print '='*80
-    print 'FODirectory =', FODirectory
-    print 'FOInputDirectory =', FOInputDirectory
-    print 'FOResultsDirectory =', FOResultsDirectory
-    print 'FOExecutable =', FOExecutable
-    print '='*80
+    #print('Check 2')
+    print('='*80)
+    print('FODirectory =', FODirectory)
+    print('FOInputDirectory =', FOInputDirectory)
+    print('FOResultsDirectory =', FOResultsDirectory)
+    print('FOExecutable =', FOExecutable)
+    print('='*80)
 	
     # check executable
     checkExistenceOfExecutable( path.join(FODirectory, FOExecutable) )
@@ -326,12 +326,12 @@ def freezeOutWithHydroResultFiles(fileList):
     #     path.join(iSDirectory, 'EOS', 'EOS_particletable.dat'))
 
     #hydroDirectory = path.join( controlParameterList['rootDir'], hydroControl['mainDir'] )
-    #print 'Check 3'
-    #print path.join( hydroDirectory, freezeOutControl['inputFile'] )
-    #print path.join( FOInputDirectory, freezeOutControl['inputFile'] )
+    #print('Check 3')
+    #print(path.join( hydroDirectory, freezeOutControl['inputFile'] ))
+    #print(path.join( FOInputDirectory, freezeOutControl['inputFile'] ))
     #move( path.join( hydroDirectory, freezeOutControl['inputFile'] ),
     #      path.join( FOInputDirectory, freezeOutControl['inputFile'] ) )
-    #print "CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable
+    #print("CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable)
     
     for hydroResultFile in fileList:
         copy( hydroResultFile, FOInputDirectory )
@@ -461,9 +461,9 @@ def sequentialEventDriverShell():
 
         # create result folder
         resultDir = controlParameterList['resultDir']
-        print '='*80
-        print 'resultDir =', resultDir
-        print '='*80
+        print('='*80)
+        print('resultDir =', resultDir)
+        print('='*80)
         if path.exists(resultDir):
             rmtree(resultDir)
 
@@ -476,7 +476,7 @@ def sequentialEventDriverShell():
         
         # generate initial conditions then loop over initial conditions
         initial_condition_list = get_initial_condition_list()
-        #print 'initial_condition_list =', initial_condition_list
+        #print('initial_condition_list =', initial_condition_list)
         nev = len(initial_condition_list)
 
 
@@ -484,7 +484,7 @@ def sequentialEventDriverShell():
         stdout.write("PROGRESS: %d events out of %d finished.\n" 
                      % (event_id, nev))
         stdout.flush()
-        #print initial_condition_list
+        #print(initial_condition_list)
 
         # loop over initial conditions
         for aInitialConditionFile in initial_condition_list:
@@ -512,15 +512,15 @@ def sequentialEventDriverShell():
    	    generate_vUSPhydro_input_from_dict()
         
             #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
-            print '='*80
-            print 'Associating ' + aInitialConditionFile + ' with event ' + str(event_id)
-            print '='*80
+            print('='*80)
+            print('Associating ' + aInitialConditionFile + ' with event ' + str(event_id))
+            print('='*80)
             
-            #print controlParameterList['rootDir'] 
+            #print(controlParameterList['rootDir'] )
             
             hydroResultFiles = [aFile for aFile in hydroWithInitialCondition(aInitialConditionFile)]
             
-            #print 'hydroResultFiles:', hydroResultFiles
+            #print('hydroResultFiles:', hydroResultFiles)
             freezeOutWithHydroResultFiles(hydroResultFiles)
     
             # print current progress to terminal
