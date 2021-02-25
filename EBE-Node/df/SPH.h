@@ -1060,8 +1060,8 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		bsub=add*bfac;
 		complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
 		complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
-		complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
-		//complex<double> at_m_i_bt(bsub, -beta_tilde);
+		//complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
+		complex<double> at_m_i_bt(bsub, -beta_tilde);
 		complex<double> z = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
 		int success = BesselFunction::cbessik01( z, ci0,  ci1,  ck0,  ck1,
 													ci0p, ci1p, ck0p, ck1p );
@@ -1073,9 +1073,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		b0 = ck0;
 		b1 = ck1;
 
-		cout << "Check Bessel: "
+		/*cout << "Check Bessel: "
 				<< bsub << "   " << beta_tilde << "   " << gamma_tilde << "   "
-				<< at_m_i_bt << "   " << z << "   " << b0 << "   " << b1 << endl;
+				<< at_m_i_bt << "   " << z << "   " << b0 << "   " << b1 << endl;*/
 
 		complex<double> I0_CP = 2.0*b0;
 		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z;
@@ -1100,7 +1100,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 
 			out1c += pre * mT * trans_phase
 					 * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
-			out2c += pre * mT * trans_phase
+			out2c += pre * trans_phase
 					 * ( I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk );
 		}
 		if (typ>1)				// if including shear
@@ -1128,8 +1128,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 
 	cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
 		<< I1c_comp << "   " << I2c_comp << "   "
-		<< I1sc_comp << "   " << I2sc_comp << "   "
-		<< mT << endl;
+		<< I1sc_comp << "   " << I2sc_comp << endl;
 	
 	if ((pd/T)>64)
 	{
