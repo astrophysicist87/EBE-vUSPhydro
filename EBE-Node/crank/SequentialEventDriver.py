@@ -495,7 +495,7 @@ def sequentialEventDriverShell():
             if path.exists(eventResultDir):
                 rmtree(eventResultDir)
             makedirs(eventResultDir)
- 			
+
             # print current progress to terminal
             print("Starting event %d..." % event_id)
             if initialConditionGeneratorControl['saveICFile']:
@@ -508,8 +508,8 @@ def sequentialEventDriverShell():
                 for aFile in file_list:
                     copy(aFile, controlParameterList['eventResultDir'])
             #aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
-   	
-   	    generate_vUSPhydro_input_from_dict()
+
+            generate_vUSPhydro_input_from_dict()
         
             #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
             print('='*80)
