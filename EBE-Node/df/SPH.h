@@ -767,7 +767,6 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur)
 	double I1,I2;
 	
 	Iout(I1,I2,p,phi,cur,i);
-	cout << "Check real: " << I1 << "   " << I2 << endl;
 
 	
 	
@@ -830,7 +829,6 @@ double SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
 		double pRap = 0.0;	// take y = 0 for right now
 		double Q0 = 0.0, QX = 0.0, QY = 0.0, QZ = 0.0;	// also Q = 0
 		IoutFT(I1_comp,I2_comp,p,phi,pRap,cur,i, Q0, QX, QY, QZ);
-		cout << "Check complex: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
 		
@@ -984,6 +982,10 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,int n
 	I1c=2*out1c;
 	I2c=2*out2c;
 	
+	cout << "Check real: " << I1 << "   " << I2 << "   "
+		<< I1c << "   " << I2c << "   "
+		<< I1sc << "   " << I2sc << endl;
+	
 	if ((pd/T)>64) {I1=0;
 	I2=0;
 	I1c=0;
@@ -1069,9 +1071,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		b0 = ck0;
 		b1 = ck1;
 
-		cout << "Check Bessel: "
-				<< bsub << "   " << at_m_i_bt << "   "
-				<< z << "   " << b0 << "   " << b1 << endl;
+		//cout << "Check Bessel: "
+		//		<< bsub << "   " << at_m_i_bt << "   "
+		//		<< z << "   " << b0 << "   " << b1 << endl;
 
 		complex<double> I0_CP = 2.0*b0;
 		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z;
@@ -1094,7 +1096,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 			double G1bulk = add*f1s;
 			double G2bulk = add*f2s;
 
-			out1c += pre * mT * trans_phase
+			out1c += pre * mT * mT * trans_phase
 					 * ( I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk );
 			out2c += pre * mT * trans_phase
 					 * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
@@ -1121,6 +1123,10 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	
 	I1c_comp=out1c;
 	I2c_comp=out2c;
+
+	cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
+		<< I1c_comp << "   " << I2c_comp << "   "
+		<< I1sc_comp << "   " << I2sc_comp << endl;
 	
 	if ((pd/T)>64)
 	{
