@@ -3,6 +3,10 @@ controlParameterList = {
     'niceness'              :   0,  
 }
 
+initialConditionGeneratorControl = {
+    'mainDir'                       :   'jaki_trento',
+}
+
 hydroParameters = {
     'equationsofmotion'    :    'ideal',
 }
