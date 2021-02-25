@@ -184,11 +184,11 @@ int main (int argc, char *argv[])
 			for(int i=0;i<l.phimax;i++)
 			{
 				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]);
-				cout << "Check spectra: "
+				/*cout << "Check spectra: "
 					<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
 				cout << "Check FT spectra: "
 					<< sph.dNdpdphi_FT(l.pt.x[ps][i],l.phi.x[ps][i],0.0,sph.had[h],
-										0.0, 0.0, 0.0, 0.0) << endl;
+										0.0, 0.0, 0.0, 0.0) << endl;*/
 			}
 	 	}
 	 	}
@@ -199,11 +199,14 @@ int main (int argc, char *argv[])
 			{
 				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]);
 				l.dNdpdphic.x[ps][i]=sph.outc;
-				cout << "Check spectra: "
+				/*cout << "Check spectra: "
 					<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
 				cout << "Check FT spectra: "
 					<< sph.dNdpdphi_FT(l.pt.x[ps][i],l.phi.x[ps][i],0.0,sph.had[h],
-										0.0, 0.0, 0.0, 0.0) << endl;
+										0.0, 0.0, 0.0, 0.0) << endl;*/
+				double tmplocal
+						= sph.dNdpdphi_FT( l.pt.x[ps][i], l.phi.x[ps][i], 0.0,
+											sph.had[h], 0.0, 0.0, 0.0, 0.0 );
 	//			if (l.dNdpdphi.x[ps][i]<0||isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
 	//			if (l.dNdpdphic.x[ps][i]<0||isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
 				if (isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
