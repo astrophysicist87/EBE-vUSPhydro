@@ -31,7 +31,7 @@ cbessjy.o: bessf.h cbessjy.cpp
 
 # deletes all .o files in case of error in makefile.  This should not be something needed regularly, only if you are updating the code and run into an error.	
 clean:
-	\rm *.o *~ fo
+	\rm -rf *.o *~ fo
 
 # puts all the files in a fo.tar file
 #tar:
