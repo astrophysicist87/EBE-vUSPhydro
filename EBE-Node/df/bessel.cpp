@@ -139,6 +139,26 @@ double Bessel::Kn(int n, double x)
 
 }
 
-      
+
+double Bessel::Kn(int n, double K0_in, double K1_in, double x)
+{	
+	if (n<2)
+	{
+		cout << "n too small in Bessel function" << endl;
+		exit(1);
+	}
+
+	double tox=2/x;
+	double bkm=K0_in;
+	double bk=K1_in;
+	for(int j=1;j<=(n-1);j++)
+	{
+		double bkp=bkm+j*tox*bk;
+		bkm=bk;
+		bk=bkp;
+	}
+
+	return bk;
+}   
 
 #endif

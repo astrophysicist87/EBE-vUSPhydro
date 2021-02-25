@@ -9,6 +9,7 @@
 #include "spectra.h"
 #include "bessel.h"
 #include "tables.h"
+#include <complex>
 
 	
 
@@ -21,6 +22,7 @@ private:
 	static const int Nmax=10;
 	
 	double I1c,I2c,I1sc,I2sc;
+	complex<double> I1c_comp, I2c_comp, I1sc_comp, I2sc_comp;
 	int h1tot;
 	
 	
@@ -109,6 +111,8 @@ public:
 	void readin2(int cev);
 	double dNdpdphi(double p, double phi, HAD cur);
 	void Iout(double &I1, double &I2, double p, double phi, HAD cur,int nsph);
+	void IoutFT(double &I1, double &I2, double pT, double phi, double pRap,
+				HAD cur,int nsph, double Q0, double QX, double QY, double QZ);
 	string convertInt(int number);
 	void flist();
 	void calcF2(HAD cur, int nsph,double pd,double &F0,double &F1, double &F2);
@@ -805,6 +809,68 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur)
 
 }
 
+
+
+template <int D,int DD>
+double SPH<D,DD>::dNdpdphi_FT(double p, double phi, double pRap, HAD cur,
+								double Q0, double QX, double QY, double QZ)
+{
+	double vfac=cur.vfac;
+	double out=0,outsc=0;
+	outc=0;
+	string negc="neg";
+	
+	for (int i=0;i<evn;i++)
+	{		
+		double I1,I2;
+		double pRap = 0.0;	// take y = 0 for right now
+		double Q0 = 0.0, QX = 0.0, QY = 0.0, QZ = 0.0;	// also Q = 0
+		IoutFT(I1,I2,p,phi,pRap,cur,i, Q0, QX, QY, QZ);
+		
+		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
+		
+		double qtot=qv[i].x[0]+qp;
+		
+		double sub=qv[i].x[0]*I1+qp*I2;
+		if (neg!=negc)
+		{
+			if ((sub<0)||qtot<0) sub=0;
+		}
+		out+=sub;  
+		 
+		if ((typ==1)||(typ==3))
+		{
+			double sub2=qv[i].x[0]*I1c+qp*I2c;
+			if (isnan(sub2)) sub2=0;
+			if (neg!=negc)
+			{
+				if ((sub2<0)||qtot<0||isnan(sub2)||sub2>100) sub2=0;
+			}
+			outc+=sub2;
+		}
+		if (typ>1)
+		{
+			double sub3=(qv[i].x[0]*I1sc+qp*I2sc)/par[i].s;
+			if (isnan(sub3)) sub3=0; 
+			if (neg!=negc)
+			{
+				if ((sub3<0)||qtot<0||isnan(sub3)||sub3>100) sub3=0;
+			}
+			outsc+=sub3;
+		}
+	}
+
+	if (isnan(out)==1) cout << out << endl;	
+
+	if (typ==1)  outc*=vfac;
+	else if (typ==2) outc=vfac*out+cur.svfac*outsc;
+	else if (typ==3) outc=vfac*outc+cur.svfac*outsc;
+	
+	return out*=vfac;
+}
+
+
+
 template <int D,int DD>
 void SPH<D,DD>::checknu( )
 {
@@ -924,6 +990,141 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,int n
 
 	
 }
+
+
+
+
+template <int D,int DD>
+void SPH<D,DD>::IoutFT( double &I1, double &I2, double pT, double phi, double pRap,
+						HAD cur,int nsph, double Q0, double QX, double QY, double QZ )
+{
+	// eventually define this globally
+	const complex<double> iComplex(0.0, 1.0);
+
+	// set space-time and momentum info for SPH particle
+	double tau_SPH     = sqrt( par[nsph].r[0]*par[nsph].r[0]
+						     - par[nsph].r[3]*par[nsph].r[3] ); 
+	double eta_SPH     = 0.5*log( abs(par[nsph].r[0]+par[nsph].r[3])
+                                 /(abs(par[nsph].r[0]-par[nsph].r[3])+1e-100) ); 
+	double x_SPH       = par[nsph].r[1];
+	double y_SPH       = par[nsph].r[2];
+	double chy         = cosh(pRap),
+           shy         = sinh(pRap);
+	double beta_tilde  = tau_SPH*(Q0*chy - QZ*shy);
+	double gamma_tilde = tau_SPH*(Q0*shy - QZ*chy);
+
+	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH));
+
+	// continue calculation as Jaki's Iout (some variables renamed or made complex)
+	complex<double> out1=0, out2=0;
+	complex<double> out1c=0, out2c=0;
+	double pd=pperp(p,phi,par[nsph].u);
+	double mT=Eperp(p,cur.mass);
+	double gamma=par[nsph].u.x[0];
+	double px=pT*cos(phi);
+	double py=pT*sin(phi);
+	double px2=px*px, py2=py*py, pxy=2*px*py;
+	double mT2=mT*mT;
+	double mT3=mT2*mT/4.;
+	double T_over_gamma=T/gamma;
+	double bfac=mT/T_over_gamma;
+
+	complex<double> b0, b1, b2;
+	double bsub, fac, pre;
+	double f0s, f1s, f2s;
+	double F0c, F1c, F2c;
+
+	// Evaluate functions entering bulk df corrections
+	if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
+
+	if (typ>1)
+	{
+		I1sc_comp=0;
+		I2sc_comp=0;
+	}
+
+	double expT=exp(pd/T);
+	
+	for (int nn=0;nn<=Nmax;nn++)
+	{
+		double add=(nn+1);
+		bsub=add*bfac;
+		complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
+		complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
+		complex<double> at_m_i_bt = bsub - iComplex*beta_tilde;
+		complex<double> z = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
+		int success = BesselFunction::cbessik01( z, ci0,  ci1,  ck0,  ck1,
+													ci0p, ci1p, ck0p, ck1p );
+		complex<double> z2 = z*z;
+		complex<double> z3 = z2*z;
+		complex<double> z5 = z2*z3;
+
+		// set K0 and K1 evaluations; no need to compute K2 or K3
+		b0 = ck0;
+		b1 = ck1;
+
+		complex<double> I0_CP = 2.0*b0;
+		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z;
+		complex<double> I2_CP = 2.0*( at_m_i_bt*at_m_i_bt*b0/z2
+									  + (z2-2.0*gamma_tilde*gamma_tilde)*b1/z3);
+		complex<double> I3_CP = 2.0*(at_m_i_bt/z5)
+								* ( z*(z2-4.0*gamma_tilde*gamma_tilde)*b0
+									+ ( z2*(z2+2.0)+gamma_tilde*gamma_tilde*(8.0-z2) )*b1 );
+		
+		pre=pow(-cur.theta,nn)*pow(expT,add);
+		complex<double> preb1=pre*b1;
+		out1+=preb1;
+		complex<double> preb0=pre*b0;
+		out2+=preb0;
+		
+		if ((typ==1)||(typ==3))	// if including bulk
+		{
+			fac=T_over_gamma/add;
+			double G0bulk = add*f0s;
+			double G1bulk = add*f1s;
+			double G2bulk = add*f2s;
+
+			out1c += pre * mT * trans_phase
+					 * ( I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk );
+			out2c += pre * mT * trans_phase
+					 * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
+		}
+		if (typ>1)				// if including shear
+		{
+			//double pred=pre*add;
+			double spi1=par[nsph].pi00 + par[nsph].pi33;
+			double spi3=px2*par[nsph].pi11 + py2*par[nsph].pi22 + pxy*par[nsph].pi12;
+
+			complex<double> G0shear = 0.5*add*( spi3 - mT*mT*par[nsph].pi33 );
+			complex<double> G1shear = 0.0;
+			complex<double> G2shear = 0.5*add*mT*mT*spi1;
+			
+			I1sc += pre * mT * trans_phase
+					* ( G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP );
+			I2sc += pre * mT * trans_phase
+					* ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
+		}
+	}
+
+	I1_comp=out1;
+	I2_comp=out2;
+	
+	I1c_comp=out1c;
+	I2c_comp=out2c;
+	
+	if ((pd/T)>64)
+	{
+		I1_comp=0;
+		I2_comp=0;
+		I1c_comp=0;
+		I2c_comp=0;	
+	}
+
+	return;
+}
+
+
+
 
 template <int D,int DD>
 void SPH<D,DD>::calcsPI(int h)
