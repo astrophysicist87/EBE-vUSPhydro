@@ -822,10 +822,10 @@ double SPH<D,DD>::dNdpdphi_FT(double p, double phi, double pRap, HAD cur,
 	
 	for (int i=0;i<evn;i++)
 	{		
-		double I1,I2;
+		complex<double> I1_comp,I2_comp;
 		double pRap = 0.0;	// take y = 0 for right now
 		double Q0 = 0.0, QX = 0.0, QY = 0.0, QZ = 0.0;	// also Q = 0
-		IoutFT(I1,I2,p,phi,pRap,cur,i, Q0, QX, QY, QZ);
+		IoutFT(I1_comp,I2_comp,p,phi,pRap,cur,i, Q0, QX, QY, QZ);
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
 		
