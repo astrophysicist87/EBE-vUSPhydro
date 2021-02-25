@@ -113,7 +113,7 @@ public:
 	double dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
 						double Q0, double QX, double QY, double QZ );
 	void Iout(double &I1, double &I2, double p, double phi, HAD cur,int nsph);
-	void IoutFT(double &I1, double &I2, double pT, double phi, double pRap,
+	void IoutFT(complex<double> &I1_comp, complex<double> &I2_comp, double pT, double phi, double pRap,
 				HAD cur,int nsph, double Q0, double QX, double QY, double QZ);
 	string convertInt(int number);
 	void flist();
@@ -998,8 +998,9 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,int n
 
 
 template <int D,int DD>
-void SPH<D,DD>::IoutFT( double &I1, double &I2, double pT, double phi, double pRap,
-						HAD cur,int nsph, double Q0, double QX, double QY, double QZ )
+void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
+						double pT, double phi, double pRap, HAD cur,int nsph,
+						double Q0, double QX, double QY, double QZ )
 {
 	// eventually define this globally
 	const complex<double> iComplex(0.0, 1.0);
