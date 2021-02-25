@@ -1127,7 +1127,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 
 	cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
 		<< I1c_comp << "   " << I2c_comp << "   "
-		<< I1sc_comp << "   " << I2sc_comp << endl;
+		<< I1sc_comp << "   " << I2sc_comp << "   "
+		<< mT << "   " << bsub << "   " << at_m_i_bt << "   "
+		<< z << "   " << b0 << "   " << b1 << endl;
 	
 	if ((pd/T)>64)
 	{
