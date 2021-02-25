@@ -11,7 +11,7 @@
 #include "tables.h"
 #include <complex>
 
-	
+#include "bessf.h"
 
 template <int D,int DD>
 class SPH {
@@ -824,7 +824,8 @@ double SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
 	
 	for (int i=0;i<evn;i++)
 	{		
-		complex<double> I1_comp,I2_comp;
+		complex<double> I1_comp, I2_comp;
+		double I1, I2;
 		double pRap = 0.0;	// take y = 0 for right now
 		double Q0 = 0.0, QX = 0.0, QY = 0.0, QZ = 0.0;	// also Q = 0
 		IoutFT(I1_comp,I2_comp,p,phi,pRap,cur,i, Q0, QX, QY, QZ);
@@ -1020,8 +1021,8 @@ void SPH<D,DD>::IoutFT( double &I1, double &I2, double pT, double phi, double pR
 	// continue calculation as Jaki's Iout (some variables renamed or made complex)
 	complex<double> out1=0, out2=0;
 	complex<double> out1c=0, out2c=0;
-	double pd=pperp(p,phi,par[nsph].u);
-	double mT=Eperp(p,cur.mass);
+	double pd=pperp(pT,phi,par[nsph].u);
+	double mT=Eperp(pT,cur.mass);
 	double gamma=par[nsph].u.x[0];
 	double px=pT*cos(phi);
 	double py=pT*sin(phi);
@@ -1101,10 +1102,10 @@ void SPH<D,DD>::IoutFT( double &I1, double &I2, double pT, double phi, double pR
 			complex<double> G1shear = 0.0;
 			complex<double> G2shear = 0.5*add*mT*mT*spi1;
 			
-			I1sc += pre * mT * trans_phase
-					* ( G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP );
-			I2sc += pre * mT * trans_phase
-					* ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
+			I1sc_comp += pre * mT * trans_phase
+						 * ( G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP );
+			I2sc_comp += pre * mT * trans_phase
+						 * ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
 		}
 	}
 
