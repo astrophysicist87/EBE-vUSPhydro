@@ -1011,8 +1011,8 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	const complex<double> iComplex(0.0, 1.0);
 
 	// set space-time and momentum info for SPH particle
-	double tau_SPH     = sqrt( par[nsph].r.x[0]*par[nsph].r.x[0]
-						     - par[nsph].r.x[3]*par[nsph].r.x[3] ); 
+	double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+						     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
 	double eta_SPH     = 0.5*log( abs(par[nsph].r.x[0]+par[nsph].r.x[3])
                                  /(abs(par[nsph].r.x[0]-par[nsph].r.x[3])+1e-100) ); 
 	double x_SPH       = par[nsph].r.x[1];
@@ -1060,8 +1060,8 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		bsub=add*bfac;
 		complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
 		complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
-		//complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
-		complex<double> at_m_i_bt = complex<double>(bsub, -beta_tilde);
+		complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
+		//complex<double> at_m_i_bt(bsub, -beta_tilde);
 		complex<double> z = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
 		int success = BesselFunction::cbessik01( z, ci0,  ci1,  ck0,  ck1,
 													ci0p, ci1p, ck0p, ck1p );
