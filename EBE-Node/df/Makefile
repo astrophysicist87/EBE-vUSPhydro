@@ -4,7 +4,7 @@ DEBUG = -g
 CFLAGS = -Wall -std=c++98 -c $(DEBUG)
 LFLAGS = -Wall $(DEBUG)
 
-sphrio : $(OBJS)
+fo : $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o fo
 
 main.o: SPH.h vector.h int.h tables.h vnvar.h spectra.h bessel.h main.cpp 
@@ -30,9 +30,9 @@ cbessjy.o: bessf.h cbessjy.cpp
 
 
 # deletes all .o files in case of error in makefile.  This should not be something needed regularly, only if you are updating the code and run into an error.	
-#clean:
-#	\rm *.o *~ sphrio
+clean:
+	\rm *.o *~ fo
 
-# puts all the files in a sphrio.tar file
+# puts all the files in a fo.tar file
 #tar:
-#    tar cfv sphrio.tar vector.h main.cpp vector.cpp 
+#    tar cfv fo.tar vector.h main.cpp vector.cpp 

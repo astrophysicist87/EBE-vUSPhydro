@@ -33,8 +33,8 @@ random.o: random.cpp random.h
 	
 
 # deletes all .o files in case of error in makefile.  This should not be something needed regularly, only if you are updating the code and run into an error.	
-#clean:
-#	\rm *.o *~ vusphydro
+clean:
+	\rm *.o *~ vusphydro
 
 # puts all the files in a vusphydro.tar file
 #tar:
