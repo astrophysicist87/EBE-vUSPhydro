@@ -241,7 +241,7 @@ def hydroWithInitialCondition(aFile):
     print('hydroICDirectory =', hydroICDirectory)
     print('hydroResultsDirectory =', hydroResultsDirectory)
     print('hydroExecutable) =', hydroExecutable)
-    print('='*80
+    print('='*80)
     
     #print(1/0)
 
