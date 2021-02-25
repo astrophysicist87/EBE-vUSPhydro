@@ -1060,7 +1060,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		bsub=add*bfac;
 		complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
 		complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
-		complex<double> at_m_i_bt = bsub - iComplex*beta_tilde;
+		complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
 		complex<double> z = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
 		int success = BesselFunction::cbessik01( z, ci0,  ci1,  ck0,  ck1,
 													ci0p, ci1p, ck0p, ck1p );
@@ -1097,10 +1097,10 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 			double G1bulk = add*f1s;
 			double G2bulk = add*f2s;
 
-			out1c += pre * mT * mT * trans_phase
-					 * ( I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk );
-			out2c += pre * mT * trans_phase
+			out1c += pre * mT * trans_phase
 					 * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
+			out2c += pre * mT * trans_phase
+					 * ( I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk );
 		}
 		if (typ>1)				// if including shear
 		{
@@ -1113,9 +1113,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 			complex<double> G2shear = 0.5*add*mT*mT*spi1;
 			
 			I1sc_comp += pre * mT * trans_phase
-						 * ( G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP );
-			I2sc_comp += pre * mT * trans_phase
 						 * ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
+			I2sc_comp += pre * mT * trans_phase
+						 * ( G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP );
 		}
 	}
 
