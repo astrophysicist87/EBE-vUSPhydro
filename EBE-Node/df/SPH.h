@@ -1016,8 +1016,8 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	double y_SPH       = par[nsph].r.x[2];
 	double chy         = cosh(pRap),
            shy         = sinh(pRap);
-	double beta_tilde  = tau_SPH*(Q0*chy - QZ*shy);
-	double gamma_tilde = tau_SPH*(Q0*shy - QZ*chy);
+	complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy), 0.0);
+	complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy), 0.0);
 
 	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH));
 
@@ -1069,7 +1069,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		b0 = ck0;
 		b1 = ck1;
 
-		cout << "Check Bessel: " << bsub << "   " << z << "   " << b0 << "   " << b1 << endl;
+		cout << "Check Bessel: "
+				<< bsub << "   " << at_m_i_bt << "   "
+				<< z << "   " << b0 << "   " << b1 << endl;
 
 		complex<double> I0_CP = 2.0*b0;
 		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z;
