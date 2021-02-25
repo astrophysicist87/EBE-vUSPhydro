@@ -1072,9 +1072,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		b0 = ck0;
 		b1 = ck1;
 
-		//cout << "Check Bessel: "
-		//		<< bsub << "   " << at_m_i_bt << "   "
-		//		<< z << "   " << b0 << "   " << b1 << endl;
+		cout << "Check Bessel: "
+				<< bsub << "   " << at_m_i_bt << "   "
+				<< z << "   " << b0 << "   " << b1 << endl;
 
 		complex<double> I0_CP = 2.0*b0;
 		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z;
@@ -1128,8 +1128,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
 		<< I1c_comp << "   " << I2c_comp << "   "
 		<< I1sc_comp << "   " << I2sc_comp << "   "
-		<< mT << "   " << bsub << "   " << at_m_i_bt << "   "
-		<< z << "   " << b0 << "   " << b1 << endl;
+		<< mT << endl;
 	
 	if ((pd/T)>64)
 	{
