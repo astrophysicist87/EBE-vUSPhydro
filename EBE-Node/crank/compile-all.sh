@@ -2,7 +2,7 @@
 (cd ..
 for ii in "jaki_trento" "df" "v-USPhydro"
     do
-    (cd $ii; make; make clean)
+    (cd $ii; make clean; make)
 done
 
 echo "Compiling finished."
