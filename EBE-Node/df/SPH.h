@@ -1078,9 +1078,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 									+ ( z2*(z2+2.0)+gamma_tilde*gamma_tilde*(8.0-z2) )*b1 );
 		
 		pre=pow(-cur.theta,nn)*pow(expT,add);
-		complex<double> preb1=pre*b1;
+		complex<double> preb1=2.0*pre*mT*b1;
 		out1+=preb1;
-		complex<double> preb0=pre*b0;
+		complex<double> preb0=2.0*pre*b0;
 		out2+=preb0;
 		
 		if ((typ==1)||(typ==3))	// if including bulk
