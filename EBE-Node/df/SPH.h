@@ -1006,12 +1006,12 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	const complex<double> iComplex(0.0, 1.0);
 
 	// set space-time and momentum info for SPH particle
-	double tau_SPH     = sqrt( par[nsph].r[0]*par[nsph].r[0]
-						     - par[nsph].r[3]*par[nsph].r[3] ); 
-	double eta_SPH     = 0.5*log( abs(par[nsph].r[0]+par[nsph].r[3])
-                                 /(abs(par[nsph].r[0]-par[nsph].r[3])+1e-100) ); 
-	double x_SPH       = par[nsph].r[1];
-	double y_SPH       = par[nsph].r[2];
+	double tau_SPH     = sqrt( par[nsph].r.x[0]*par[nsph].r.x[0]
+						     - par[nsph].r.x[3]*par[nsph].r.x[3] ); 
+	double eta_SPH     = 0.5*log( abs(par[nsph].r.x[0]+par[nsph].r.x[3])
+                                 /(abs(par[nsph].r.x[0]-par[nsph].r.x[3])+1e-100) ); 
+	double x_SPH       = par[nsph].r.x[1];
+	double y_SPH       = par[nsph].r.x[2];
 	double chy         = cosh(pRap),
            shy         = sinh(pRap);
 	double beta_tilde  = tau_SPH*(Q0*chy - QZ*shy);
