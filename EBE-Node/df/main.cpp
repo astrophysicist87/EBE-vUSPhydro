@@ -80,7 +80,7 @@ int main (int argc, char *argv[])
 	}
 
 	
-
+	const bool set_spacetime_moments = true;
   	
   	
   	list l(sph.pt.size(),sph.phi.size());
