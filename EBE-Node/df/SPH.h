@@ -152,17 +152,17 @@ SPH<D,DD>::SPH()
 	facc=1/(2*PI*PI);
 	
 	// resize vectors to hold space-time moments
-	ST_out1.rezise(15);
-	ST_out2.rezise(15);
-	ST_out1c.rezise(15);
-	ST_out2c.rezise(15);
-	ST_I1c.rezise(15);
-	ST_I2c.rezise(15);
-	ST_I1sc.rezise(15);
-	ST_I2sc.rezise(15);
-	ST_out.rezise(15);
-	ST_outc.rezise(15);
-	ST_outsc.rezise(15);
+	ST_out1.resize(15);
+	ST_out2.resize(15);
+	ST_out1c.resize(15);
+	ST_out2c.resize(15);
+	ST_I1c.resize(15);
+	ST_I2c.resize(15);
+	ST_I1sc.resize(15);
+	ST_I2sc.resize(15);
+	ST_out.resize(15);
+	ST_outc.resize(15);
+	ST_outsc.resize(15);
 }
 
 template <int D,int DD>
