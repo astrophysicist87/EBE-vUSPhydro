@@ -77,44 +77,45 @@ public:
 };
 
 
-list::list(int npT,int nphi) {
-                      
-        pTmax=npT;
-        phimax=nphi;
-        pt.setup(pTmax,phimax);
-        phi.setup(pTmax,phimax);
-        dNdpdphi.setup(pTmax,phimax);
-        dNdpdphic.setup(pTmax,phimax);
-		stm_S.setup(pTmax,phimax);
-		stm_xS.setup(pTmax,phimax);
-		stm_yS.setup(pTmax,phimax);
-		stm_zS.setup(pTmax,phimax);
-		stm_tS.setup(pTmax,phimax); 
-		stm_x2S.setup(pTmax,phimax);
-		stm_y2S.setup(pTmax,phimax);
-		stm_z2S.setup(pTmax,phimax);
-		stm_t2S.setup(pTmax,phimax);
-		stm_xyS.setup(pTmax,phimax);
-		stm_xzS.setup(pTmax,phimax);
-		stm_yzS.setup(pTmax,phimax);
-		stm_xtS.setup(pTmax,phimax);
-		stm_ytS.setup(pTmax,phimax);
-		stm_ztS.setup(pTmax,phimax);
-		stm_Sc.setup(pTmax,phimax);
-		stm_xSc.setup(pTmax,phimax);
-		stm_ySc.setup(pTmax,phimax);
-		stm_zSc.setup(pTmax,phimax);
-		stm_tSc.setup(pTmax,phimax); 
-		stm_x2Sc.setup(pTmax,phimax);
-		stm_y2Sc.setup(pTmax,phimax);
-		stm_z2Sc.setup(pTmax,phimax);
-		stm_t2Sc.setup(pTmax,phimax);
-		stm_xySc.setup(pTmax,phimax);
-		stm_xzSc.setup(pTmax,phimax);
-		stm_yzSc.setup(pTmax,phimax);
-		stm_xtSc.setup(pTmax,phimax);
-		stm_ytSc.setup(pTmax,phimax);
-		stm_ztSc.setup(pTmax,phimax);
+list::list(int npT,int nphi)
+{
+    pTmax=npT;
+    phimax=nphi;
+    pt.setup(pTmax,phimax);
+    phi.setup(pTmax,phimax);
+    dNdpdphi.setup(pTmax,phimax);
+    dNdpdphic.setup(pTmax,phimax);
+	stm_S.setup(pTmax,phimax);
+	stm_xS.setup(pTmax,phimax);
+	stm_yS.setup(pTmax,phimax);
+	stm_zS.setup(pTmax,phimax);
+	stm_tS.setup(pTmax,phimax); 
+	stm_x2S.setup(pTmax,phimax);
+	stm_y2S.setup(pTmax,phimax);
+	stm_z2S.setup(pTmax,phimax);
+	stm_t2S.setup(pTmax,phimax);
+	stm_xyS.setup(pTmax,phimax);
+	stm_xzS.setup(pTmax,phimax);
+	stm_yzS.setup(pTmax,phimax);
+	stm_xtS.setup(pTmax,phimax);
+	stm_ytS.setup(pTmax,phimax);
+	stm_ztS.setup(pTmax,phimax);
+	stm_Sc.setup(pTmax,phimax);
+	stm_xSc.setup(pTmax,phimax);
+	stm_ySc.setup(pTmax,phimax);
+	stm_zSc.setup(pTmax,phimax);
+	stm_tSc.setup(pTmax,phimax); 
+	stm_x2Sc.setup(pTmax,phimax);
+	stm_y2Sc.setup(pTmax,phimax);
+	stm_z2Sc.setup(pTmax,phimax);
+	stm_t2Sc.setup(pTmax,phimax);
+	stm_xySc.setup(pTmax,phimax);
+	stm_xzSc.setup(pTmax,phimax);
+	stm_yzSc.setup(pTmax,phimax);
+	stm_xtSc.setup(pTmax,phimax);
+	stm_ytSc.setup(pTmax,phimax);
+	stm_ztSc.setup(pTmax,phimax);
+}
 
 void list::destroy()
 {
