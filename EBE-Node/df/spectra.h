@@ -177,7 +177,8 @@ void list::destroyc()
 	stm_ztSc.destroy();        
 }
 
-void list::setup(vector<double> ptp,vector<double> phip) {
+void list::setup(vector<double> & ptp,vector<double> & phip)
+{
             
             
             int si=ptp.size();
