@@ -263,31 +263,32 @@ void spectra::setphi(int i_phi,double a) {
 
 // Christopher Plumberg changes - 02/26/2021
 // Add FTlist methods to store Fourier-transformed (FT) spectra
-FTlist::FTlist(int npT,int nphi)
+FTlist::FTlist(int npT, int nphi, int nQX, int nQY, int nQZ)
 {       
-        pTmax=npT;
-        phimax=nphi;
-        pt.setup(pTmax,phimax);
-        phi.setup(pTmax,phimax);
-        dNdpdphi.setup(pTmax,phimax);
-        dNdpdphic.setup(pTmax,phimax);
+    pTmax  = npT;
+    phimax = nphi;
+	QXmax  = nQX;
+	QYmax  = nQY;
+	QZmax  = nQZ;
+    pt.setup(pTmax,phimax);
+    phi.setup(pTmax,phimax);
+    dNdpdphi.setup(pTmax,phimax);
+    dNdpdphic.setup(pTmax,phimax);
 }
 
-void FTlist::destroy() {
-                      
-        pt.destroy();
-        phi.destroy();
-        dNdpdphi.destroy();
-        
+void FTlist::destroy()
+{
+    pt.destroy();
+    phi.destroy();
+    dNdpdphi.destroy();
 }
 
-void FTlist::destroyc() {
-                      
-        pt.destroy();
-        phi.destroy();
-        dNdpdphi.destroy();
-        dNdpdphic.destroy();
-        
+void FTlist::destroyc()
+{
+    pt.destroy();
+    phi.destroy();
+    dNdpdphi.destroy();
+    dNdpdphic.destroy();
 }
 
 void FTlist::setup( vector<double> & ptp, vector<double> & phip,
