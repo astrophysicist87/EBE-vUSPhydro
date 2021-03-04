@@ -185,7 +185,27 @@ int main (int argc, char *argv[])
 		{
 			for(int i=0;i<l.phimax;i++)
 			{
-				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]);
+				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],
+											sph.had[h], set_spacetime_moments );
+				if ( set_spacetime_moments )
+				{						
+					l.stm_S.x[ps][i]   = sph.ST_out[0];
+					l.stm_xS.x[ps][i]  = sph.ST_out[1];
+					l.stm_yS.x[ps][i]  = sph.ST_out[2];
+					l.stm_zS.x[ps][i]  = sph.ST_out[3];
+					l.stm_tS.x[ps][i]  = sph.ST_out[4];
+					l.stm_x2S.x[ps][i] = sph.ST_out[5];
+					l.stm_xyS.x[ps][i] = sph.ST_out[6];
+					l.stm_y2S.x[ps][i] = sph.ST_out[7];
+					l.stm_xzS.x[ps][i] = sph.ST_out[8];
+					l.stm_yzS.x[ps][i] = sph.ST_out[9];
+					l.stm_z2S.x[ps][i] = sph.ST_out[10];
+					l.stm_xtS.x[ps][i] = sph.ST_out[11];
+					l.stm_ytS.x[ps][i] = sph.ST_out[12];
+					l.stm_ztS.x[ps][i] = sph.ST_out[13];
+					l.stm_t2S.x[ps][i] = sph.ST_out[14];
+				}
+
 				/*cout << "Check spectra: "
 					<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
 				cout << "Check FT spectra: "
@@ -201,6 +221,39 @@ int main (int argc, char *argv[])
 			{
 				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]);
 				l.dNdpdphic.x[ps][i]=sph.outc;
+				if ( set_spacetime_moments )
+				{						
+					l.stm_S.x[ps][i]    = sph.ST_out[0];
+					l.stm_xS.x[ps][i]   = sph.ST_out[1];
+					l.stm_yS.x[ps][i]   = sph.ST_out[2];
+					l.stm_zS.x[ps][i]   = sph.ST_out[3];
+					l.stm_tS.x[ps][i]   = sph.ST_out[4];
+					l.stm_x2S.x[ps][i]  = sph.ST_out[5];
+					l.stm_xyS.x[ps][i]  = sph.ST_out[6];
+					l.stm_y2S.x[ps][i]  = sph.ST_out[7];
+					l.stm_xzS.x[ps][i]  = sph.ST_out[8];
+					l.stm_yzS.x[ps][i]  = sph.ST_out[9];
+					l.stm_z2S.x[ps][i]  = sph.ST_out[10];
+					l.stm_xtS.x[ps][i]  = sph.ST_out[11];
+					l.stm_ytS.x[ps][i]  = sph.ST_out[12];
+					l.stm_ztS.x[ps][i]  = sph.ST_out[13];
+					l.stm_t2S.x[ps][i]  = sph.ST_out[14];
+					l.stm_Sc.x[ps][i]   = sph.ST_outc[0];
+					l.stm_xSc.x[ps][i]  = sph.ST_outc[1];
+					l.stm_ySc.x[ps][i]  = sph.ST_outc[2];
+					l.stm_zSc.x[ps][i]  = sph.ST_outc[3];
+					l.stm_tSc.x[ps][i]  = sph.ST_outc[4];
+					l.stm_x2Sc.x[ps][i] = sph.ST_outc[5];
+					l.stm_xySc.x[ps][i] = sph.ST_outc[6];
+					l.stm_y2Sc.x[ps][i] = sph.ST_outc[7];
+					l.stm_xzSc.x[ps][i] = sph.ST_outc[8];
+					l.stm_yzSc.x[ps][i] = sph.ST_outc[9];
+					l.stm_z2Sc.x[ps][i] = sph.ST_outc[10];
+					l.stm_xtSc.x[ps][i] = sph.ST_outc[11];
+					l.stm_ytSc.x[ps][i] = sph.ST_outc[12];
+					l.stm_ztSc.x[ps][i] = sph.ST_outc[13];
+					l.stm_t2Sc.x[ps][i] = sph.ST_outc[14];
+				}
 				/*cout << "Check spectra: "
 					<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
 				cout << "Check FT spectra: "

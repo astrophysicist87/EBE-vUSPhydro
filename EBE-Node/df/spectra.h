@@ -24,10 +24,18 @@ public:
 
 class list {
 public:
-	int pTmax,phimax;
-	spectra pt,phi,dNdpdphi,dNdpdphic;
-	list(int npT,int nphi);
-	void setup(vector<double> pt,vector<double> phi);
+	int pTmax, phimax;
+	spectra pt, phi, dNdpdphi, dNdpdphic;
+	// direct space-time moments
+	spectra stm_S,   stm_xS,  stm_yS,  stm_zS,  stm_tS, 
+			stm_x2S, stm_y2S, stm_z2S, stm_t2S, 
+			stm_xyS, stm_xzS, stm_yzS, stm_xtS, stm_ytS, stm_ztS;
+	// space-time moments with viscous corrections included
+	spectra stm_Sc,   stm_xSc,  stm_ySc,  stm_zSc, stm_tSc, 
+			stm_x2Sc, stm_y2Sc, stm_z2Sc, stm_t2Sc, 
+			stm_xySc, stm_xzSc, stm_yzSc, stm_xtSc, stm_ytSc, stm_ztSc;
+	list(int npT, int nphi);
+	void setup(vector<double> & pt, vector<double> & phi);
 	void destroy();
 	void destroyc();
 };
@@ -77,23 +85,95 @@ list::list(int npT,int nphi) {
         phi.setup(pTmax,phimax);
         dNdpdphi.setup(pTmax,phimax);
         dNdpdphic.setup(pTmax,phimax);
+		stm_S.setup(pTmax,phimax);
+		stm_xS.setup(pTmax,phimax);
+		stm_yS.setup(pTmax,phimax);
+		stm_zS.setup(pTmax,phimax);
+		stm_tS.setup(pTmax,phimax); 
+		stm_x2S.setup(pTmax,phimax);
+		stm_y2S.setup(pTmax,phimax);
+		stm_z2S.setup(pTmax,phimax);
+		stm_t2S.setup(pTmax,phimax);
+		stm_xyS.setup(pTmax,phimax);
+		stm_xzS.setup(pTmax,phimax);
+		stm_yzS.setup(pTmax,phimax);
+		stm_xtS.setup(pTmax,phimax);
+		stm_ytS.setup(pTmax,phimax);
+		stm_ztS.setup(pTmax,phimax);
+		stm_Sc.setup(pTmax,phimax);
+		stm_xSc.setup(pTmax,phimax);
+		stm_ySc.setup(pTmax,phimax);
+		stm_zSc.setup(pTmax,phimax);
+		stm_tSc.setup(pTmax,phimax); 
+		stm_x2Sc.setup(pTmax,phimax);
+		stm_y2Sc.setup(pTmax,phimax);
+		stm_z2Sc.setup(pTmax,phimax);
+		stm_t2Sc.setup(pTmax,phimax);
+		stm_xySc.setup(pTmax,phimax);
+		stm_xzSc.setup(pTmax,phimax);
+		stm_yzSc.setup(pTmax,phimax);
+		stm_xtSc.setup(pTmax,phimax);
+		stm_ytSc.setup(pTmax,phimax);
+		stm_ztSc.setup(pTmax,phimax);
+
+void list::destroy()
+{
+    pt.destroy();
+    phi.destroy();
+    dNdpdphi.destroy();
+	stm_S.destroy();
+	stm_xS.destroy();
+	stm_yS.destroy();
+	stm_zS.destroy();
+	stm_tS.destroy();
+	stm_x2S.destroy();
+	stm_y2S.destroy();
+	stm_z2S.destroy();
+	stm_t2S.destroy();
+	stm_xyS.destroy();
+	stm_xzS.destroy();
+	stm_yzS.destroy();
+	stm_xtS.destroy();
+	stm_ytS.destroy();
+	stm_ztS.destroy();
 }
 
-void list::destroy() {
-                      
-        pt.destroy();
-        phi.destroy();
-        dNdpdphi.destroy();
-        
-}
-
-void list::destroyc() {
-                      
-        pt.destroy();
-        phi.destroy();
-        dNdpdphi.destroy();
-        dNdpdphic.destroy();
-        
+void list::destroyc()
+{                      
+    pt.destroy();
+    phi.destroy();
+    dNdpdphi.destroy();
+    dNdpdphic.destroy();
+	stm_S.destroy();
+	stm_xS.destroy();
+	stm_yS.destroy();
+	stm_zS.destroy();
+	stm_tS.destroy();
+	stm_x2S.destroy();
+	stm_y2S.destroy();
+	stm_z2S.destroy();
+	stm_t2S.destroy();
+	stm_xyS.destroy();
+	stm_xzS.destroy();
+	stm_yzS.destroy();
+	stm_xtS.destroy();
+	stm_ytS.destroy();
+	stm_ztS.destroy();
+	stm_Sc.destroy();
+	stm_xSc.destroy();
+	stm_ySc.destroy();
+	stm_zSc.destroy();
+	stm_tSc.destroy();
+	stm_x2Sc.destroy();
+	stm_y2Sc.destroy();
+	stm_z2Sc.destroy();
+	stm_t2Sc.destroy();
+	stm_xySc.destroy();
+	stm_xzSc.destroy();
+	stm_yzSc.destroy();
+	stm_xtSc.destroy();
+	stm_ytSc.destroy();
+	stm_ztSc.destroy();        
 }
 
 void list::setup(vector<double> ptp,vector<double> phip) {

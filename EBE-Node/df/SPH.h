@@ -99,6 +99,9 @@ public:
 	string folder;
 	string flist2;
 	double *Ia,*Iac;
+
+	// space-time moments
+	vector<double> ST_out(15), ST_outc(15), ST_outsc(15);
 	
 	string neg;
 	
@@ -780,7 +783,15 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 		
 		if ( set_spacetime_moments )
 		{
-
+			for (int ii = 0; ii < 15; ii++)
+			{
+				double sub_ii = qv[i].x[0]*ST_I1[ii]+qp*ST_I2[ii];
+				if (neg!=negc)
+				{
+					if ((sub_ii<0)||qtot<0) sub_ii=0;
+				}
+				ST_out[ii] += sub_ii;
+			}
 		}
 
 		// if bulk		 
@@ -796,7 +807,16 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 
 			if ( set_spacetime_moments )
 			{
-
+				for (int ii = 0; ii < 15; ii++)
+				{
+					double sub2_ii=qv[i].x[0]*ST_I1c[ii]+qp*ST_I2c[ii];
+					if (isnan(sub2_ii)) sub2_ii=0;
+					if (neg!=negc)
+					{
+						if ((sub2_ii<0)||qtot<0||isnan(sub2_ii)||sub2_ii>100) sub2_ii=0;
+					}
+					ST_outc[ii] += sub2_ii;
+				}
 			}
 		}
 
@@ -813,16 +833,46 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 
 			if ( set_spacetime_moments )
 			{
-
+				for (int ii = 0; ii < 15; ii++)
+				{
+					double sub3_ii = (qv[i].x[0]*ST_I1sc[ii]+qp*ST_I2sc[ii])/par[i].s;
+					if (isnan(sub3_ii)) sub3_ii=0; 
+					if (neg!=negc)
+					{
+						if ((sub3_ii<0)||qtot<0||isnan(sub3_ii)||sub3_ii>100) sub3_ii=0;
+					}
+					ST_outsc[ii] += sub3_ii;
+				}
 			}
 		}
 	}
 
 	if (isnan(out)==1) cout << out << endl;
 	
-	if (typ==1)  outc*=vfac;
-	else if (typ==2) outc=vfac*out+cur.svfac*outsc;
-	else if (typ==3) outc=vfac*outc+cur.svfac*outsc;
+	if (typ==1)
+	{
+		outc*=vfac;
+		if ( set_spacetime_moments )
+			for (int ii = 0; ii < 15; ii++)
+				ST_outc[ii] *= vfac;
+	}
+	else if (typ==2)
+	{
+		outc=vfac*out+cur.svfac*outsc;
+		if ( set_spacetime_moments )
+			for (int ii = 0; ii < 15; ii++)
+				ST_outc[ii] = vfac*ST_out[ii]+cur.svfac*ST_outsc[ii];
+	}
+	else if (typ==3)
+	{
+		outc=vfac*outc+cur.svfac*outsc;
+		if ( set_spacetime_moments )
+			for (int ii = 0; ii < 15; ii++)
+				ST_outc[ii] = vfac*ST_outc[ii]+cur.svfac*ST_outsc[ii];
+	}
+
+	if ( set_spacetime_moments )
+		for (int ii = 0; ii < 15; ii++) ST_out[ii] *= vfac;
 
 	return out*=vfac;
 }
