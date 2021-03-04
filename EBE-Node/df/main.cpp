@@ -253,6 +253,13 @@ int main (int argc, char *argv[])
 					l.stm_ytSc.x[ps][i] = sph.ST_outc[12];
 					l.stm_ztSc.x[ps][i] = sph.ST_outc[13];
 					l.stm_t2Sc.x[ps][i] = sph.ST_outc[14];
+
+cout << "HBT (ideal): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i];
+for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
+cout << endl << "HBT (viscous): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i];
+for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_outc[ii];
+cout << endl;
+
 				}
 				/*cout << "Check spectra: "
 					<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
