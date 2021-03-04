@@ -270,25 +270,25 @@ FTlist::FTlist(int npT, int nphi, int nQX, int nQY, int nQZ)
 	QXmax  = nQX;
 	QYmax  = nQY;
 	QZmax  = nQZ;
-    pt.setup(pTmax,phimax);
-    phi.setup(pTmax,phimax);
-    dNdpdphi.setup(pTmax,phimax);
-    dNdpdphic.setup(pTmax,phimax);
+    pt.setup( pTmax, phimax, QXmax, QYmax, QZmax );
+    phi.setup( pTmax, phimax, QXmax, QYmax, QZmax );
+    FTdNdpdphi.setup( pTmax, phimax, QXmax, QYmax, QZmax );
+    FTdNdpdphic.setup( pTmax, phimax, QXmax, QYmax, QZmax );
 }
 
 void FTlist::destroy()
 {
     pt.destroy();
     phi.destroy();
-    dNdpdphi.destroy();
+    FTdNdpdphi.destroy();
 }
 
 void FTlist::destroyc()
 {
     pt.destroy();
     phi.destroy();
-    dNdpdphi.destroy();
-    dNdpdphic.destroy();
+    FTdNdpdphi.destroy();
+    FTdNdpdphic.destroy();
 }
 
 void FTlist::setup( vector<double> & ptp, vector<double> & phip,
