@@ -27,7 +27,7 @@ private:
 
 	// vectors to hold space-time moments w.r.t. I1, I2
 	vector<double> ST_out1, ST_out2, ST_out1c, ST_out2c;
-	vector<double> ST_I1c, ST_I2c, ST_I1sc, ST_I2sc;
+	vector<double> ST_I1, ST_I2, ST_I1c, ST_I2c, ST_I1sc, ST_I2sc;
 	
 	double Eperp(double p, double m) {return sqrt(p*p+m*m);}
 	double pperp(double p, double phi, Vector<double,DD> u) {return p*(u.x[1]*cos(phi)+u.x[2]*sin(phi));}
@@ -156,6 +156,8 @@ SPH<D,DD>::SPH()
 	ST_out2.resize(15);
 	ST_out1c.resize(15);
 	ST_out2c.resize(15);
+	ST_I1.resize(15);
+	ST_I2.resize(15);
 	ST_I1c.resize(15);
 	ST_I2c.resize(15);
 	ST_I1sc.resize(15);
