@@ -1247,9 +1247,9 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		}
 	}
 
-	cout << "Check real: " << I1 << "   " << I2 << "   "
-		<< I1c << "   " << I2c << "   "
-		<< I1sc << "   " << I2sc << endl;
+	//cout << "Check real: " << I1 << "   " << I2 << "   "
+	//	<< I1c << "   " << I2c << "   "
+	//	<< I1sc << "   " << I2sc << endl;
 	
 	// momentum too large at this temperature to give meaningful contribution;
 	// ergo, zero everything
@@ -1395,9 +1395,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	I1c_comp=out1c;
 	I2c_comp=out2c;
 
-	cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
-		<< I1c_comp << "   " << I2c_comp << "   "
-		<< I1sc_comp << "   " << I2sc_comp << endl;
+	//cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
+	//	<< I1c_comp << "   " << I2c_comp << "   "
+	//	<< I1sc_comp << "   " << I2sc_comp << endl;
 	
 	if ((pd/T)>64)
 	{
