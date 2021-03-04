@@ -26,8 +26,8 @@ private:
 	int h1tot;
 
 	// vectors to hold space-time moments w.r.t. I1, I2
-	vector<double> ST_out1(15), ST_out2(15), ST_out1c(15), ST_out2c(15);
-	vector<double> ST_I1c(15), ST_I2c(15), ST_I1sc(15), ST_I2sc(15);
+	vector<double> ST_out1, ST_out2, ST_out1c, ST_out2c;
+	vector<double> ST_I1c, ST_I2c, ST_I1sc, ST_I2sc;
 	
 	double Eperp(double p, double m) {return sqrt(p*p+m*m);}
 	double pperp(double p, double phi, Vector<double,DD> u) {return p*(u.x[1]*cos(phi)+u.x[2]*sin(phi));}
@@ -101,7 +101,7 @@ public:
 	double *Ia,*Iac;
 
 	// space-time moments
-	vector<double> ST_out(15), ST_outc(15), ST_outsc(15);
+	vector<double> ST_out, ST_outc, ST_outsc;
 	
 	string neg;
 	
@@ -151,6 +151,18 @@ SPH<D,DD>::SPH()
 {
 	facc=1/(2*PI*PI);
 	
+	// resize vectors to hold space-time moments
+	ST_out1.rezise(15);
+	ST_out2.rezise(15);
+	ST_out1c.rezise(15);
+	ST_out2c.rezise(15);
+	ST_I1c.rezise(15);
+	ST_I2c.rezise(15);
+	ST_I1sc.rezise(15);
+	ST_I2sc.rezise(15);
+	ST_out.rezise(15);
+	ST_outc.rezise(15);
+	ST_outsc.rezise(15);
 }
 
 template <int D,int DD>
