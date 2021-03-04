@@ -87,9 +87,9 @@ int main (int argc, char *argv[])
   	l.setup(sph.pt,sph.phi);
   	
   	
-	const int nQX = 7, nQY = 7, nQZ = 7;
-  	FTlist FTl(sph.pt.size(), sph.phi.size(), nQX, nQY, nQZ);
-  	FTl.setup()
+	//const int nQX = 7, nQY = 7, nQZ = 7;
+  	//FTlist FTl(sph.pt.size(), sph.phi.size(), nQX, nQY, nQZ);
+  	//FTl.setup()
 
 	
 	string ofolder="out/"+sph.folder;
