@@ -38,7 +38,7 @@ namespace BesselFunction
 		complex<double> *cy,complex<double> *cjp,complex<double> *cyp);
 	int cbessjynb(int n,complex<double> z,int &nm,complex<double> *cj,
 		complex<double> *cy,complex<double> *cjp,complex<double> *cyp);
-	int cbessik01(complex<double>z,complex<double>&ci0,complex<double>&ci1,
+	int cbessik01(const complex<double>&z,complex<double>&ci0,complex<double>&ci1,
 		complex<double>&ck0,complex<double>&ck1,complex<double>&ci0p,
 		complex<double>&ci1p,complex<double>&ck0p,complex<double>&ck1p);
 	int cbessikna(int n,complex<double> z,int &nm,complex<double> *ci,

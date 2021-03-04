@@ -24,7 +24,10 @@ private:
 	double I1c,I2c,I1sc,I2sc;
 	complex<double> I1c_comp, I2c_comp, I1sc_comp, I2sc_comp;
 	int h1tot;
-	
+
+	// vectors to hold space-time moments w.r.t. I1, I2
+	vector<double> ST_out1(15), ST_out2(15), ST_out1c(15), ST_out2c(15);
+	vector<double> ST_I1c(15), ST_I2c(15), ST_I1sc(15), ST_I2sc(15);
 	
 	double Eperp(double p, double m) {return sqrt(p*p+m*m);}
 	double pperp(double p, double phi, Vector<double,DD> u) {return p*(u.x[1]*cos(phi)+u.x[2]*sin(phi));}
@@ -109,10 +112,10 @@ public:
 	~SPH<D,DD>();
 	void readin(_inputIC ics);
 	void readin2(int cev);
-	double dNdpdphi(double p, double phi, HAD cur);
+	double dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_moments = false);
 	double dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
 						double Q0, double QX, double QY, double QZ );
-	void Iout(double &I1, double &I2, double p, double phi, HAD cur,int nsph);
+	void Iout(double &I1, double &I2, double p, double phi, HAD cur,int nsph, bool set_spacetime_moments = false);
 	void IoutFT(complex<double> &I1_comp, complex<double> &I2_comp, double pT, double phi, double pRap,
 				HAD cur,int nsph, double Q0, double QX, double QY, double QZ);
 	string convertInt(int number);
@@ -751,7 +754,7 @@ string SPH<D,DD>::convertInt(int number)
 
 
 template <int D,int DD>
-double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur)
+double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_moments /*= false*/)
 {
 	
 	double vfac=cur.vfac;
@@ -759,56 +762,69 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur)
 	outc=0;
 	string negc="neg";
 	
-	
-	
 	for (int i=0;i<evn;i++)
 	{
-	
-	double I1,I2;
-	
-	Iout(I1,I2,p,phi,cur,i);
-	//cout << "Check Iout: " << I1 << "   " << I2 << endl;
-	
-	
-	double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
-	
-	double qtot=qv[i].x[0]+qp;
-	
-	double sub=qv[i].x[0]*I1+qp*I2;
-	if (neg!=negc){ if ((sub<0)||qtot<0) sub=0;}
-	out+=sub;  
-	
-	
-     
+		double I1,I2;
+		
+		Iout(I1,I2,p,phi,cur,i, set_spacetime_moments);
+		//cout << "Check Iout: " << I1 << "   " << I2 << endl;
+		
+		
+		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
+		
+		double qtot=qv[i].x[0]+qp;
+		
+		double sub=qv[i].x[0]*I1+qp*I2;
+		if (neg!=negc){ if ((sub<0)||qtot<0) sub=0;}
+		out+=sub;  
+		
+		if ( set_spacetime_moments )
+		{
 
-	 
-	if ((typ==1)||(typ==3)) {double sub2=qv[i].x[0]*I1c+qp*I2c;
-	  if (isnan(sub2)) sub2=0;
-	  if (neg!=negc){if ((sub2<0)||qtot<0||isnan(sub2)||sub2>100) sub2=0;}
-	outc+=sub2;}
-	if (typ>1) {double sub3=(qv[i].x[0]*I1sc+qp*I2sc)/par[i].s;
-	  if (isnan(sub3)) sub3=0; 
-	  if (neg!=negc){ if ((sub3<0)||qtot<0||isnan(sub3)||sub3>100) sub3=0;}
-	outsc+=sub3; }
+		}
+
+		// if bulk		 
+		if ((typ==1)||(typ==3))
+		{
+			double sub2=qv[i].x[0]*I1c+qp*I2c;
+			if (isnan(sub2)) sub2=0;
+			if (neg!=negc)
+			{
+				if ((sub2<0)||qtot<0||isnan(sub2)||sub2>100) sub2=0;
+			}
+			outc+=sub2;
+
+			if ( set_spacetime_moments )
+			{
+
+			}
+		}
+
+		// if shear
+		if (typ>1)
+		{
+			double sub3=(qv[i].x[0]*I1sc+qp*I2sc)/par[i].s;
+			if (isnan(sub3)) sub3=0; 
+			if (neg!=negc)
+			{
+				if ((sub3<0)||qtot<0||isnan(sub3)||sub3>100) sub3=0;
+			}
+			outsc+=sub3;
+
+			if ( set_spacetime_moments )
+			{
+
+			}
+		}
 	}
-	
-	
-	
 
 	if (isnan(out)==1) cout << out << endl;
 	
-
 	if (typ==1)  outc*=vfac;
 	else if (typ==2) outc=vfac*out+cur.svfac*outsc;
 	else if (typ==3) outc=vfac*outc+cur.svfac*outsc;
-	
-	
-	
-	
 
 	return out*=vfac;
-	
-
 }
 
 
@@ -888,7 +904,8 @@ void SPH<D,DD>::checknu( )
 
 
 template <int D,int DD>
-void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,int nsph)
+void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
+					 int nsph, bool set_spacetime_moments /*= false*/)
 {
 	double out1=0,out2=0;
 	double out1c=0,out2c=0;
@@ -927,7 +944,17 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,int n
 		b0=bes.K0(bsub);
 		b1=bes.K1(bsub);
 		
-		
+		// N.B. - Christopher Plumberg:
+		// define my own Bessel function evaluations so
+		// they don't get confused with Jaki's
+		// (new version of Kn to avoid recalculating K0, K1)
+		double STb0 = b0;
+		double STb1 = b1;
+		double STb2 = bes.Kn(2, b0, b1, bsub);
+		double STb3 = bes.Kn(3, b0, b1, bsub);
+		double STb4 = bes.Kn(4, b0, b1, bsub);
+		double STb5 = bes.Kn(5, b0, b1, bsub);
+
 		
 		pre=pow(-cur.theta,nn)*pow(expT,add);
 		double preb1=pre*b1;
@@ -936,39 +963,203 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,int n
 		out2+=preb0;
 		
 		
-		
+		if ( set_spacetime_moments )
+		{
+			double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+								     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+			double x_SPH       = par[nsph].r.x[1];
+			double y_SPH       = par[nsph].r.x[2];
+
+			// moments from first term
+			ST_out1[0] += pre * STb1 * 1.0;									// S
+			ST_out1[1] += pre * STb1 * x_SPH;								// x S
+			ST_out1[2] += pre * STb1 * y_SPH;								// y S
+			//ST_out1[3] += 0.0;											// z S
+			ST_out1[4] += pre * 0.5*(STb0+STb2) * tau_SPH;					// t S
+			ST_out1[5] += pre * STb1 * x_SPH * x_SPH;						// x^2 S
+			ST_out1[6] += pre * STb1 * x_SPH * y_SPH;						// x y S
+			ST_out1[7] += pre * STb1 * y_SPH * y_SPH;						// y^2 S
+			//ST_out1[8] += 0.0;											// x z S
+			//ST_out1[9] += 0.0;											// y z S
+			ST_out1[10] += pre * 0.25*(STb3-STb0) * tau_SPH * tau_SPH;		// z^2 S
+			ST_out1[11] += pre * 0.5*(STb0+STb2) * x_SPH * tau_SPH;			// x t S
+			ST_out1[12] += pre * 0.5*(STb0+STb2) * y_SPH * tau_SPH;			// y t S
+			//ST_out1[13] += 0.0;											// z t S
+			ST_out1[14] += pre * 0.25*(STb3+3.0*STb0) * tau_SPH * tau_SPH;	// t^2 S
+
+			// moments from second term
+			ST_out2[0] += pre * STb0 * 1.0;									// S
+			ST_out2[1] += pre * STb0 * x_SPH;								// x S
+			ST_out2[2] += pre * STb0 * y_SPH;								// y S
+			//ST_out2[3] += 0.0;											// z S
+			ST_out2[4] += pre * STb1 * tau_SPH;								// t S
+			ST_out2[5] += pre * STb0 * x_SPH * x_SPH;						// x^2 S
+			ST_out2[6] += pre * STb0 * x_SPH * y_SPH;						// x y S
+			ST_out2[7] += pre * STb0 * y_SPH * y_SPH;						// y^2 S
+			//ST_out2[8] += 0.0;											// x z S
+			//ST_out2[9] += 0.0;											// y z S
+			ST_out2[10] += pre * 0.5*(STb2-STb0) * tau_SPH * tau_SPH;		// z^2 S
+			ST_out2[11] += pre * STb1 * x_SPH * tau_SPH;					// x t S
+			ST_out2[12] += pre * STb1 * y_SPH * tau_SPH;					// y t S
+			//ST_out2[13] += 0.0;											// z t S
+			ST_out2[14] += pre * 0.5*(STb2+STb0) * tau_SPH * tau_SPH;		// t^2 S
+		}
 		
 		
 		
 		if ((typ==1)||(typ==3))
 		{
-		
-		
-		fac=TG/add;
-		b2=bes.Kn(2,bsub);
-		F0c=1+add*f0s;
-		F1c=add*f1s;
-		F2c=add*f2s;
-		
-		double prep=preb1*eperp;
-		double facF2=fac*F2c;
-		double F0F2=F0c+F2c*ep2;
-		
-		
-		out1c+=ep2*(F1c*preb0+pre*facF2*b2)+prep*(F0F2+fac*F1c);		
-		out2c+=preb0*F0F2+prep*(F1c+facF2);
+			fac=TG/add;
+			b2=bes.Kn(2,bsub);
+			F0c=1+add*f0s;
+			F1c=add*f1s;
+			F2c=add*f2s;
+			
+			double prep=preb1*eperp;
+			double facF2=fac*F2c;
+			double F0F2=F0c+F2c*ep2;
+			
+			
+			out1c+=ep2*(F1c*preb0+pre*facF2*b2)+prep*(F0F2+fac*F1c);		
+			out2c+=preb0*F0F2+prep*(F1c+facF2);
+
+			if ( set_spacetime_moments )
+			{
+				double K0coeff = pre*ep2*F1c;
+				double K1coeff = pre*eperp*(F0F2+fac*F1c);
+				double K2coeff = pre*ep2*facF2;
+
+				double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+									     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+				double x_SPH       = par[nsph].r.x[1];
+				double y_SPH       = par[nsph].r.x[2];
+	
+				// moments from first term
+				ST_out1c[0] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * 1.0;				// S
+				ST_out1c[1] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * x_SPH;			// x S
+				ST_out1c[2] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * y_SPH;			// y S
+				//ST_out1c[3] += 0.0;														// z S
+				ST_out1c[4] += (K0coeff*STb1
+								+K1coeff*0.5*(STb2+STb0)
+								+K2coeff*0.5*(STb3+STb1)) * tau_SPH;						// t S
+				ST_out1c[5] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * x_SPH * x_SPH;	// x^2 S
+				ST_out1c[6] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * x_SPH * y_SPH;	// x y S
+				ST_out1c[7] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * y_SPH * y_SPH;	// y^2 S
+				//ST_out1c[8] += 0.0;														// x z S
+				//ST_out1c[9] += 0.0;														// y z S
+				ST_out1c[10] += (K0coeff*0.5*(STb2-STb0)
+									+ K1coeff*0.25*(STb3-STb0)
+									+ K2coeff*0.25*(STb4-2.0*STb2+STb0))
+								* tau_SPH * tau_SPH;										// z^2 S
+				ST_out1c[11] += (K0coeff*STb1
+									+ K1coeff*0.5*(STb2+STb0)
+									+ K2coeff*0.5*(STb3+STb1)) * x_SPH * tau_SPH;			// x t S
+				ST_out1c[12] += (K0coeff*STb1
+									+ K1coeff*0.5*(STb2+STb0)
+									+ K2coeff*0.5*(STb3+STb1)) * y_SPH * tau_SPH;			// y t S
+				//ST_out1c[13] += 0.0;														// z t S
+				ST_out1c[14] += (K0coeff*0.5*(STb2+STb0)
+									+ K1coeff*0.25*(STb3+3.0*STb0)
+									+ K2coeff*0.25*(STb4+2.0*STb2+STb0))
+								* tau_SPH * tau_SPH;	// t^2 S
+	
+
+				// reset Bessel function coefficients
+				K0coeff = pre*F0F2;
+				K1coeff = pre*eperp*(F1c+facF2);
+
+				// moments from second term
+				ST_out2c[0] += (K0coeff*STb0+K1coeff*STb1) * 1.0;							// S
+				ST_out2c[1] += (K0coeff*STb0+K1coeff*STb1) * x_SPH;							// x S
+				ST_out2c[2] += (K0coeff*STb0+K1coeff*STb1) * y_SPH;							// y S
+				//ST_out2c[3] += 0.0;														// z S
+				ST_out2c[4] += (K0coeff*STb1+K1coeff*0.5*(STb2+STb0)) * tau_SPH;			// t S
+				ST_out2c[5] += (K0coeff*STb0+K1coeff*STb1) * x_SPH * x_SPH;					// x^2 S
+				ST_out2c[6] += (K0coeff*STb0+K1coeff*STb1) * x_SPH * y_SPH;					// x y S
+				ST_out2c[7] += (K0coeff*STb0+K1coeff*STb1) * y_SPH * y_SPH;					// y^2 S
+				//ST_out2c[8] += 0.0;														// x z S
+				//ST_out2c[9] += 0.0;														// y z S
+				ST_out2c[10] += (K0coeff*0.5*(STb2-STb0)
+								+K1coeff*0.25*(STb3-STb0)) * tau_SPH * tau_SPH;				// z^2 S
+				ST_out2c[11] += (K0coeff*STb1+K1coeff*0.5*(STb2+STb0)) * x_SPH * tau_SPH;	// x t S
+				ST_out2c[12] += (K0coeff*STb1+K1coeff*0.5*(STb2+STb0)) * y_SPH * tau_SPH;	// y t S
+				//ST_out2c[13] += 0.0;														// z t S
+				ST_out2c[14] += (K0coeff*0.5*(STb2+STb0)
+								+K1coeff*0.25*(STb3+3.0*STb0)) * tau_SPH * tau_SPH;			// t^2 S
+			}
 		}
-		if (typ>1){
-		if (typ==2) b2=bes.Kn(2,bsub);
-		double pred=pre*add;
+		if (typ>1)
+		{
+			if (typ==2) b2=bes.Kn(2,bsub);
+			double pred=pre*add;
+			
+			double spi1=par[nsph].pi00+par[nsph].pi33;
+			double spi3=px2*par[nsph].pi11 +py2*par[nsph].pi22 +pxy* par[nsph].pi12;
+			
+			
+			I1sc+=pred*( ep3*spi1*bes.Kn(3,bsub)
+							+ ( ep3*(3*par[nsph].pi00 - par[nsph].pi33) + eperp*spi3 )*b1
+						);
+			I2sc+=pred*( 0.5*ep2*spi1*b2+(0.5*ep2*(par[nsph].pi00- par[nsph].pi33)+spi3)*b0);
 		
-		double spi1=par[nsph].pi00+par[nsph].pi33;
-		double spi3=px2*par[nsph].pi11 +py2*par[nsph].pi22 +pxy* par[nsph].pi12;
-		
-		
-		I1sc+=pred*( ep3*spi1*bes.Kn(3,bsub)+(ep3*(3*par[nsph].pi00- par[nsph].pi33)+eperp*spi3   )*b1   );
-		I2sc+=pred*( 0.5*ep2*spi1*b2+(0.5*ep2*(par[nsph].pi00- par[nsph].pi33)+spi3)*b0);
-		
+			if ( set_spacetime_moments )
+			{
+				double K3coeff = pred*ep3*spi1;
+				double K1coeff = pred*(ep3*(3.0*par[nsph].pi00-par[nsph].pi33)+eperp*spi3);
+				
+				double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+									     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+				double x_SPH       = par[nsph].r.x[1];
+				double y_SPH       = par[nsph].r.x[2];
+	
+				// moments from I1sc
+				ST_I1sc[0] += (K3coeff*STb3 + K1coeff*STb1) * 1.0;						// S
+				ST_I1sc[1] += (K3coeff*STb3 + K1coeff*STb1) * x_SPH;					// x S
+				ST_I1sc[2] += (K3coeff*STb3 + K1coeff*STb1) * y_SPH;					// y S
+				//ST_I1sc[3] += 0.0;													// z S
+				ST_I1sc[4] += (K3coeff*0.5*(STb4-STb2)
+								+ K1coeff*0.5*(STb2+STb0)) * tau_SPH;					// t S
+				ST_I1sc[5] += (K3coeff*STb3 + K1coeff*STb1) * x_SPH * x_SPH;			// x^2 S
+				ST_I1sc[6] += (K3coeff*STb3 + K1coeff*STb1) * x_SPH * y_SPH;			// x y S
+				ST_I1sc[7] += (K3coeff*STb3 + K1coeff*STb1) * y_SPH * y_SPH;			// y^2 S
+				//ST_I1sc[8] += 0.0;													// x z S
+				//ST_I1sc[9] += 0.0;													// y z S
+				ST_I1sc[10] += (K3coeff*0.25*(STb5-2.0*STb3+STb1)
+								+ K1coeff*0.25*(STb3-STb0)) * tau_SPH * tau_SPH;		// z^2 S
+				ST_I1sc[11] += (K3coeff*0.5*(STb4-STb2)
+								+ K1coeff*0.5*(STb2+STb0)) * x_SPH * tau_SPH;			// x t S
+				ST_I1sc[12] += (K3coeff*0.5*(STb4-STb2)
+								+ K1coeff*0.5*(STb2+STb0)) * y_SPH * tau_SPH;			// y t S
+				//ST_I1sc[13] += 0.0;													// z t S
+				ST_I1sc[14] += (K3coeff*0.25*(STb5+2.0*STb3+STb1)
+								+ K1coeff*0.25*(STb3+3.0*STb0)) * tau_SPH * tau_SPH;	// t^2 S
+	
+				// set needed Bessel function coefficients
+				double K2coeff = 0.5*pred*ep2*spi1;
+				double K0coeff = pred*(0.5*ep2*(par[nsph].pi00-par[nsph].pi33)+spi3);
+
+				// moments from I2sc
+				ST_I2sc[0] += (K2coeff*STb2 + K0coeff*STb0) * 1.0;				// S
+				ST_I2sc[1] += (K2coeff*STb2 + K0coeff*STb0) * x_SPH;			// x S
+				ST_I2sc[2] += (K2coeff*STb2 + K0coeff*STb0) * y_SPH;			// y S
+				//ST_I2sc[3] += 0.0;											// z S
+				ST_I2sc[4] += (K2coeff*0.5*(STb3+STb1)
+								+ K0coeff*STb1) * tau_SPH;						// t S
+				ST_I2sc[5] += (K2coeff*STb2 + K0coeff*STb0) * x_SPH * x_SPH;	// x^2 S
+				ST_I2sc[6] += (K2coeff*STb2 + K0coeff*STb0) * x_SPH * y_SPH;	// x y S
+				ST_I2sc[7] += (K2coeff*STb2 + K0coeff*STb0) * y_SPH * y_SPH;	// y^2 S
+				//ST_I2sc[8] += 0.0;											// x z S
+				//ST_I2sc[9] += 0.0;											// y z S
+				ST_I2sc[10] += (K2coeff*0.25*(STb4-2.0*STb2+STb0)
+								+ K0coeff*0.5*(STb2-STb0)) * tau_SPH * tau_SPH;	// z^2 S
+				ST_I2sc[11] += (K2coeff*0.5*(STb3+STb1)
+								+ K0coeff*STb1) * x_SPH * tau_SPH;				// x t S
+				ST_I2sc[12] += (K2coeff*0.5*(STb3+STb1)
+								+ K0coeff*STb1) * y_SPH * tau_SPH;				// y t S
+				//ST_I2sc[13] += 0.0;											// z t S
+				ST_I2sc[14] += (K2coeff*0.25*(STb4+2.0*STb2+STb0)
+								+ K0coeff*0.5*(STb2+STb0)) * tau_SPH * tau_SPH;	// t^2 S
+			}
 		}
 	}
 
@@ -978,20 +1169,33 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,int n
 	I1=2*out1*eperp;
 	I2=2*out2;
 	
-	
-	
 	I1c=2*out1c;
 	I2c=2*out2c;
 	
+	if ( set_spacetime_moments )
+	{
+		for (int ii = 0; ii < 15; ii++)
+		{
+			ST_I1[ii] = 2*ST_out1[ii]*eperp;
+			ST_I2[ii] = 2*ST_out2[ii]*eperp;
+			ST_I1c[ii] = 2*ST_out1c[ii];
+			ST_I2c[ii] = 2*ST_out2c[ii];
+		}
+	}
+
 	cout << "Check real: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
 		<< I1sc << "   " << I2sc << endl;
 	
-	if ((pd/T)>64) {I1=0;
-	I2=0;
-	I1c=0;
-	I2c=0;
-	
+	// momentum too large at this temperature to give meaningful contribution;
+	// ergo, zero everything
+	if ((pd/T)>64)
+	{
+		I1=0; I2=0; I1c=0; I2c=0;
+		fill(ST_I1.begin(), ST_I1.end(), 0.0);
+		fill(ST_I2.begin(), ST_I2.end(), 0.0);
+		fill(ST_I1c.begin(), ST_I1c.end(), 0.0);
+		fill(ST_I2c.begin(), ST_I2c.end(), 0.0);
 	}
 	
 	
@@ -1008,6 +1212,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 						double Q0, double QX, double QY, double QZ )
 {
 	// eventually define this globally
+	const double hbarc_local = 0.19733;
 	const complex<double> iComplex(0.0, 1.0);
 
 	// set space-time and momentum info for SPH particle
@@ -1019,10 +1224,10 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	double y_SPH       = par[nsph].r.x[2];
 	double chy         = cosh(pRap),
            shy         = sinh(pRap);
-	complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy), 0.0);
-	complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy), 0.0);
+	complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy)/hbarc_local, 0.0);
+	complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy)/hbarc_local, 0.0);
 
-	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH));
+	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH)/hbarc_local);
 
 	// continue calculation as Jaki's Iout (some variables renamed or made complex)
 	complex<double> out1=0, out2=0;

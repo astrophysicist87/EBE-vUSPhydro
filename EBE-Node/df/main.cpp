@@ -21,13 +21,13 @@ int main (int argc, char *argv[])
 {
 	_inputIC ics;
 	
-	if (argv[1])
+	if (argc>1)
 	{
 	ics.man= argv[1];
 	
 	
 	
-	if (argv[3])
+	if (argc>3)
 	{
 	stringstream s,s1;
 	s << argv[3];
@@ -61,17 +61,17 @@ int main (int argc, char *argv[])
   		sph.flist();	
   	}
   	
-  	if (argv[2])
+  	if (argc>2)
 	{
 	sph.rnum=argv[2];
 	
 	}
-	if (argv[4])
+	if (argc>4)
 	{
 	sph.neg=argv[4];
         cout << sph.neg << endl;
 	}
-	if (argv[5])
+	if (argc>5)
 	{
 	stringstream s2;
 	s2 << argv[5];
@@ -87,12 +87,14 @@ int main (int argc, char *argv[])
   	l.setup(sph.pt,sph.phi);
   	
   	
-  	
+	const int nQX = 7, nQY = 7, nQZ = 7;
+  	FTlist FTl(sph.pt.size(), sph.phi.size(), nQX, nQY, nQZ);
+  	FTl.setup()
 
 	
 	string ofolder="out/"+sph.folder;
 	string zero="0";
-	if (argv[6]&&argv[6]!=zero)  {
+	if (argc>6&&argv[6]!=zero)  {
            string newout=argv[6];
            ofolder=ofolder+"/"+newout;
         }
