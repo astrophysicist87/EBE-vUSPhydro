@@ -987,18 +987,16 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 	double TG=T/g;
 	double bfac=eperp/TG;
 	
-	
-	
 
 	if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
-	if (typ>1) {I1sc=0;
-	I2sc=0;
+	if (typ>1)
+	{
+		I1sc=0;
+		I2sc=0;
 	}
 
 	double expT=exp(pd/T);
-	
-	
-	
+		
 	for (int nn=0;nn<=Nmax;nn++)
 	{
 		
@@ -1247,9 +1245,11 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		}
 	}
 
-	//cout << "Check real: " << I1 << "   " << I2 << "   "
-	//	<< I1c << "   " << I2c << "   "
-	//	<< I1sc << "   " << I2sc << endl;
+	cout << "Check real: " << I1 << "   " << I2 << "   "
+		<< I1c << "   " << I2c << "   "
+		<< I1sc << "   " << I2sc << "   "
+		<< ST_I1[0] << "   " << ST_I2[0] << "   "
+		<< ST_I1c[0] << "   " << ST_I2c[0] << endl;
 	
 	// momentum too large at this temperature to give meaningful contribution;
 	// ergo, zero everything
