@@ -303,7 +303,7 @@ int main (int argc, char *argv[])
 							= sph.dNdpdphi_FT( KT, Kphi, KYrap, sph.had[h],
 												Q0, QXpts[iQX], QYpts[iQY], QZpts[iQZ] );
 						FTl.FTdNdpdphic.x[ FTl_index ] = sph.outc_comp;
-cout << "Check all spectra: " << l.pT.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
+cout << "Check all spectra: " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
 		<< l.dNdpdphi.x[ps][i] << "   " << l.dNdpdphic.x[ps][i] << "   "
 		<< FTl.FTdNdpdphi.x[ FTl_index ] << "   " << FTl.FTdNdpdphic.x[ FTl_index ] << endl;
 					}

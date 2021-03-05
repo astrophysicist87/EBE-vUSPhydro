@@ -1339,7 +1339,8 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 
 
 template <int D,int DD>
-void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
+void SPH<D,DD>::IoutFT( double &I1, double &I2,
+						complex<double> &I1_comp, complex<double> &I2_comp,
 						double pT, double phi, double pRap, HAD cur,int nsph,
 						double Q0, double QX, double QY, double QZ )
 {

@@ -44,7 +44,7 @@ public:
 class FTspectra
 {
 	public:
-		vector<double> x;	// collapse 5d vector
+		vector<complex<double> > x;	// collapse 5d vector
 		int pTmax, phimax, QXmax, QYmax, QZmax;
 		FTspectra& operator=(FTspectra a);
 		FTspectra& operator=(double a);
