@@ -82,7 +82,9 @@ int main (int argc, char *argv[])
 
 	
 	const bool set_spacetime_moments = true;
-  	vector<int> HBTparticleIDs = {211, 321};	//pi^+, K^+
+  	vector<int> HBTparticleIDs;
+	HBTparticleIDs.push_back( 211 );
+	HBTparticleIDs.push_back( 321 );
 	std::map<int,string> HBTparticleNames;
 	HBTparticleNames[211] = "pion_+";
 	HBTparticleNames[321] = "kaon_+";
