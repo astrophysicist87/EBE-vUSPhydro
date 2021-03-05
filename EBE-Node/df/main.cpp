@@ -86,10 +86,15 @@ int main (int argc, char *argv[])
   	list l(sph.pt.size(),sph.phi.size());
   	l.setup(sph.pt,sph.phi);
   	
-  	
-	//const int nQX = 7, nQY = 7, nQZ = 7;
-  	//FTlist FTl(sph.pt.size(), sph.phi.size(), nQX, nQY, nQZ);
-  	//FTl.setup()
+  	// set up calculation of correlation function
+	const double deltaQ = 0.01; // GeV
+	const int nQX = 1, nQY = 1, nQZ = 1;	// should all be odd to guarantee Q=0 included
+	vector<double> QXpts(nQX), QYpts(nQY), QZpts(nQZ);
+	for (int iQX = 0; iQX < nQX; iQX++) QXpts[iQX] = -0.5*(nQX-1)*deltaQ + deltaQ*iQX;
+	for (int iQY = 0; iQY < nQY; iQY++) QYpts[iQY] = -0.5*(nQY-1)*deltaQ + deltaQ*iQY;
+	for (int iQZ = 0; iQZ < nQZ; iQZ++) QZpts[iQZ] = -0.5*(nQZ-1)*deltaQ + deltaQ*iQZ;
+  	FTlist FTl(sph.pt.size(), sph.phi.size(), nQX, nQY, nQZ);
+  	FTl.setup(sph.pt, sph.phi, QXpts, QYpts, QZpts);
 
 	
 	string ofolder="out/"+sph.folder;
@@ -180,106 +185,135 @@ int main (int argc, char *argv[])
 
 	        if (sph.had[h].null!=2){
 
-		if (sph.typ==0){
-		for (int ps=0;ps<l.pTmax;ps++)
+		if (sph.typ==0)
 		{
-			for(int i=0;i<l.phimax;i++)
+			for (int ps=0;ps<l.pTmax;ps++)
 			{
-				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],
-											sph.had[h], set_spacetime_moments );
-				if ( set_spacetime_moments )
-				{						
-					l.stm_S.x[ps][i]   = sph.ST_out[0];
-					l.stm_xS.x[ps][i]  = sph.ST_out[1];
-					l.stm_yS.x[ps][i]  = sph.ST_out[2];
-					l.stm_zS.x[ps][i]  = sph.ST_out[3];
-					l.stm_tS.x[ps][i]  = sph.ST_out[4];
-					l.stm_x2S.x[ps][i] = sph.ST_out[5];
-					l.stm_xyS.x[ps][i] = sph.ST_out[6];
-					l.stm_y2S.x[ps][i] = sph.ST_out[7];
-					l.stm_xzS.x[ps][i] = sph.ST_out[8];
-					l.stm_yzS.x[ps][i] = sph.ST_out[9];
-					l.stm_z2S.x[ps][i] = sph.ST_out[10];
-					l.stm_xtS.x[ps][i] = sph.ST_out[11];
-					l.stm_ytS.x[ps][i] = sph.ST_out[12];
-					l.stm_ztS.x[ps][i] = sph.ST_out[13];
-					l.stm_t2S.x[ps][i] = sph.ST_out[14];
+				for(int i=0;i<l.phimax;i++)
+				{
+					l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],
+												sph.had[h], set_spacetime_moments );
+					if ( set_spacetime_moments )
+					{						
+						l.stm_S.x[ps][i]   = sph.ST_out[0];
+						l.stm_xS.x[ps][i]  = sph.ST_out[1];
+						l.stm_yS.x[ps][i]  = sph.ST_out[2];
+						l.stm_zS.x[ps][i]  = sph.ST_out[3];
+						l.stm_tS.x[ps][i]  = sph.ST_out[4];
+						l.stm_x2S.x[ps][i] = sph.ST_out[5];
+						l.stm_xyS.x[ps][i] = sph.ST_out[6];
+						l.stm_y2S.x[ps][i] = sph.ST_out[7];
+						l.stm_xzS.x[ps][i] = sph.ST_out[8];
+						l.stm_yzS.x[ps][i] = sph.ST_out[9];
+						l.stm_z2S.x[ps][i] = sph.ST_out[10];
+						l.stm_xtS.x[ps][i] = sph.ST_out[11];
+						l.stm_ytS.x[ps][i] = sph.ST_out[12];
+						l.stm_ztS.x[ps][i] = sph.ST_out[13];
+						l.stm_t2S.x[ps][i] = sph.ST_out[14];
+					}
+	
+					/*cout << "Check spectra: "
+						<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
+					cout << "Check FT spectra: "
+						<< sph.dNdpdphi_FT(l.pt.x[ps][i],l.phi.x[ps][i],0.0,sph.had[h],
+											0.0, 0.0, 0.0, 0.0) << endl;*/
 				}
-
-				/*cout << "Check spectra: "
-					<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
-				cout << "Check FT spectra: "
-					<< sph.dNdpdphi_FT(l.pt.x[ps][i],l.phi.x[ps][i],0.0,sph.had[h],
-										0.0, 0.0, 0.0, 0.0) << endl;*/
-			}
+		 	}
 	 	}
-	 	}
-	 	else{
-	 	for (int ps=0;ps<l.pTmax;ps++)
+	 	else
 		{
-			for(int i=0;i<l.phimax;i++)
+		 	for (int ps=0;ps<l.pTmax;ps++)
 			{
-				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],
-											sph.had[h], set_spacetime_moments );
-				l.dNdpdphic.x[ps][i]=sph.outc;
-				if ( set_spacetime_moments )
-				{						
-					l.stm_S.x[ps][i]    = sph.ST_out[0];
-					l.stm_xS.x[ps][i]   = sph.ST_out[1];
-					l.stm_yS.x[ps][i]   = sph.ST_out[2];
-					l.stm_zS.x[ps][i]   = sph.ST_out[3];
-					l.stm_tS.x[ps][i]   = sph.ST_out[4];
-					l.stm_x2S.x[ps][i]  = sph.ST_out[5];
-					l.stm_xyS.x[ps][i]  = sph.ST_out[6];
-					l.stm_y2S.x[ps][i]  = sph.ST_out[7];
-					l.stm_xzS.x[ps][i]  = sph.ST_out[8];
-					l.stm_yzS.x[ps][i]  = sph.ST_out[9];
-					l.stm_z2S.x[ps][i]  = sph.ST_out[10];
-					l.stm_xtS.x[ps][i]  = sph.ST_out[11];
-					l.stm_ytS.x[ps][i]  = sph.ST_out[12];
-					l.stm_ztS.x[ps][i]  = sph.ST_out[13];
-					l.stm_t2S.x[ps][i]  = sph.ST_out[14];
-
-					l.stm_Sc.x[ps][i]   = sph.ST_outc[0];
-					l.stm_xSc.x[ps][i]  = sph.ST_outc[1];
-					l.stm_ySc.x[ps][i]  = sph.ST_outc[2];
-					l.stm_zSc.x[ps][i]  = sph.ST_outc[3];
-					l.stm_tSc.x[ps][i]  = sph.ST_outc[4];
-					l.stm_x2Sc.x[ps][i] = sph.ST_outc[5];
-					l.stm_xySc.x[ps][i] = sph.ST_outc[6];
-					l.stm_y2Sc.x[ps][i] = sph.ST_outc[7];
-					l.stm_xzSc.x[ps][i] = sph.ST_outc[8];
-					l.stm_yzSc.x[ps][i] = sph.ST_outc[9];
-					l.stm_z2Sc.x[ps][i] = sph.ST_outc[10];
-					l.stm_xtSc.x[ps][i] = sph.ST_outc[11];
-					l.stm_ytSc.x[ps][i] = sph.ST_outc[12];
-					l.stm_ztSc.x[ps][i] = sph.ST_outc[13];
-					l.stm_t2Sc.x[ps][i] = sph.ST_outc[14];
-
-cout << "HBT (ideal): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
-		<< "   " << l.dNdpdphi.x[ps][i];
-for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
-cout << endl << "HBT (viscous): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
-		<< "   " << l.dNdpdphic.x[ps][i];
-for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_outc[ii];
-cout << endl;
-
+				for(int i=0;i<l.phimax;i++)
+				{
+					l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],
+												sph.had[h], set_spacetime_moments );
+					l.dNdpdphic.x[ps][i]=sph.outc;
+					if ( set_spacetime_moments )
+					{						
+						l.stm_S.x[ps][i]    = sph.ST_out[0];
+						l.stm_xS.x[ps][i]   = sph.ST_out[1];
+						l.stm_yS.x[ps][i]   = sph.ST_out[2];
+						l.stm_zS.x[ps][i]   = sph.ST_out[3];
+						l.stm_tS.x[ps][i]   = sph.ST_out[4];
+						l.stm_x2S.x[ps][i]  = sph.ST_out[5];
+						l.stm_xyS.x[ps][i]  = sph.ST_out[6];
+						l.stm_y2S.x[ps][i]  = sph.ST_out[7];
+						l.stm_xzS.x[ps][i]  = sph.ST_out[8];
+						l.stm_yzS.x[ps][i]  = sph.ST_out[9];
+						l.stm_z2S.x[ps][i]  = sph.ST_out[10];
+						l.stm_xtS.x[ps][i]  = sph.ST_out[11];
+						l.stm_ytS.x[ps][i]  = sph.ST_out[12];
+						l.stm_ztS.x[ps][i]  = sph.ST_out[13];
+						l.stm_t2S.x[ps][i]  = sph.ST_out[14];
+	
+						l.stm_Sc.x[ps][i]   = sph.ST_outc[0];
+						l.stm_xSc.x[ps][i]  = sph.ST_outc[1];
+						l.stm_ySc.x[ps][i]  = sph.ST_outc[2];
+						l.stm_zSc.x[ps][i]  = sph.ST_outc[3];
+						l.stm_tSc.x[ps][i]  = sph.ST_outc[4];
+						l.stm_x2Sc.x[ps][i] = sph.ST_outc[5];
+						l.stm_xySc.x[ps][i] = sph.ST_outc[6];
+						l.stm_y2Sc.x[ps][i] = sph.ST_outc[7];
+						l.stm_xzSc.x[ps][i] = sph.ST_outc[8];
+						l.stm_yzSc.x[ps][i] = sph.ST_outc[9];
+						l.stm_z2Sc.x[ps][i] = sph.ST_outc[10];
+						l.stm_xtSc.x[ps][i] = sph.ST_outc[11];
+						l.stm_ytSc.x[ps][i] = sph.ST_outc[12];
+						l.stm_ztSc.x[ps][i] = sph.ST_outc[13];
+						l.stm_t2Sc.x[ps][i] = sph.ST_outc[14];
+	
+	/*cout << "HBT (ideal): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
+			<< "   " << l.dNdpdphi.x[ps][i];
+	for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
+	cout << endl << "HBT (viscous): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
+			<< "   " << l.dNdpdphic.x[ps][i];
+	for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_outc[ii];
+	cout << endl;*/
+	
+					}
+					/*cout << "Check spectra: "
+						<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
+					cout << "Check FT spectra: "
+						<< sph.dNdpdphi_FT(l.pt.x[ps][i],l.phi.x[ps][i],0.0,sph.had[h],
+											0.0, 0.0, 0.0, 0.0) << endl;*/
+					const double mass  = sph.had[h].mass;
+					const double KT    = l.pt.x[ps][i];
+					const double Kphi  = l.phi.x[ps][i];
+					const double KYrap = 0.0;
+					const double ckp   = cos(Kphi),
+								 skp   = sin(Kphi);
+	
+					for ( int iQX = 0; iQX < nQX; iQX++ )
+					for ( int iQY = 0; iQY < nQY; iQY++ )
+					for ( int iQZ = 0; iQZ < nQZ; iQZ++ )
+					{
+						const double xi2  = mass*mass + KT*KT
+											+ 0.25*( QXpts[iQX]*QXpts[iQX]
+													+ QYpts[iQY]*QYpts[iQY]
+													+ QZpts[iQZ]*QZpts[iQZ] );
+					
+						const double QOUT = ckp * QXpts[iQX] + skp * QYpts[iQY];
+						const double Q0   = sqrt(xi2 + QOUT*KT) - sqrt(xi2 - QOUT*KT);
+	
+						// use built-in indexer
+						const int FTl_index
+							= FTl.FTdNdpdphi.index5D(ps, i, iQX, iQY, iQZ);
+						FTl.FTdNdpdphi.x[ FTl_index ]
+							= sph.dNdpdphi_FT( KT, Kphi, KYrap, sph.had[h],
+												Q0, QXpts[iQX], QYpts[iQY], QZpts[iQZ] );
+						FTl.FTdNdpdphic.x[ FTl_index ] = sph.outc_comp;
+cout << "Check all spectra: " << l.pT.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
+		<< l.dNdpdphi.x[ps][i] << "   " << l.dNdpdphic.x[ps][i] << "   "
+		<< FTl.FTdNdpdphi.x[ FTl_index ] << "   " << FTl.FTdNdpdphic.x[ FTl_index ] << endl;
+					}
+		//			if (l.dNdpdphi.x[ps][i]<0||isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
+		//			if (l.dNdpdphic.x[ps][i]<0||isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
+					if (isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
+					if (isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
 				}
-				/*cout << "Check spectra: "
-					<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
-				cout << "Check FT spectra: "
-					<< sph.dNdpdphi_FT(l.pt.x[ps][i],l.phi.x[ps][i],0.0,sph.had[h],
-										0.0, 0.0, 0.0, 0.0) << endl;*/
-				double tmplocal
-						= sph.dNdpdphi_FT( l.pt.x[ps][i], l.phi.x[ps][i], 0.0,
-											sph.had[h], 0.0, 0.0, 0.0, 0.0 );
-	//			if (l.dNdpdphi.x[ps][i]<0||isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
-	//			if (l.dNdpdphic.x[ps][i]<0||isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
-				if (isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
-				if (isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
-			}
-	 	}
-	 	
+		 	}
+		 	
 	 	}
 		
 		

@@ -92,6 +92,7 @@ public:
 	
 	
 	double outc;
+	complex<double> outc_comp;
 	int typ;
 	vector<HAD> had,nmes;
 	string before,after,rnum;
@@ -116,14 +117,16 @@ public:
 	void readin(_inputIC ics);
 	void readin2(int cev);
 	double dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_moments = false);
-	double dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
-						double Q0, double QX, double QY, double QZ );
-	void Iout(double &I1, double &I2, double p, double phi, HAD cur,int nsph, bool set_spacetime_moments = false);
-	void IoutFT(complex<double> &I1_comp, complex<double> &I2_comp, double pT, double phi, double pRap,
-				HAD cur,int nsph, double Q0, double QX, double QY, double QZ);
+	complex<double> dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
+								 double Q0, double QX, double QY, double QZ );
+	void Iout( double &I1, double &I2, double p, double phi, HAD cur, int nsph,
+				bool set_spacetime_moments = false);
+	void IoutFT(double &I1, double &I2, complex<double> &I1_comp, complex<double> &I2_comp,
+				double pT, double phi, double pRap, HAD cur, int nsph,
+				double Q0, double QX, double QY, double QZ);
 	string convertInt(int number);
 	void flist();
-	void calcF2(HAD cur, int nsph,double pd,double &F0,double &F1, double &F2);
+	void calcF2(HAD cur, int nsph, double pd, double &F0, double &F1, double &F2);
 	void checknu( );
 	void setcoef(int i);
 	void calcsPI(int h);
@@ -914,21 +917,24 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 
 
 template <int D,int DD>
-double SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
+complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
 								double Q0, double QX, double QY, double QZ )
 {
-	double vfac=cur.vfac;
-	double out=0,outsc=0;
-	outc=0;
-	string negc="neg";
+	double vfac = cur.vfac;
+	double out = 0, outsc = 0;
+	outc = 0;
+	string negc = "neg";
+
+	complex<double> out_comp = 0.0, outsc_comp = 0.0;
+	outc_comp = 0.0;
 
 	for (int i=0;i<evn;i++)
 	{		
-		complex<double> I1_comp, I2_comp;
 		double I1, I2;
-		double pRap = 0.0;	// take y = 0 for right now
-		double Q0 = 0.0, QX = 0.0, QY = 0.0, QZ = 0.0;	// also Q = 0
-		IoutFT(I1_comp,I2_comp,p,phi,pRap,cur,i, Q0, QX, QY, QZ);
+		complex<double> I1_comp, I2_comp;
+		//double pRap = 0.0;	// take y = 0 for right now
+		//double Q0 = 0.0, QX = 0.0, QY = 0.0, QZ = 0.0;	// also Q = 0
+		IoutFT(I1, I2, I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
 		//cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
@@ -936,41 +942,67 @@ double SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
 		double qtot=qv[i].x[0]+qp;
 		
 		double sub=qv[i].x[0]*I1+qp*I2;
+		complex<double> sub_comp = qv[i].x[0]*I1_comp+qp*I2_comp;
 		if (neg!=negc)
 		{
-			if ((sub<0)||qtot<0) sub=0;
+			if ((sub<0)||qtot<0)
+			{
+				sub      = 0.0;
+				sub_comp = 0.0;
+			}
 		}
-		out+=sub;  
+		out+=sub;
+		out_comp += sub_comp;
 		 
 		if ((typ==1)||(typ==3))
 		{
 			double sub2=qv[i].x[0]*I1c+qp*I2c;
-			if (isnan(sub2)) sub2=0;
+			complex<double> sub2_comp = qv[i].x[0]*I1c_comp+qp*I2c_comp;
+			if (isnan(sub2))
+			{
+				sub2 = 0;
+				sub2_comp = 0;
+			}
 			if (neg!=negc)
 			{
-				if ((sub2<0)||qtot<0||isnan(sub2)||sub2>100) sub2=0;
+				if ((sub2<0)||qtot<0||isnan(sub2)||sub2>100)
+				{
+					sub2 = 0;
+					sub2_comp = 0;
+				}
 			}
 			outc+=sub2;
+			outc_comp += sub2_comp;
 		}
 		if (typ>1)
 		{
 			double sub3=(qv[i].x[0]*I1sc+qp*I2sc)/par[i].s;
-			if (isnan(sub3)) sub3=0; 
+			complex<double> sub3_comp = (qv[i].x[0]*I1sc_comp+qp*I2sc_comp)/par[i].s;
+			if (isnan(sub3))
+			{
+				sub3=0;
+				sub3_comp=0;
+			}
 			if (neg!=negc)
 			{
-				if ((sub3<0)||qtot<0||isnan(sub3)||sub3>100) sub3=0;
+				if ((sub3<0)||qtot<0||isnan(sub3)||sub3>100)
+				{
+					sub3=0;
+					sub3_comp=0;
+				}
 			}
 			outsc+=sub3;
+			outsc_comp += sub3_comp;
 		}
 	}
 
 	if (isnan(out)==1) cout << out << endl;	
 
-	if (typ==1)  outc*=vfac;
-	else if (typ==2) outc=vfac*out+cur.svfac*outsc;
-	else if (typ==3) outc=vfac*outc+cur.svfac*outsc;
+	if (typ==1)  outc_comp*=vfac;
+	else if (typ==2) outc_comp=vfac*out_comp+cur.svfac*outsc_comp;
+	else if (typ==3) outc_comp=vfac*outc_comp+cur.svfac*outsc_comp;
 	
-	return out*=vfac;
+	return out_comp*=vfac;
 }
 
 

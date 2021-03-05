@@ -43,12 +43,6 @@ public:
 
 class FTspectra
 {
-	private:
-		inline int index5D(int ipT, int iphi, int iQX, int iQY, int iQZ)
-		{
-			return ( ( ( ( ipT * phimax + iphi ) * QXmax + iQX )
-							   * QYmax + iQY )   * QZmax + iQZ );
-		}
 	public:
 		vector<double> x;	// collapse 5d vector
 		int pTmax, phimax, QXmax, QYmax, QZmax;
@@ -62,18 +56,29 @@ class FTspectra
 		void setQZ(int i_QZ, double a);
 		void destroy();
 		void destroyc();
+		inline int index5D(int ipT, int iphi, int iQX, int iQY, int iQZ)
+		{
+			return ( ( ( ( ipT * phimax + iphi ) * QXmax + iQX )
+							   * QYmax + iQY )   * QZmax + iQZ );
+		}
 };
 
 
-class FTlist {
-public:
-	int pTmax, phimax, QXmax, QYmax, QZmax;
-	FTspectra pt, phi, QX, QY, QZ, FTdNdpdphi, FTdNdpdphic;
-	FTlist(int npT, int nphi, int nQX, int nQY, int nQZ);
-	void setup( vector<double> & pt, vector<double> & phi,
-				vector<double> & QX, vector<double> & QY, vector<double> & QZ );
-	void destroy();
-	void destroyc();
+class FTlist
+{
+	public:
+		int pTmax, phimax, QXmax, QYmax, QZmax;
+		FTspectra pt, phi, QX, QY, QZ, FTdNdpdphi, FTdNdpdphic;
+		FTlist(int npT, int nphi, int nQX, int nQY, int nQZ);
+		void setup( vector<double> & pt, vector<double> & phi,
+					vector<double> & QX, vector<double> & QY, vector<double> & QZ );
+		void destroy();
+		void destroyc();
+		/*inline int index5D(int ipT, int iphi, int iQX, int iQY, int iQZ)
+		{
+			return ( ( ( ( ipT * phimax + iphi ) * QXmax + iQX )
+							   * QYmax + iQY )   * QZmax + iQZ );
+		}*/
 };
 
 
