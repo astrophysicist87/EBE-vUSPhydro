@@ -812,8 +812,8 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 					if ((sub_ii<0)||qtot<0) sub_ii=0;
 				}
 				ST_out[ii] += sub_ii;
+if (ii==0) cout << "Check here: " << sub << "   " << sub_ii << "   " << out << "   " << ST_out[ii] << endl;
 			}
-cout << "Check here: " << sub << "   " << sub_ii << "   " << out << "   " << ST_out[ii] << endl;
 		}
 
 		// if bulk		 
