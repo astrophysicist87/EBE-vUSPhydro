@@ -787,6 +787,9 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 	{
 		double I1,I2;
 		
+		std::fill( ST_I1.begin(), ST_I1.end(), 0.0 );
+		std::fill( ST_I2.begin(), ST_I2.end(), 0.0 );
+
 		Iout(I1,I2,p,phi,cur,i, set_spacetime_moments);
 		//cout << "Check Iout: " << I1 << "   " << I2 << endl;
 		
@@ -1001,6 +1004,8 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 	{
 		I1sc=0;
 		I2sc=0;
+		std::fill( ST_I1sc.begin(), ST_I1sc.end(), 0.0 );
+		std::fill( ST_I2sc.begin(), ST_I2sc.end(), 0.0 );
 	}
 
 	double expT=exp(pd/T);
