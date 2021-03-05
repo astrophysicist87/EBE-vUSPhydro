@@ -934,7 +934,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		complex<double> I1_comp, I2_comp;
 		//double pRap = 0.0;	// take y = 0 for right now
 		//double Q0 = 0.0, QX = 0.0, QY = 0.0, QZ = 0.0;	// also Q = 0
-		IoutFT(I1, I2, I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
+		Iout(I1, I2, p, phi, cur, i);
+		IoutFT(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
 		//cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
