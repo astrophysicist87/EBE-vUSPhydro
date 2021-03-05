@@ -93,8 +93,8 @@ int main (int argc, char *argv[])
   	l.setup(sph.pt,sph.phi);
   	
   	// set up calculation of correlation function
-	const double deltaQ = 0.01; // GeV
-	const int nQX = 1, nQY = 1, nQZ = 1;	// should all be odd to guarantee Q=0 included
+	const double deltaQ = 0.025; // GeV
+	const int nQX = 7, nQY = 7, nQZ = 7;	// should all be odd to guarantee Q=0 included
 	vector<double> QXpts(nQX), QYpts(nQY), QZpts(nQZ);
 	for (int iQX = 0; iQX < nQX; iQX++) QXpts[iQX] = -0.5*(nQX-1)*deltaQ + deltaQ*iQX;
 	for (int iQY = 0; iQY < nQY; iQY++) QYpts[iQY] = -0.5*(nQY-1)*deltaQ + deltaQ*iQY;
