@@ -812,7 +812,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 					if ((sub_ii<0)||qtot<0) sub_ii=0;
 				}
 				ST_out[ii] += sub_ii;
-if (ii==0) cout << "Check here(0): " << sub << "   " << sub_ii << "   " << out << "   " << ST_out[ii] << endl;
+//if (ii==0) cout << "Check here(0): " << sub << "   " << sub_ii << "   " << out << "   " << ST_out[ii] << endl;
 			}
 		}
 
@@ -842,7 +842,7 @@ if (ii==0) cout << "Check here(0): " << sub << "   " << sub_ii << "   " << out <
 			}
 		}
 
-cout << "Check here(1): " << out << "   " << ST_out[0] << endl;
+//cout << "Check here(1): " << out << "   " << ST_out[0] << endl;
 
 		// if shear
 		if (typ>1)
@@ -871,7 +871,7 @@ cout << "Check here(1): " << out << "   " << ST_out[0] << endl;
 		}
 	}
 
-cout << "Check here(2): " << out << "   " << ST_out[0] << endl;
+//cout << "Check here(2): " << out << "   " << ST_out[0] << endl;
 
 	if (isnan(out)==1) cout << out << endl;
 	
@@ -897,7 +897,7 @@ cout << "Check here(2): " << out << "   " << ST_out[0] << endl;
 				ST_outc[ii] = vfac*ST_outc[ii]+cur.svfac*ST_outsc[ii];
 	}
 
-cout << "Check here(3): " << out << "   " << ST_out[0] << endl;
+//cout << "Check here(3): " << out << "   " << ST_out[0] << endl;
 
 
 	if ( set_spacetime_moments )
