@@ -219,7 +219,8 @@ int main (int argc, char *argv[])
 		{
 			for(int i=0;i<l.phimax;i++)
 			{
-				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]);
+				l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],,
+											sph.had[h], set_spacetime_moments );
 				l.dNdpdphic.x[ps][i]=sph.outc;
 				if ( set_spacetime_moments )
 				{						
