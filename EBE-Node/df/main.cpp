@@ -346,6 +346,8 @@ int main (int argc, char *argv[])
 								   << CF << "   " << CFc << endl;
 
 						}	// end of Q loops
+
+					 	outHBT.close();
 					}		// end of if condition (test HBT particle)
 		//			if (l.dNdpdphi.x[ps][i]<0||isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
 		//			if (l.dNdpdphic.x[ps][i]<0||isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
@@ -353,7 +355,6 @@ int main (int argc, char *argv[])
 					if (isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
 				}			// end of phi loop
 		 	}				// end of pT loop
-		 	outHBT.close();
 	 	}					// end of if condition (test viscous or ideal)
 		
 		
