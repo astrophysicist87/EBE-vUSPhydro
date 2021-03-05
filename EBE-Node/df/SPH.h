@@ -999,9 +999,9 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 
 	if (isnan(out)==1) cout << out << endl;	
 
-cout << "Check here: " << out << "   " << out_comp << "   "
+/*cout << "Check here: " << out << "   " << out_comp << "   "
 		<< outc << "   " << outc_comp << "   "
-		<< outsc << "   " << outsc_comp << endl;
+		<< outsc << "   " << outsc_comp << endl;*/
 
 	if (typ==1)  outc_comp*=vfac;
 	else if (typ==2) outc_comp=vfac*out_comp+cur.svfac*outsc_comp;

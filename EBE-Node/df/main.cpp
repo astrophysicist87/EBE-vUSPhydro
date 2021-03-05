@@ -7,6 +7,7 @@
 #include <sstream>
 #include <cmath>
 #include <vector>
+#include <map>
 
 #include "SPH.h"
 #include "int.h"
@@ -81,7 +82,10 @@ int main (int argc, char *argv[])
 
 	
 	const bool set_spacetime_moments = true;
-  	
+  	vector<int> HBTparticleIDs = {211, 321};	//pi^+, K^+
+	std::map<int,string> HBTparticleNames;
+	HBTparticleNames[211] = "pion_+";
+	HBTparticleNames[321] = "kaon_+";
   	
   	list l(sph.pt.size(),sph.phi.size());
   	l.setup(sph.pt,sph.phi);
@@ -222,6 +226,15 @@ int main (int argc, char *argv[])
 	 	}
 	 	else
 		{
+			string particleName = HBTparticleNames[sph.had[h].id];
+			string outfilename = ofolder + "/" + particleName
+									+ "_HBT_correlation_function.dat";
+			ofstream outHBT;	// declaration
+			if ( std::count( HBTparticleIDs.begin(),
+							 HBTparticleIDs.end(),
+							 sph.had[h].id ) > 0 )
+				outHBT = ofstream( outfilename.c_str(), ios::out | ios::app );
+
 		 	for (int ps=0;ps<l.pTmax;ps++)
 			{
 				for(int i=0;i<l.phimax;i++)
@@ -277,44 +290,73 @@ int main (int argc, char *argv[])
 					cout << "Check FT spectra: "
 						<< sph.dNdpdphi_FT(l.pt.x[ps][i],l.phi.x[ps][i],0.0,sph.had[h],
 											0.0, 0.0, 0.0, 0.0) << endl;*/
-					const double mass  = sph.had[h].mass;
-					const double KT    = l.pt.x[ps][i];
-					const double Kphi  = l.phi.x[ps][i];
-					const double KYrap = 0.0;
-					const double ckp   = cos(Kphi),
-								 skp   = sin(Kphi);
-	
-					for ( int iQX = 0; iQX < nQX; iQX++ )
-					for ( int iQY = 0; iQY < nQY; iQY++ )
-					for ( int iQZ = 0; iQZ < nQZ; iQZ++ )
+
+					// if this is one of the HBT particles, do HBT!
+					if ( std::count( HBTparticleIDs.begin(),
+									 HBTparticleIDs.end(),
+									 sph.had[h].id ) > 0 )
 					{
-						const double xi2  = mass*mass + KT*KT
-											+ 0.25*( QXpts[iQX]*QXpts[iQX]
-													+ QYpts[iQY]*QYpts[iQY]
-													+ QZpts[iQZ]*QZpts[iQZ] );
-					
-						const double QOUT = ckp * QXpts[iQX] + skp * QYpts[iQY];
-						const double Q0   = sqrt(xi2 + QOUT*KT) - sqrt(xi2 - QOUT*KT);
-	
-						// use built-in indexer
-						const int FTl_index
-							= FTl.FTdNdpdphi.index5D(ps, i, iQX, iQY, iQZ);
-						FTl.FTdNdpdphi.x[ FTl_index ]
-							= sph.dNdpdphi_FT( KT, Kphi, KYrap, sph.had[h],
-												Q0, QXpts[iQX], QYpts[iQY], QZpts[iQZ] );
-						FTl.FTdNdpdphic.x[ FTl_index ] = sph.outc_comp;
-cout << "Check all spectra: " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
-		<< l.dNdpdphi.x[ps][i] << "   " << l.dNdpdphic.x[ps][i] << "   "
-		<< FTl.FTdNdpdphi.x[ FTl_index ] << "   " << FTl.FTdNdpdphic.x[ FTl_index ] << endl;
-					}
+						const double mass  = sph.had[h].mass;
+						const double KT    = l.pt.x[ps][i];
+						const double Kphi  = l.phi.x[ps][i];
+						const double KYrap = 0.0;
+						const double ckp   = cos(Kphi),
+									 skp   = sin(Kphi);
+		
+						for ( int iQX = 0; iQX < nQX; iQX++ )
+						for ( int iQY = 0; iQY < nQY; iQY++ )
+						for ( int iQZ = 0; iQZ < nQZ; iQZ++ )
+						{
+							const double xi2  = mass*mass + KT*KT
+												+ 0.25*( QXpts[iQX]*QXpts[iQX]
+														+ QYpts[iQY]*QYpts[iQY]
+														+ QZpts[iQZ]*QZpts[iQZ] );
+						
+							const double QOUT = ckp * QXpts[iQX] + skp * QYpts[iQY];
+							const double Q0   = sqrt(xi2 + QOUT*KT) - sqrt(xi2 - QOUT*KT);
+		
+							// use built-in indexer
+							const int FTl_index
+								= FTl.FTdNdpdphi.index5D(ps, i, iQX, iQY, iQZ);
+							FTl.FTdNdpdphi.x[ FTl_index ]
+								= sph.dNdpdphi_FT( KT, Kphi, KYrap, sph.had[h],
+													Q0, QXpts[iQX], QYpts[iQY], QZpts[iQZ] );
+							FTl.FTdNdpdphic.x[ FTl_index ] = sph.outc_comp;
+	//cout << "Check all spectra: " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
+	//		<< l.dNdpdphi.x[ps][i] << "   " << l.dNdpdphic.x[ps][i] << "   "
+	//		<< FTl.FTdNdpdphi.x[ FTl_index ] << "   " << FTl.FTdNdpdphic.x[ FTl_index ] << endl;
+
+							complex<double> ratio = FTl.FTdNdpdphi.x[ FTl_index ]
+													/ l.dNdpdphi.x[ps][i];
+							complex<double> ratioc = FTl.FTdNdpdphic.x[ FTl_index ]
+													/ l.dNdpdphic.x[ps][i];
+							const double CF = 1.0 + abs(ratio)*abs(ratio);
+							const double CFc = 1.0 + abs(ratioc)*abs(ratioc);
+
+							// finally, output everything to appropriate files
+							outHBT << l.pt.x[ps][i] << "   "
+								   << l.phi.x[ps][i] << "   "
+								   << QXpts[iQX] << "   "
+								   << QYpts[iQY] << "   "
+								   << QZpts[iQZ] << "   "
+								   << l.dNdpdphi.x[ps][i] << "   "
+								   << l.dNdpdphic.x[ps][i] << "   "
+								   << FTl.FTdNdpdphi.x[ FTl_index ].real() << "   "
+								   << FTl.FTdNdpdphi.x[ FTl_index ].imag() << "   "
+								   << FTl.FTdNdpdphic.x[ FTl_index ].real() << "   "
+								   << FTl.FTdNdpdphic.x[ FTl_index ].imag() << "   "
+								   << CF << "   " << CFc << endl;
+
+						}	// end of Q loops
+					}		// end of if condition (test HBT particle)
 		//			if (l.dNdpdphi.x[ps][i]<0||isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
 		//			if (l.dNdpdphic.x[ps][i]<0||isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
 					if (isnan(l.dNdpdphi.x[ps][i])) l.dNdpdphi.x[ps][i]=0;
 					if (isnan(l.dNdpdphic.x[ps][i])) l.dNdpdphic.x[ps][i]=0;
-				}
-		 	}
-		 	
-	 	}
+				}			// end of phi loop
+		 	}				// end of pT loop
+		 	outHBT.close();
+	 	}					// end of if condition (test viscous or ideal)
 		
 		
 		//print off spectra
@@ -347,13 +389,13 @@ cout << "Check all spectra: " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i] << "  
 
 
 		
-		}
+		}	// end of if clause - checking well-definedness of this hadron
 		
 	 	
 		
 		
 		
-	}
+	}	// end of loop over hadrons
 	
 	
 	delete [] sph.par;
