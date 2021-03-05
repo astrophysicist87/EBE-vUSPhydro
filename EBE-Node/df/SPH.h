@@ -121,9 +121,9 @@ public:
 								 double Q0, double QX, double QY, double QZ );
 	void Iout( double &I1, double &I2, double p, double phi, HAD cur, int nsph,
 				bool set_spacetime_moments = false);
-	void IoutFT(double &I1, double &I2, complex<double> &I1_comp, complex<double> &I2_comp,
+	void IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 				double pT, double phi, double pRap, HAD cur, int nsph,
-				double Q0, double QX, double QY, double QZ);
+				double Q0, double QX, double QY, double QZ );
 	string convertInt(int number);
 	void flist();
 	void calcF2(HAD cur, int nsph, double pd, double &F0, double &F1, double &F2);
@@ -1344,8 +1344,7 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 
 
 template <int D,int DD>
-void SPH<D,DD>::IoutFT( double &I1, double &I2,
-						complex<double> &I1_comp, complex<double> &I2_comp,
+void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 						double pT, double phi, double pRap, HAD cur,int nsph,
 						double Q0, double QX, double QY, double QZ )
 {
