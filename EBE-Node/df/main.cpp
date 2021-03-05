@@ -228,15 +228,6 @@ int main (int argc, char *argv[])
 	 	}
 	 	else
 		{
-			string particleName = HBTparticleNames[sph.had[h].id];
-			string outfilename = ofolder + "/" + particleName
-									+ "_HBT_correlation_function.dat";
-			ofstream outHBT;	// declaration
-			if ( std::count( HBTparticleIDs.begin(),
-							 HBTparticleIDs.end(),
-							 sph.had[h].id ) > 0 )
-				outHBT = ofstream( outfilename.c_str(), ios::out | ios::app );
-
 		 	for (int ps=0;ps<l.pTmax;ps++)
 			{
 				for(int i=0;i<l.phimax;i++)
@@ -298,6 +289,11 @@ int main (int argc, char *argv[])
 									 HBTparticleIDs.end(),
 									 sph.had[h].id ) > 0 )
 					{
+						string particleName = HBTparticleNames[sph.had[h].id];
+						string outfilename = ofolder + "/" + particleName
+												+ "_HBT_correlation_function.dat";
+						ofstream outHBT( outfilename.c_str(), ios::out | ios::app );
+
 						const double mass  = sph.had[h].mass;
 						const double KT    = l.pt.x[ps][i];
 						const double Kphi  = l.phi.x[ps][i];
