@@ -493,7 +493,7 @@ void SPH<D,DD>::readin2(int cev)
 	
 	while (!feof(myfile))   // runs over all the SPH particles in the event
 	{
-	cout << "Reading in " << myfile ": dimension = " << par2[i].n.dim() << "   " << par2[i].u.dim() << "   " << par2[i].r.dim() << endl;
+	cout << "Reading in " << myfile << ": dimension = " << par2[i].n.dim() << "   " << par2[i].u.dim() << "   " << par2[i].r.dim() << endl;
 	fscanf(myfile,"%lf %lf %lf %lf %lf %lf %lf %lf %lf  %lf %lf %lf %lf %lf %lf %lf  %lf \n",&par2[i].n.x[0],&par2[i].n.x[1],&par2[i].n.x[2],&par2[i].u.x[0],&par2[i].u.x[1],&par2[i].u.x[2],&par2[i].vol,&par2[i].bulkpi,&par2[i].pi00,&par2[i].pi11,&par2[i].pi22,&par2[i].pi33,&par2[i].pi12,&par2[i].tau,&par2[i].r.x[0],&par2[i].r.x[1],&par2[i].s); 
 	par2[i].vol/=sc3;
 	par2[i].pi33*=par2[i].tau*par2[i].tau;
