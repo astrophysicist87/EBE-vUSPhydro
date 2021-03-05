@@ -779,6 +779,10 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 	outc=0;
 	string negc="neg";
 	
+	std::fill( ST_out.begin(), ST_out.end(), 0.0 );
+	std::fill( ST_outc.begin(), ST_outc.end(), 0.0 );
+	std::fill( ST_outsc.begin(), ST_outsc.end(), 0.0 );
+	
 	for (int i=0;i<evn;i++)
 	{
 		double I1,I2;
@@ -901,7 +905,7 @@ double SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD cur,
 	double out=0,outsc=0;
 	outc=0;
 	string negc="neg";
-	
+
 	for (int i=0;i<evn;i++)
 	{		
 		complex<double> I1_comp, I2_comp;
@@ -987,6 +991,10 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 	double TG=T/g;
 	double bfac=eperp/TG;
 	
+	std::fill( ST_out1.begin(), ST_out1.end(), 0.0 );
+	std::fill( ST_out2.begin(), ST_out2.end(), 0.0 );
+	std::fill( ST_out1c.begin(), ST_out1c.end(), 0.0 );
+	std::fill( ST_out2c.begin(), ST_out2c.end(), 0.0 );
 
 	if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
 	if (typ>1)
