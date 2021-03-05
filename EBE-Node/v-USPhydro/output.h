@@ -718,6 +718,7 @@ void Output<D>::svFOprint(LinkList<D> &linklist)
   	FO.open(FOname.c_str(), ios::out | ios::app );
   	for (int i=0;i< linklist.cf;i++)
   	{
+	cout << "rsub dimension = " << linklist.rsub[i].dim() << endl;
   	FO <<  linklist.divTtemp[i] << " " << linklist.divT[i] << " " << linklist.gsub[i] << " " << linklist.uout[i] << " " << linklist.swsub[i] << " " <<  linklist.bulksub[i] << " "  <<  linklist.shearsub[i].x[0][0] << " "  <<  linklist.shearsub[i].x[1][1] << " "  <<  linklist.shearsub[i].x[2][2] <<" " <<linklist.shear33sub[i] << " "  <<  linklist.shearsub[i].x[1][2] <<  " "  <<  linklist.tlist[i] <<  " " << linklist.rsub[i] <<  " " << linklist.sFO[i] << endl; // removed entropy, added in tau
 	}
   	FO.close();
