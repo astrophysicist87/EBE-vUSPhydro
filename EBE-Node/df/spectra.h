@@ -2,6 +2,7 @@
 #define _SPECTRA_H_
 
 #include <vector>
+#include <complex>
 
 using namespace std;
 
