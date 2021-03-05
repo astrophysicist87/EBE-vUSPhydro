@@ -1157,13 +1157,13 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 				double K1coeff = pre*eperp*(F0F2+fac*F1c);
 				double K2coeff = pre*ep2*facF2;
 
-			//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
-			//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
-			//double x_SPH       = par[nsph].r.x[1];
-			//double y_SPH       = par[nsph].r.x[2];
-			double tau_SPH     = par[nsph].tau; 
-			double x_SPH       = par[nsph].r.x[0];
-			double y_SPH       = par[nsph].r.x[1];
+				//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+				//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+				//double x_SPH       = par[nsph].r.x[1];
+				//double y_SPH       = par[nsph].r.x[2];
+				double tau_SPH     = par[nsph].tau; 
+				double x_SPH       = par[nsph].r.x[0];
+				double y_SPH       = par[nsph].r.x[1];
 	
 				// moments from first term
 				ST_out1c[0] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * 1.0;				// S
@@ -1432,9 +1432,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		
 		pre=pow(-cur.theta,nn)*pow(expT,add);
 		complex<double> preb1=2.0*pre*mT*b1;
-		out1+=preb1;
+		out1 += trans_phase * preb1;
 		complex<double> preb0=2.0*pre*b0;
-		out2+=preb0;
+		out2 += trans_phase * preb0;
 		
 		if ((typ==1)||(typ==3))	// if including bulk
 		{
