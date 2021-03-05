@@ -1053,10 +1053,13 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		
 		if ( set_spacetime_moments )
 		{
-			double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
-								     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
-			double x_SPH       = par[nsph].r.x[1];
-			double y_SPH       = par[nsph].r.x[2];
+			//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+			//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+			//double x_SPH       = par[nsph].r.x[1];
+			//double y_SPH       = par[nsph].r.x[2];
+			double tau_SPH     = par[nsph].tau; 
+			double x_SPH       = par[nsph].r.x[0];
+			double y_SPH       = par[nsph].r.x[1];
 
 			// moments from first term
 			ST_out1[0] += pre * STb1 * 1.0;									// S
@@ -1117,10 +1120,13 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 				double K1coeff = pre*eperp*(F0F2+fac*F1c);
 				double K2coeff = pre*ep2*facF2;
 
-				double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
-									     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
-				double x_SPH       = par[nsph].r.x[1];
-				double y_SPH       = par[nsph].r.x[2];
+			//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+			//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+			//double x_SPH       = par[nsph].r.x[1];
+			//double y_SPH       = par[nsph].r.x[2];
+			double tau_SPH     = par[nsph].tau; 
+			double x_SPH       = par[nsph].r.x[0];
+			double y_SPH       = par[nsph].r.x[1];
 	
 				// moments from first term
 				ST_out1c[0] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * 1.0;				// S
@@ -1195,10 +1201,13 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 				double K3coeff = pred*ep3*spi1;
 				double K1coeff = pred*(ep3*(3.0*par[nsph].pi00-par[nsph].pi33)+eperp*spi3);
 				
-				double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
-									     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
-				double x_SPH       = par[nsph].r.x[1];
-				double y_SPH       = par[nsph].r.x[2];
+				//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+				//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+				//double x_SPH       = par[nsph].r.x[1];
+				//double y_SPH       = par[nsph].r.x[2];
+				double tau_SPH     = par[nsph].tau; 
+				double x_SPH       = par[nsph].r.x[0];
+				double y_SPH       = par[nsph].r.x[1];
 	
 				// moments from I1sc
 				ST_I1sc[0] += (K3coeff*STb3 + K1coeff*STb1) * 1.0;						// S
@@ -1307,12 +1316,15 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	const complex<double> iComplex(0.0, 1.0);
 
 	// set space-time and momentum info for SPH particle
-	double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
-						     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
-	double eta_SPH     = 0.5*log( abs(par[nsph].r.x[0]+par[nsph].r.x[3])
-                                 /(abs(par[nsph].r.x[0]-par[nsph].r.x[3])+1e-100) ); 
-	double x_SPH       = par[nsph].r.x[1];
-	double y_SPH       = par[nsph].r.x[2];
+	//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+	//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+	//double eta_SPH     = 0.5*log( abs(par[nsph].r.x[0]+par[nsph].r.x[3])
+    //                             /(abs(par[nsph].r.x[0]-par[nsph].r.x[3])+1e-100) ); 
+	//double x_SPH       = par[nsph].r.x[1];
+	//double y_SPH       = par[nsph].r.x[2];
+	double tau_SPH     = par[nsph].tau; 
+	double x_SPH       = par[nsph].r.x[0];
+	double y_SPH       = par[nsph].r.x[1];
 	double chy         = cosh(pRap),
            shy         = sinh(pRap);
 	complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy)/hbarc_local, 0.0);
