@@ -1239,17 +1239,17 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		for (int ii = 0; ii < 15; ii++)
 		{
 			ST_I1[ii] = 2*ST_out1[ii]*eperp;
-			ST_I2[ii] = 2*ST_out2[ii]*eperp;
+			ST_I2[ii] = 2*ST_out2[ii];
 			ST_I1c[ii] = 2*ST_out1c[ii];
 			ST_I2c[ii] = 2*ST_out2c[ii];
 		}
 	}
 
-	cout << "Check real: " << I1 << "   " << I2 << "   "
+	/*cout << "Check real: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
 		<< I1sc << "   " << I2sc << "   "
 		<< ST_I1[0] << "   " << ST_I2[0] << "   "
-		<< ST_I1c[0] << "   " << ST_I2c[0] << endl;
+		<< ST_I1c[0] << "   " << ST_I2c[0] << endl;*/
 	
 	// momentum too large at this temperature to give meaningful contribution;
 	// ergo, zero everything
