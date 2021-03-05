@@ -17,6 +17,7 @@ public:
 	Vector<T,D>& operator+=(Vector<T,D>);
 	Vector<T,D>& operator-=(Vector<T,D>);
 	Vector<T,D>& operator*=(T);	
+	inline int dim(){ return ( D ); }
 };
 
 template <class T, int D>

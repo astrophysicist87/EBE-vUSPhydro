@@ -239,6 +239,7 @@ int main (int argc, char *argv[])
 					l.stm_ytS.x[ps][i]  = sph.ST_out[12];
 					l.stm_ztS.x[ps][i]  = sph.ST_out[13];
 					l.stm_t2S.x[ps][i]  = sph.ST_out[14];
+
 					l.stm_Sc.x[ps][i]   = sph.ST_outc[0];
 					l.stm_xSc.x[ps][i]  = sph.ST_outc[1];
 					l.stm_ySc.x[ps][i]  = sph.ST_outc[2];
