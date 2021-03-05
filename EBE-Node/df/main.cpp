@@ -256,10 +256,11 @@ int main (int argc, char *argv[])
 					l.stm_t2Sc.x[ps][i] = sph.ST_outc[14];
 
 cout << "HBT (ideal): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
-		<< "   " << l.dNdpdphi.x[ps][i] << "   " << l.dNdpdphic.x[ps][i];
-for (int ii = 0; ii < 1; ii++) cout << "   " << sph.ST_out[ii];
-cout << endl << "HBT (viscous): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i];
-for (int ii = 0; ii < 1; ii++) cout << "   " << sph.ST_outc[ii];
+		<< "   " << l.dNdpdphi.x[ps][i];
+for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
+cout << endl << "HBT (viscous): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
+		<< "   " << l.dNdpdphic.x[ps][i];
+for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_outc[ii];
 cout << endl;
 
 				}

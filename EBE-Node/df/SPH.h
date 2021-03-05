@@ -901,7 +901,11 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 
 
 	if ( set_spacetime_moments )
-		for (int ii = 0; ii < 15; ii++) ST_out[ii] *= vfac;
+		for (int ii = 0; ii < 15; ii++)
+		{
+			ST_out[ii] *= vfac;
+			if ( ii > 0 ) ST_out[ii] /= ST_out[0];
+		}
 
 	return out*=vfac;
 }
