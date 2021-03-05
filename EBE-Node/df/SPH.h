@@ -813,6 +813,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 				}
 				ST_out[ii] += sub_ii;
 			}
+cout << "Check here: " << sub << "   " << sub_ii << "   " << out << "   " << ST_out[ii] << endl;
 		}
 
 		// if bulk		 
