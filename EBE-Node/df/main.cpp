@@ -216,6 +216,27 @@ int main (int argc, char *argv[])
 						l.stm_ytS.x[ps][i] = sph.ST_out[12];
 						l.stm_ztS.x[ps][i] = sph.ST_out[13];
 						l.stm_t2S.x[ps][i] = sph.ST_out[14];
+
+						// switch from XYZ --> OSL
+						const double ckp     = cos(l.phi.x[ps][i]),
+									 skp     = sin(l.phi.x[ps][i]);
+						const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_xS.x[ps][i];
+						const double x2Sloc  = l.stm_x2S.x[ps][i], xySloc = l.stm_xyS.x[ps][i],
+									 y2Sloc  = l.stm_y2S.x[ps][i];
+						const double xtSloc  = l.stm_xtS.x[ps][i], ytSloc = l.stm_ytS.x[ps][i],
+									 xzSloc  = l.stm_xtS.x[ps][i], yzSloc = l.stm_ytS.x[ps][i];
+						l.stm_xoS.x[ps][i]   = ckp*xSloc+skp*ySloc;
+						l.stm_xsS.x[ps][i]   = ckp*ySloc-skp*xSloc;
+						l.stm_xlS.x[ps][i]   = l.stm_zS.x[ps][i];
+						l.stm_xo2S.x[ps][i]  = ckp*ckp*x2Sloc+skp*skp*y2Sloc+2.0*ckp*skp*xySloc;
+						l.stm_xs2S.x[ps][i]  = ckp*ckp*y2Sloc+skp*skp*x2Sloc-2.0*ckp*skp*xySloc;
+						l.stm_xl2S.x[ps][i]  = l.stm_z2S.x[ps][i];
+						l.stm_xoxsS.x[ps][i] = (ckp*ckp*-skp*skp)*xySloc+ckp*skp*(y2Sloc-x2Sloc);
+						l.stm_xotS.x[ps][i]  = ckp*xtSloc+skp*ytSloc;
+						l.stm_xstS.x[ps][i]  = ckp*ytSloc-skp*xtSloc;
+						l.stm_xltS.x[ps][i]  = l.stm_ztS.x[ps][i];
+						l.stm_xoxlS.x[ps][i] = ckp*xzSloc+skp*yzSloc;
+						l.stm_xsxlS.x[ps][i] = ckp*yzSloc-skp*xzSloc;
 					}
 	
 					/*cout << "Check spectra: "
@@ -269,6 +290,45 @@ int main (int argc, char *argv[])
 						l.stm_ztSc.x[ps][i] = sph.ST_outc[13];
 						l.stm_t2Sc.x[ps][i] = sph.ST_outc[14];
 	
+						// switch from XYZ --> OSL
+						const double ckp     = cos(l.phi.x[ps][i]),
+									 skp     = sin(l.phi.x[ps][i]);
+						const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_xS.x[ps][i];
+						const double x2Sloc  = l.stm_x2S.x[ps][i], xySloc = l.stm_xyS.x[ps][i],
+									 y2Sloc  = l.stm_y2S.x[ps][i];
+						const double xtSloc  = l.stm_xtS.x[ps][i], ytSloc = l.stm_ytS.x[ps][i],
+									 xzSloc  = l.stm_xtS.x[ps][i], yzSloc = l.stm_ytS.x[ps][i];
+						l.stm_xoS.x[ps][i]   = ckp*xSloc+skp*ySloc;
+						l.stm_xsS.x[ps][i]   = ckp*ySloc-skp*xSloc;
+						l.stm_xlS.x[ps][i]   = l.stm_zS.x[ps][i];
+						l.stm_xo2S.x[ps][i]  = ckp*ckp*x2Sloc+skp*skp*y2Sloc+2.0*ckp*skp*xySloc;
+						l.stm_xs2S.x[ps][i]  = ckp*ckp*y2Sloc+skp*skp*x2Sloc-2.0*ckp*skp*xySloc;
+						l.stm_xl2S.x[ps][i]  = l.stm_z2S.x[ps][i];
+						l.stm_xoxsS.x[ps][i] = (ckp*ckp*-skp*skp)*xySloc+ckp*skp*(y2Sloc-x2Sloc);
+						l.stm_xotS.x[ps][i]  = ckp*xtSloc+skp*ytSloc;
+						l.stm_xstS.x[ps][i]  = ckp*ytSloc-skp*xtSloc;
+						l.stm_xltS.x[ps][i]  = l.stm_ztS.x[ps][i];
+						l.stm_xoxlS.x[ps][i] = ckp*xzSloc+skp*yzSloc;
+						l.stm_xsxlS.x[ps][i] = ckp*yzSloc-skp*xzSloc;
+
+						const double xScloc   = l.stm_xSc.x[ps][i],  yScloc  = l.stm_xSc.x[ps][i];
+						const double x2Scloc  = l.stm_x2Sc.x[ps][i], xyScloc = l.stm_xySc.x[ps][i],
+									 y2Scloc  = l.stm_y2Sc.x[ps][i];
+						const double xtScloc  = l.stm_xtSc.x[ps][i], ytScloc = l.stm_ytSc.x[ps][i],
+									 xzScloc  = l.stm_xtSc.x[ps][i], yzScloc = l.stm_ytSc.x[ps][i];
+						l.stm_xoSc.x[ps][i]   = ckp*xScloc+skp*yScloc;
+						l.stm_xsSc.x[ps][i]   = ckp*yScloc-skp*xScloc;
+						l.stm_xlSc.x[ps][i]   = l.stm_zSc.x[ps][i];
+						l.stm_xo2Sc.x[ps][i]  = ckp*ckp*x2Scloc+skp*skp*y2Scloc+2.0*ckp*skp*xyScloc;
+						l.stm_xs2Sc.x[ps][i]  = ckp*ckp*y2Scloc+skp*skp*x2Scloc-2.0*ckp*skp*xyScloc;
+						l.stm_xl2Sc.x[ps][i]  = l.stm_z2Sc.x[ps][i];
+						l.stm_xoxsSc.x[ps][i] = (ckp*ckp*-skp*skp)*xyScloc+ckp*skp*(y2Scloc-x2Scloc);
+						l.stm_xotSc.x[ps][i]  = ckp*xtScloc+skp*ytScloc;
+						l.stm_xstSc.x[ps][i]  = ckp*ytScloc-skp*xtScloc;
+						l.stm_xltSc.x[ps][i]  = l.stm_ztSc.x[ps][i];
+						l.stm_xoxlSc.x[ps][i] = ckp*xzScloc+skp*yzScloc;
+						l.stm_xsxlSc.x[ps][i] = ckp*yzScloc-skp*xzScloc;
+
 	/*cout << "HBT (ideal): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
 			<< "   " << l.dNdpdphi.x[ps][i];
 	for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
@@ -289,7 +349,18 @@ int main (int argc, char *argv[])
 									 HBTparticleIDs.end(),
 									 sph.had[h].id ) > 0 )
 					{
+						// set grid.params file as well
 						string particleName = HBTparticleNames[sph.had[h].id];
+						string gridParamsFilename = ofolder + "/" + particleName
+													+ "_grid.params";
+						ofstream gridParams( gridParamsFilename.c_str(), ios::out );
+						gridParams << l.pt.x[ps].size << std::endl;
+						gridParams << l.phi.x[ps].size << std::endl;
+						gridParams << nQX << std::endl;
+						gridParams << nQY << std::endl;
+						gridParams << nQZ << std::endl;
+						gridParams.close();
+
 						string outfilename = ofolder + "/" + particleName
 												+ "_HBT_correlation_function.dat";
 						ofstream outHBT( outfilename.c_str(), ios::out | ios::app );
@@ -357,6 +428,26 @@ int main (int argc, char *argv[])
 		 	}				// end of pT loop
 	 	}					// end of if condition (test viscous or ideal)
 		
+		// set this using source variances defined above
+		l.compute_HBT_radii();
+
+		// then print to file
+		{
+			string outHBTfilename = ofolder + "/" + particleName
+									+ "_HBT_radii_SV.dat";
+			ofstream outHBT( outHBTfilename.c_str(), ios::out );
+
+			for (int ps=0;ps<l.pTmax;ps++)
+			for (int i=0;i<l.phimax;i++)
+				outHBT
+					<< l.pt.x[ps][i]   << "   " << l.phi.x[ps][i]  << "   "
+					<< R2o.x[ps][i]    << "   " << R2s.x[ps][i]    << "   " << R2l.x[ps][i]    << "   "
+					<< R2os.x[ps][i]   << "   " << R2ol.x[ps][i]   << "   " << R2sl.x[ps][i]   << "   "
+					<< R2o_c.x[ps][i]  << "   " << R2s_c.x[ps][i]  << "   " << R2l_c.x[ps][i]  << "   "
+					<< R2os_c.x[ps][i] << "   " << R2ol_c.x[ps][i] << "   " << R2sl_c.x[ps][i] << std::endl;
+
+			outHBT.close();
+		}
 		
 		//print off spectra
 		if (sph.typ>0) printc(out2,h,l,sph);

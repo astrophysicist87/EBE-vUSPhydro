@@ -37,12 +37,18 @@ namespace fitCF
 		vector<double> sigma;
 	};
 	
-	int Fittarget_correlfun3D_f (const gsl_vector *xvec_ptr, void *params_ptr, gsl_vector *f_ptr);
-	int Fittarget_correlfun3D_df (const gsl_vector *xvec_ptr, void *params_ptr,  gsl_matrix *Jacobian_ptr);
-	int Fittarget_correlfun3D_fdf (const gsl_vector* xvec_ptr, void *params_ptr, gsl_vector* f_ptr, gsl_matrix* Jacobian_ptr);
-	int Fittarget_correlfun3D_f_withlambda (const gsl_vector *xvec_ptr, void *params_ptr, gsl_vector *f_ptr);
-	int Fittarget_correlfun3D_df_withlambda (const gsl_vector *xvec_ptr, void *params_ptr,	gsl_matrix *Jacobian_ptr);
-	int Fittarget_correlfun3D_fdf_withlambda (const gsl_vector* xvec_ptr, void *params_ptr, gsl_vector* f_ptr, gsl_matrix* Jacobian_ptr);
+	int Fittarget_correlfun3D_f (const gsl_vector *xvec_ptr, void *params_ptr,
+									gsl_vector *f_ptr);
+	int Fittarget_correlfun3D_df (const gsl_vector *xvec_ptr, void *params_ptr,
+									gsl_matrix *Jacobian_ptr);
+	int Fittarget_correlfun3D_fdf (const gsl_vector* xvec_ptr, void *params_ptr,
+									gsl_vector* f_ptr, gsl_matrix* Jacobian_ptr);
+	int Fittarget_correlfun3D_f_withlambda (const gsl_vector *xvec_ptr, void *params_ptr,
+									gsl_vector *f_ptr);
+	int Fittarget_correlfun3D_df_withlambda (const gsl_vector *xvec_ptr, void *params_ptr,
+									gsl_matrix *Jacobian_ptr);
+	int Fittarget_correlfun3D_fdf_withlambda (const gsl_vector* xvec_ptr, void *params_ptr,
+									gsl_vector* f_ptr, gsl_matrix* Jacobian_ptr);
 	
 	const double hbarC = 0.197327053;
 	
@@ -51,11 +57,17 @@ namespace fitCF
 	extern bool USE_LOG_FIT;
 	const int VERBOSE = 0;
 	
-	const int n_KT_pts = 15;
+	/*const int n_KT_pts = 15;
 	const int n_Kphi_pts = 36;
 	const int nqxpts = 7;
 	const int nqypts = 7;
-	const int nqzpts = 7;
+	const int nqzpts = 7;*/
+	// initialize but allow them to be changed
+	int n_KT_pts = 15;
+	int n_Kphi_pts = 36;
+	int nqxpts = 7;
+	int nqypts = 7;
+	int nqzpts = 7;
 	
 	const int n_order = 4;
 	
@@ -91,13 +103,16 @@ namespace fitCF
 	/*vector<double> KT_pts(n_KT_pts), Kphi_pts(n_Kphi_pts);
 	vector<double> qx_pts(nqxpts), qy_pts(nqypts), qz_pts(nqzpts);
 	
-	vector<vector<double> > CFvals = vector<vector<double> >( n_KT_pts * n_Kphi_pts, vector<double> ( nqxpts * nqypts * nqzpts ) );*/
+	vector<vector<double> > CFvals = vector<vector<double> >( n_KT_pts * n_Kphi_pts,
+									 vector<double> ( nqxpts * nqypts * nqzpts ) );*/
 	
 	extern vector<double> KT_pts, Kphi_pts, qx_pts, qy_pts, qz_pts;
 	
 	extern vector<vector<double> > CFvals;
 	
 	
+	void Set_grid_parameters( string grid_parameter_file, int & n_KT_pts, int & n_Kphi_pts,
+								int & nqxpts, int & nqypts, int & nqzpts );
 	void Get_GF_HBTradii(string directory_in, bool use_log_fit_in=true);
 	void Read_in_correlationfunction();
 	void Fit_Correlationfunction3D(vector<double> & Correl_3D, int iKT, int iKphi);

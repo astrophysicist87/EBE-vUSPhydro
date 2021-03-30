@@ -32,6 +32,10 @@ namespace fitCF
 	{
 		directory = directory_in;
 		USE_LOG_FIT = use_log_fit_in;
+
+		string grid_parameter_file = directory + "/pion_+_grid.params";
+		Set_grid_parameters( grid_parameter_file, n_KT_pts, n_Kphi_pts,
+												  nqxpts, nqypts, nqzpts );
 	
 		cout << "  - processing " << directory << " with log fit = " << USE_LOG_FIT << endl;
 	
@@ -41,7 +45,8 @@ namespace fitCF
 		qy_pts = vector<double>(nqypts);
 		qz_pts = vector<double>(nqzpts);
 	
-		CFvals = vector<vector<double> >( n_KT_pts * n_Kphi_pts, vector<double> ( nqxpts * nqypts * nqzpts, 0.0 ) );
+		CFvals = vector<vector<double> >( n_KT_pts * n_Kphi_pts,
+					vector<double> ( nqxpts * nqypts * nqzpts, 0.0 ) );
 	
 		lambda_Correl = vector<double>( n_KT_pts * n_Kphi_pts );
 		R2_side_GF = vector<double>( n_KT_pts * n_Kphi_pts );
@@ -85,8 +90,9 @@ namespace fitCF
 			}
 		}
 	
-		for (int iKT = 0; iKT < nKT; ++iKT)
-			R2_Fourier_transform(iKT, 0.0);
+		// don't Fourier transform until we're sure we're doing Gaussian quadrature...
+		//for (int iKT = 0; iKT < nKT; ++iKT)
+		//	R2_Fourier_transform(iKT, 0.0);
 	
 		KT_pts.clear();
 		Kphi_pts.clear();
@@ -120,10 +126,26 @@ namespace fitCF
 		return;
 	}
 	
+	void Set_grid_parameters( string grid_parameter_file, int & n_KT_pts, int & n_Kphi_pts,
+								int & nqxpts, int & nqypts, int & nqzpts )
+	{
+		ifstream iGridParams;
+		iGridParams.open(grid_parameter_file.c_str());
+
+		iGridParams >> n_KT_pts;
+		iGridParams >> n_Kphi_pts;
+		iGridParams >> nqxpts;
+		iGridParams >> nqypts;
+		iGridParams >> nqzpts;
+
+		iGridParams.close();
+		return;
+	}
+
 	void Read_in_correlationfunction()
 	{
 		ifstream iCorrFunc;
-		string filename = directory + "/correlfunct3D_Pion_+.dat";
+		string filename = directory + "/pion_+_HBT_correlation_function.dat";
 		iCorrFunc.open(filename.c_str());
 	
 		double dummy;
@@ -209,7 +231,8 @@ namespace fitCF
 		target_func.params = &Correlfun3D_data;  // structure with the data and error bars
 	
 		const gsl_multifit_fdfsolver_type *type_ptr = gsl_multifit_fdfsolver_lmsder;
-		gsl_multifit_fdfsolver *solver_ptr = gsl_multifit_fdfsolver_alloc (type_ptr, data_length, n_para);
+		gsl_multifit_fdfsolver *solver_ptr
+			= gsl_multifit_fdfsolver_alloc (type_ptr, data_length, n_para);
 		gsl_multifit_fdfsolver_set (solver_ptr, &target_func, &xvec_ptr.vector);
 	
 		size_t iteration = 0;         // initialize iteration counter
@@ -234,7 +257,8 @@ namespace fitCF
 			}
 	
 			// test for convergence with an absolute and relative error (see manual)
-			status = gsl_multifit_test_delta (solver_ptr->dx, solver_ptr->x, fit_tolerance, fit_tolerance);
+			status = gsl_multifit_test_delta (solver_ptr->dx, solver_ptr->x,
+												fit_tolerance, fit_tolerance);
 		}
 		while (status == GSL_CONTINUE && iteration < fit_max_iterations);
 	
@@ -355,7 +379,8 @@ namespace fitCF
 		target_func.params = &Correlfun3D_data;  // structure with the data and error bars
 	
 		const gsl_multifit_fdfsolver_type *type_ptr = gsl_multifit_fdfsolver_lmsder;
-		gsl_multifit_fdfsolver *solver_ptr = gsl_multifit_fdfsolver_alloc (type_ptr, data_length, n_para);
+		gsl_multifit_fdfsolver *solver_ptr
+			= gsl_multifit_fdfsolver_alloc (type_ptr, data_length, n_para);
 		gsl_multifit_fdfsolver_set (solver_ptr, &target_func, &xvec_ptr.vector);
 	
 		size_t iteration = 0;         // initialize iteration counter
@@ -380,7 +405,8 @@ namespace fitCF
 			}
 	
 			// test for convergence with an absolute and relative error (see manual)
-			status = gsl_multifit_test_delta (solver_ptr->dx, solver_ptr->x, fit_tolerance, fit_tolerance);
+			status = gsl_multifit_test_delta (solver_ptr->dx, solver_ptr->x,
+												fit_tolerance, fit_tolerance);
 		}
 		while (status == GSL_CONTINUE && iteration < fit_max_iterations);
 	
@@ -599,7 +625,8 @@ namespace fitCF
 	    // the cross term is not necessary positive
 	    double R2_os = results[4]*hbarC*hbarC;
 	    /*cout << "lambda = " << lambda << endl;
-	    cout << "R2_o = " << R_o*R_o << " fm^2, R2_s = " << R_s*R_s << " fm^2, R2_l = " << R_l*R_l << " fm^2" << endl;
+	    cout << "R2_o = " << R_o*R_o << " fm^2, R2_s = " << R_s*R_s
+			 << " fm^2, R2_l = " << R_l*R_l << " fm^2" << endl;
 	    cout << "R2_os = " << R2_os << " fm^2." << endl;*/
 	
 		const int iKT_iKphi_idx 			= indexer_KT_Kphi( iKT, iKphi );
@@ -681,16 +708,19 @@ namespace fitCF
 	
 		for (i = 0; i < n; i++)
 		{
-			double Yi = 1.0 + exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
+			double Yi = 1.0 + exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s
+								  - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
 			gsl_vector_set (f_ptr, i, (Yi - y[i]) / sigma[i]);
 	//cout << "i = " << i << ": " << y[i] << "   " << Yi << "   " << (Yi - y[i]) / sigma[i]
-	//		<< "   " << q_o[i] << "   " << q_s[i] << "   " << q_l[i] << "   " << R2_o << "   " << R2_s << "   " << R2_l << "   " << R2_os << endl;
+	//		<< "   " << q_o[i] << "   " << q_s[i] << "   " << q_l[i] << "   "
+	//		<< R2_o << "   " << R2_s << "   " << R2_l << "   " << R2_os << endl;
 		}
 	
 		return GSL_SUCCESS;
 	}
 	
-	int Fittarget_correlfun3D_f_withlambda (const gsl_vector *xvec_ptr, void *params_ptr, gsl_vector *f_ptr)
+	int Fittarget_correlfun3D_f_withlambda (const gsl_vector *xvec_ptr, void *params_ptr,
+											gsl_vector *f_ptr)
 	{
 		size_t n = ((struct Correlationfunction3D_data *) params_ptr)->data_length;
 		vector<double> q_o = ((struct Correlationfunction3D_data *) params_ptr)->q_o;
@@ -712,10 +742,13 @@ namespace fitCF
 		{
 			//double Yi = lambda*exp(- q_l[i]*q_l[i]*R_l*R_l - q_s[i]*q_s[i]*R_s*R_s
 			//             - q_o[i]*q_o[i]*R_o*R_o - q_o[i]*q_s[i]*R_os*R_os);
-			double Yi = 1.0 + lambda*exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
+			double Yi = 1.0 + lambda*exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s
+										 - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
 			gsl_vector_set (f_ptr, i, (Yi - y[i]) / sigma[i]);
-	//cout << "i = " << i << ": " << y[i] << "   " << Yi << "   " << (Yi - y[i]) / sigma[i] << "   " << lambda
-	//		<< "   " << q_o[i] << "   " << q_s[i] << "   " << q_l[i] << "   " << R2_o << "   " << R2_s << "   " << R2_l << "   " << R2_os << endl;
+	//cout << "i = " << i << ": " << y[i] << "   " << Yi << "   "
+	//		<< (Yi - y[i]) / sigma[i] << "   " << lambda
+	//		<< "   " << q_o[i] << "   " << q_s[i] << "   " << q_l[i] << "   "
+	//		<< R2_o << "   " << R2_s << "   " << R2_l << "   " << R2_os << endl;
 		}
 	
 		return GSL_SUCCESS;
@@ -723,7 +756,8 @@ namespace fitCF
 	
 	//*********************************************************************
 	//  Function returning the Jacobian of the residual function
-	int Fittarget_correlfun3D_df (const gsl_vector *xvec_ptr, void *params_ptr,  gsl_matrix *Jacobian_ptr)
+	int Fittarget_correlfun3D_df (const gsl_vector *xvec_ptr, void *params_ptr,
+									gsl_matrix *Jacobian_ptr)
 	{
 		size_t n = ((struct Correlationfunction3D_data *) params_ptr)->data_length;
 		vector<double> q_o = ((struct Correlationfunction3D_data *) params_ptr)->q_o;
@@ -744,8 +778,12 @@ namespace fitCF
 			double sig = sigma[i];
 	
 			// derivatives
-			// double common_elemt = exp(- q_l[i]*q_l[i]*R_l*R_l - q_s[i]*q_s[i]*R_s*R_s - q_o[i]*q_o[i]*R_o*R_o - q_o[i]*q_s[i]*R_os*R_os);
-			double common_elemt = exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
+			// double common_elemt = exp(- q_l[i]*q_l[i]*R_l*R_l
+			//							- q_s[i]*q_s[i]*R_s*R_s
+			//							- q_o[i]*q_o[i]*R_o*R_o
+			//							- q_o[i]*q_s[i]*R_os*R_os);
+			double common_elemt = exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s 
+									  - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
 	      
 			gsl_matrix_set (Jacobian_ptr, i, 0, - q_o[i]*q_o[i]*common_elemt/sig);
 			gsl_matrix_set (Jacobian_ptr, i, 1, - q_s[i]*q_s[i]*common_elemt/sig);
@@ -756,7 +794,8 @@ namespace fitCF
 		return GSL_SUCCESS;
 	}
 	
-	int Fittarget_correlfun3D_df_withlambda (const gsl_vector *xvec_ptr, void *params_ptr,  gsl_matrix *Jacobian_ptr)
+	int Fittarget_correlfun3D_df_withlambda( const gsl_vector *xvec_ptr, void *params_ptr,
+											 gsl_matrix *Jacobian_ptr)
 	{
 		size_t n = ((struct Correlationfunction3D_data *) params_ptr)->data_length;
 		vector<double> q_o = ((struct Correlationfunction3D_data *) params_ptr)->q_o;
@@ -778,7 +817,8 @@ namespace fitCF
 			double sig = sigma[i];
 	
 			//derivatives
-			double common_elemt = exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
+			double common_elemt = exp(- q_l[i]*q_l[i]*R2_l - q_s[i]*q_s[i]*R2_s
+									  - q_o[i]*q_o[i]*R2_o - 2.*q_o[i]*q_s[i]*R2_os);
 	      
 			gsl_matrix_set (Jacobian_ptr, i, 0, common_elemt/sig);
 			gsl_matrix_set (Jacobian_ptr, i, 1, - lambda*q_o[i]*q_o[i]*common_elemt/sig);
@@ -792,7 +832,8 @@ namespace fitCF
 	
 	//*********************************************************************
 	//  Function combining the residual function and its Jacobian
-	int Fittarget_correlfun3D_fdf (const gsl_vector* xvec_ptr, void *params_ptr, gsl_vector* f_ptr, gsl_matrix* Jacobian_ptr)
+	int Fittarget_correlfun3D_fdf( const gsl_vector* xvec_ptr, void *params_ptr,
+								   gsl_vector* f_ptr, gsl_matrix* Jacobian_ptr )
 	{
 		Fittarget_correlfun3D_f(xvec_ptr, params_ptr, f_ptr);
 		Fittarget_correlfun3D_df(xvec_ptr, params_ptr, Jacobian_ptr);
@@ -800,7 +841,9 @@ namespace fitCF
 		return GSL_SUCCESS;
 	}
 	
-	int Fittarget_correlfun3D_fdf_withlambda (const gsl_vector* xvec_ptr, void *params_ptr, gsl_vector* f_ptr, gsl_matrix* Jacobian_ptr)
+	int Fittarget_correlfun3D_fdf_withlambda( const gsl_vector* xvec_ptr,
+											  void *params_ptr, gsl_vector* f_ptr,
+											  gsl_matrix* Jacobian_ptr )
 	{
 		Fittarget_correlfun3D_f_withlambda(xvec_ptr, params_ptr, f_ptr);
 		Fittarget_correlfun3D_df_withlambda(xvec_ptr, params_ptr, Jacobian_ptr);
@@ -874,13 +917,17 @@ namespace fitCF
 			for (int iKphi = 0; iKphi < nKphi; ++iKphi)
 			{
 				double local_R2s = interpolate2D(array_KT_pts, array_Kphi_pts, arr_R2_side_GF,
-												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts, interpMode, false, true);
+												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts,
+												 interpMode, false, true);
 				double local_R2o = interpolate2D(array_KT_pts, array_Kphi_pts, arr_R2_out_GF,
-												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts, interpMode, false, true);
+												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts,
+												 interpMode, false, true);
 				double local_R2os = interpolate2D(array_KT_pts, array_Kphi_pts, arr_R2_outside_GF,
-												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts, interpMode, false, true);
+												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts,
+												 interpMode, false, true);
 				double local_R2l = interpolate2D(array_KT_pts, array_Kphi_pts, arr_R2_long_GF,
-												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts, interpMode, false, true);
+												 K_T[jKT], K_phi[iKphi], n_KT_pts, n_Kphi_pts,
+												 interpMode, false, true);
 	
 				temp_sum_side_cos    += local_R2s*cos_mKphi_pts[iKphi]*Kphi_wts[iKphi];
 				temp_sum_side_sin    += local_R2s*sin_mKphi_pts[iKphi]*Kphi_wts[iKphi];
@@ -912,7 +959,8 @@ namespace fitCF
 				<< R2_outside_GF_S[jKT*n_order + Morder] << "   "
 				<< R2_long_GF_C[jKT*n_order + Morder] << "   "
 				<< R2_long_GF_S[jKT*n_order + Morder] << "   "
-				<< 0 << "   " << 0 << "   " << 0 << "   " << 0 << endl;	//R2sl==R2ol==0 for boost-invariant
+				<< 0 << "   " << 0 << "   " << 0 << "   " << 0 << endl;
+				//R2sl==R2ol==0 for boost-invariant
 	
 	
 		}
