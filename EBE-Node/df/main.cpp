@@ -358,8 +358,8 @@ int main (int argc, char *argv[])
 						string gridParamsFilename = ofolder + "/" + particleName
 													+ "_grid.params";
 						ofstream gridParams( gridParamsFilename.c_str(), ios::out );
-						gridParams << l.pt.x[ps].size << std::endl;
-						gridParams << l.phi.x[ps].size << std::endl;
+						gridParams << l.pt.x[ps].size() << std::endl;
+						gridParams << l.phi.x[ps].size() << std::endl;
 						gridParams << nQX << std::endl;
 						gridParams << nQY << std::endl;
 						gridParams << nQZ << std::endl;
@@ -445,11 +445,11 @@ int main (int argc, char *argv[])
 			for (int ps=0;ps<l.pTmax;ps++)
 			for (int i=0;i<l.phimax;i++)
 				outHBT
-					<< l.pt.x[ps][i]   << "   " << l.phi.x[ps][i]  << "   "
-					<< R2o.x[ps][i]    << "   " << R2s.x[ps][i]    << "   " << R2l.x[ps][i]    << "   "
-					<< R2os.x[ps][i]   << "   " << R2ol.x[ps][i]   << "   " << R2sl.x[ps][i]   << "   "
-					<< R2o_c.x[ps][i]  << "   " << R2s_c.x[ps][i]  << "   " << R2l_c.x[ps][i]  << "   "
-					<< R2os_c.x[ps][i] << "   " << R2ol_c.x[ps][i] << "   " << R2sl_c.x[ps][i] << std::endl;
+					<< l.pt.x[ps][i]     << "   " << l.phi.x[ps][i]    << "   "
+					<< l.R2o.x[ps][i]    << "   " << l.R2s.x[ps][i]    << "   " << l.R2l.x[ps][i]    << "   "
+					<< l.R2os.x[ps][i]   << "   " << l.R2ol.x[ps][i]   << "   " << l.R2sl.x[ps][i]   << "   "
+					<< l.R2o_c.x[ps][i]  << "   " << l.R2s_c.x[ps][i]  << "   " << l.R2l_c.x[ps][i]  << "   "
+					<< l.R2os_c.x[ps][i] << "   " << l.R2ol_c.x[ps][i] << "   " << l.R2sl_c.x[ps][i] << std::endl;
 
 			outHBT.close();
 		}

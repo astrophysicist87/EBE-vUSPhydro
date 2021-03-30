@@ -384,7 +384,7 @@ void list::compute_HBT_radii( double mass )
 	for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
 	for ( int iphi = 0; iphi < phimax; iphi++ )
 	{
-		const double KT = l.pt.x[ps][i], Kphi = l.phi.x[ps][i], KYrap = 0.0;
+		const double KT = pt.x[ipT][iphi], Kphi = phi.x[ipT][iphi], KYrap = 0.0;
 		const double betaT = KT / sqrt(mass*mass + KT*KT), betaL = 0.0;
 
 		double xo   = stm_xoS.x[ipT][iphi],   xs   = stm_xsS.x[ipT][iphi],
@@ -406,7 +406,7 @@ void list::compute_HBT_radii( double mass )
 	for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
 	for ( int iphi = 0; iphi < phimax; iphi++ )
 	{
-		const double KT = l.pt.x[ps][i], Kphi = l.phi.x[ps][i], KYrap = 0.0;
+		const double KT = pt.x[ipT][iphi], Kphi = phi.x[ipT][iphi], KYrap = 0.0;
 		const double betaT = KT / sqrt(mass*mass + KT*KT), betaL = 0.0;
 
 		double xo   = stm_xoSc.x[ipT][iphi],   xs   = stm_xsSc.x[ipT][iphi],
