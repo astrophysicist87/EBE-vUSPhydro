@@ -93,8 +93,8 @@ int main (int argc, char *argv[])
   	l.setup(sph.pt,sph.phi);
   	
   	// set up calculation of correlation function
-	const double deltaQ = 0.025; // GeV
-	const int nQX = 7, nQY = 7, nQZ = 7;	// should all be odd to guarantee Q=0 included
+	const double deltaQ = 0.075; // GeV
+	const int nQX = 3, nQY = 3, nQZ = 3;	// should all be odd to guarantee Q=0 included
 	vector<double> QXpts(nQX), QYpts(nQY), QZpts(nQZ);
 	for (int iQX = 0; iQX < nQX; iQX++) QXpts[iQX] = -0.5*(nQX-1)*deltaQ + deltaQ*iQX;
 	for (int iQY = 0; iQY < nQY; iQY++) QYpts[iQY] = -0.5*(nQY-1)*deltaQ + deltaQ*iQY;
@@ -186,6 +186,10 @@ int main (int argc, char *argv[])
 	for (int h=0;h<sph.NHAD;h++) // runs over the number of hadrons
 	{
 		
+		const bool do_HBT_on_this_particle
+					= bool( std::count( HBTparticleIDs.begin(),
+										HBTparticleIDs.end(),
+										sph.had[h].id ) > 0 );
 		
 	  //		cout << "\r" << sph.had[h].id << " " << h << "= Hadron #"  <<flush;
 
@@ -197,9 +201,10 @@ int main (int argc, char *argv[])
 			{
 				for(int i=0;i<l.phimax;i++)
 				{
-					l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],
-												sph.had[h], set_spacetime_moments );
-					if ( set_spacetime_moments )
+					l.dNdpdphi.x[ps][i]
+						= sph.dNdpdphi( l.pt.x[ps][i], l.phi.x[ps][i], sph.had[h],
+										do_HBT_on_this_particle and set_spacetime_moments );
+					if ( do_HBT_on_this_particle and set_spacetime_moments )
 					{						
 						l.stm_S.x[ps][i]   = sph.ST_out[0];
 						l.stm_xS.x[ps][i]  = sph.ST_out[1];
@@ -253,10 +258,11 @@ int main (int argc, char *argv[])
 			{
 				for(int i=0;i<l.phimax;i++)
 				{
-					l.dNdpdphi.x[ps][i]=sph.dNdpdphi(l.pt.x[ps][i], l.phi.x[ps][i],
-												sph.had[h], set_spacetime_moments );
+					l.dNdpdphi.x[ps][i]
+						= sph.dNdpdphi( l.pt.x[ps][i], l.phi.x[ps][i], sph.had[h],
+										do_HBT_on_this_particle and set_spacetime_moments );
 					l.dNdpdphic.x[ps][i]=sph.outc;
-					if ( set_spacetime_moments )
+					if ( do_HBT_on_this_particle and set_spacetime_moments )
 					{						
 						l.stm_S.x[ps][i]    = sph.ST_out[0];
 						l.stm_xS.x[ps][i]   = sph.ST_out[1];
@@ -345,9 +351,7 @@ int main (int argc, char *argv[])
 											0.0, 0.0, 0.0, 0.0) << endl;*/
 
 					// if this is one of the HBT particles, do HBT!
-					if ( std::count( HBTparticleIDs.begin(),
-									 HBTparticleIDs.end(),
-									 sph.had[h].id ) > 0 )
+					if ( do_HBT_on_this_particle )
 					{
 						// set grid.params file as well
 						string particleName = HBTparticleNames[sph.had[h].id];
@@ -428,13 +432,14 @@ int main (int argc, char *argv[])
 		 	}				// end of pT loop
 	 	}					// end of if condition (test viscous or ideal)
 		
-		// set this using source variances defined above
-		l.compute_HBT_radii();
-
-		// then print to file
+		if ( do_HBT_on_this_particle and set_spacetime_moments )
 		{
-			string outHBTfilename = ofolder + "/" + particleName
-									+ "_HBT_radii_SV.dat";
+			// set this using source variances defined above
+			l.compute_HBT_radii( sph.had[h].mass );
+	
+			// then print to file
+			string particleName = HBTparticleNames[sph.had[h].id];
+			string outHBTfilename = ofolder + "/" + particleName + "_HBT_radii_SV.dat";
 			ofstream outHBT( outHBTfilename.c_str(), ios::out );
 
 			for (int ps=0;ps<l.pTmax;ps++)

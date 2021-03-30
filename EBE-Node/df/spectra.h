@@ -278,7 +278,7 @@ void list::setup(vector<double> & ptp,vector<double> & phip)
 }
 
 
-void list::compute_HBT_radii()
+void list::compute_HBT_radii( double mass )
 {
 	// first normalize all source moments
 	for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
@@ -347,6 +347,9 @@ void list::compute_HBT_radii()
 	for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
 	for ( int iphi = 0; iphi < phimax; iphi++ )
 	{
+		const double KT = l.pt.x[ps][i], Kphi = l.phi.x[ps][i], KYrap = 0.0;
+		const double betaT = KT / sqrt(mass*mass + KT*KT), betaL = 0.0;
+
 		double xo   = stm_xoS.x[ipT][iphi],   xs   = stm_xsS.x[ipT][iphi],
 			   xl   = stm_xlS.x[ipT][iphi],   ta   = stm_tS.x[ipT][iphi];
 		double xo2  = stm_xo2S.x[ipT][iphi],  xs2  = stm_xs2S.x[ipT][iphi],
@@ -366,6 +369,9 @@ void list::compute_HBT_radii()
 	for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
 	for ( int iphi = 0; iphi < phimax; iphi++ )
 	{
+		const double KT = l.pt.x[ps][i], Kphi = l.phi.x[ps][i], KYrap = 0.0;
+		const double betaT = KT / sqrt(mass*mass + KT*KT), betaL = 0.0;
+
 		double xo   = stm_xoSc.x[ipT][iphi],   xs   = stm_xsSc.x[ipT][iphi],
 			   xl   = stm_xlSc.x[ipT][iphi],   ta   = stm_tSc.x[ipT][iphi];
 		double xo2  = stm_xo2Sc.x[ipT][iphi],  xs2  = stm_xs2Sc.x[ipT][iphi],
