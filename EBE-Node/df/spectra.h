@@ -46,7 +46,7 @@ public:
 
 	list(int npT, int nphi);
 	void setup(vector<double> & pt, vector<double> & phi);
-	void compute_HBT_radii();
+	void compute_HBT_radii( double mass );
 	void destroy();
 	void destroyc();
 };
@@ -159,6 +159,21 @@ list::list(int npT,int nphi)
 	stm_xotSc.setup(pTmax,phimax);
 	stm_xstSc.setup(pTmax,phimax);
 	stm_xltSc.setup(pTmax,phimax);
+
+	R2o.setup(pTmax,phimax);
+	R2s.setup(pTmax,phimax);
+	R2l.setup(pTmax,phimax);
+	R2os.setup(pTmax,phimax);
+	R2ol.setup(pTmax,phimax);
+	R2sl.setup(pTmax,phimax);
+
+	R2o_c.setup(pTmax,phimax);
+	R2s_c.setup(pTmax,phimax);
+	R2l_c.setup(pTmax,phimax);
+	R2os_c.setup(pTmax,phimax);
+	R2ol_c.setup(pTmax,phimax);
+	R2sl_c.setup(pTmax,phimax);
+
 }
 
 void list::destroy()
@@ -195,6 +210,14 @@ void list::destroy()
 	stm_xotS.destroy();
 	stm_xstS.destroy();
 	stm_xltS.destroy();
+
+	R2o.destroy();
+	R2s.destroy();
+	R2l.destroy();
+	R2os.destroy();
+	R2ol.destroy();
+	R2sl.destroy();
+
 }
 
 void list::destroyc()
@@ -261,6 +284,20 @@ void list::destroyc()
 	stm_xotSc.destroy();
 	stm_xstSc.destroy();
 	stm_xltSc.destroy();
+
+	R2o.destroy();
+	R2s.destroy();
+	R2l.destroy();
+	R2os.destroy();
+	R2ol.destroy();
+	R2sl.destroy();
+
+	R2o_c.destroy();
+	R2s_c.destroy();
+	R2l_c.destroy();
+	R2os_c.destroy();
+	R2ol_c.destroy();
+	R2sl_c.destroy();
 }
 
 void list::setup(vector<double> & ptp,vector<double> & phip)
