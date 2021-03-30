@@ -358,8 +358,8 @@ int main (int argc, char *argv[])
 						string gridParamsFilename = ofolder + "/" + particleName
 													+ "_grid.params";
 						ofstream gridParams( gridParamsFilename.c_str(), ios::out );
-						gridParams << l.pt.x[ps].size() << std::endl;
-						gridParams << l.phi.x[ps].size() << std::endl;
+						gridParams << l.pTmax << std::endl;
+						gridParams << l.phimax << std::endl;
 						gridParams << nQX << std::endl;
 						gridParams << nQY << std::endl;
 						gridParams << nQZ << std::endl;
