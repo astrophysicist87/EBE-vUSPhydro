@@ -318,7 +318,7 @@ void list::setup(vector<double> & ptp,vector<double> & phip)
 void list::compute_HBT_radii( double mass )
 {
 	// first normalize all source moments
-	for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
+	/*for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
 	for ( int iphi = 0; iphi < phimax; iphi++ )
 	{
 		double Slocal = stm_S.x[ipT][iphi];
@@ -378,7 +378,7 @@ void list::compute_HBT_radii( double mass )
 		stm_xotSc.x[ipT][iphi] /= Sclocal;
 		stm_xstSc.x[ipT][iphi] /= Sclocal;
 		stm_xltSc.x[ipT][iphi] /= Sclocal;
-	}
+	}*/
 
 	// then get the radii (ideal)
 	for ( int ipT  = 0; ipT  < pTmax;  ipT++ )
