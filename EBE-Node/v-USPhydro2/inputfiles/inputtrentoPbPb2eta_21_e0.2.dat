@@ -1,0 +1,20 @@
+h: 0.1	dt: 0.05
+equationsofmotion: shear+bulk EOS: table
+temp21.dat
+derv21.dat
+low: off
+etaconst: 1
+viscfac_bulk_shear: 0 0.2
+t0: 0.6
+freezeoutT: 150
+trento 90
+ICs: trento/PbPb5020TeV/cen
+QM_fluc: 0
+output_folder: trento/PbPb5020TeV/shear/EOS21/cen/e0.2
+5 5
+freezeout: 1
+dfinputfilename: trentoinputPbPb2eta_21_e0.2.dat
+df_cor_file: input/MHlistall.dat
+range(ptmax,ptstepsize,phisteps): input/ptphipoints.dat
+hadronl_list: input/resoweakPDG2016Plus.dat
+had_check: input/pi+.dat

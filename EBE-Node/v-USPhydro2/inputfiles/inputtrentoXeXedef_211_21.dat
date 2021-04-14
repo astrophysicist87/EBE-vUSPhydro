@@ -1,0 +1,20 @@
+h: 0.3	dt: 0.05
+equationsofmotion: shear+bulk EOS: table
+tempcharm.dat
+dervcharm.dat
+low: off
+etaconst: 1
+viscfac_bulk_shear: 0 0.04
+t0: 0.6
+freezeoutT: 150
+trento 119
+ICs: trento/XeXe5440TeVdef/21
+QM_fluc: 0
+output_folder: trento/XeXe5440TeVdef/shear/EOS211/21
+5 5
+freezeout: 1
+dfinputfilename: trentoinputXeXedef_211_21.dat
+df_cor_file: input/MHlistall.dat
+range(ptmax,ptstepsize,phisteps): input/ptphipoints.dat
+hadronl_list: input/resoweakPDG2016Plus.dat
+had_check: input/numbers16p.dat

@@ -1,0 +1,10 @@
+typeofequations: shear+bulk
+folder: trento/OO_3pF_65TeV/shear/EOS21/10
+range(pt,phi): input/gl15.dat input/gq20.dat
+decays: 1
+rangeofevents: 982 982
+freezeouttemp: 0.15
+df_cor_file: input/MHlistall.dat
+range(ptmax,ptstepsize,phisteps): input/ptphipoints.dat
+hadronl_list: input/resoweakPDG2016Plus.dat
+had_check: input/numbers16p.dat

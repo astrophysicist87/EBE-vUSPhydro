@@ -64,8 +64,6 @@ int main(int argc, char* argv[]) {
   // There are quite a few options, so let's separate them into logical groups.
   using OptDesc = po::options_description;
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
   using VecStr = std::vector<std::string>;
   OptDesc main_opts{};
   main_opts.add_options()
@@ -79,15 +77,11 @@ int main(int argc, char* argv[]) {
     ("number-events", po::value<int>()->default_value(1),
      "number of events");
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
   // Make all main arguments positional.
   po::positional_options_description positional_opts{};
   positional_opts
     .add("projectile", 2)
     .add("number-events", 1);
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
 
   using VecPath = std::vector<fs::path>;
   OptDesc general_opts{"general options"};
@@ -99,8 +93,6 @@ int main(int argc, char* argv[]) {
     ("config-file,c", po::value<VecPath>()->value_name("FILE"),
      "configuration file\n(can be passed multiple times)");
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
   OptDesc output_opts{"output options"};
   output_opts.add_options()
     ("quiet,q", po::bool_switch(),
@@ -111,8 +103,6 @@ int main(int argc, char* argv[]) {
      "do not write headers to text files")
     ("ncoll", po::bool_switch(),
      "calculate binary collisions");
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
 
   OptDesc phys_opts{"physical options"};
   phys_opts.add_options()
@@ -150,8 +140,6 @@ int main(int argc, char* argv[]) {
      po::value<int64_t>()->value_name("INT")->default_value(-1, "auto"),
      "random seed");
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
   OptDesc grid_opts{"grid options"};
   grid_opts.add_options()
     ("grid-max",
@@ -160,8 +148,6 @@ int main(int argc, char* argv[]) {
     ("grid-step",
      po::value<double>()->value_name("FLOAT")->default_value(0.2, "0.2"),
      "step size [fm]");
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
 
   // Make a meta-group containing all the option groups except the main
   // positional options (don't want the auto-generated usage info for those).
@@ -172,21 +158,15 @@ int main(int argc, char* argv[]) {
     .add(phys_opts)
     .add(grid_opts);
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
   // Now a meta-group containing _all_ options.
   OptDesc all_opts{};
   all_opts
     .add(usage_opts)
     .add(main_opts);
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
   // Will be used several times.
   const std::string usage_str{
     "usage: trento [options] projectile projectile [number-events = 1]\n"};
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
 
   try {
     // Initialize a VarMap (boost::program_options::variables_map).
@@ -222,8 +202,6 @@ int main(int argc, char* argv[]) {
     //   return 0;
     // }
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
     // Merge any config files.
     if (var_map.count("config-file")) {
       // Everything except general_opts.
@@ -233,8 +211,6 @@ int main(int argc, char* argv[]) {
         .add(output_opts)
         .add(phys_opts)
         .add(grid_opts);
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
 
       for (const auto& path : var_map["config-file"].as<VecPath>()) {
         if (!fs::exists(path)) {
@@ -246,8 +222,6 @@ int main(int argc, char* argv[]) {
       }
     }
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
     // Set default constituent width equal to the nucleon width.
     if (var_map["constit-width"].defaulted()) {
       var_map.at("constit-width").value() = var_map["nucleon-width"].as<double>();
@@ -257,40 +231,27 @@ int main(int argc, char* argv[]) {
     double constituent_width = var_map["constit-width"].as<double>();
     int constituent_number = var_map["constit-number"].as<int>();
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
     // Constituent and nucleon widths must be non-negative.
     if ((nucleon_width < 0) || (constituent_width < 0))
       throw po::error{"nucleon and constituent widths must be non-negative"};
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
 
     // Constituent width cannot be larger than nucleon width.
     if (constituent_width > nucleon_width)
       throw po::error{"constituent width cannot be larger than nucleon width"};
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
     // Cannot fit nucleon width using single constituent if different sizes.
     if ((constituent_width < nucleon_width) && constituent_number == 1)
       throw po::error{"cannot fit nucleon width using single constituent if different sizes"};
 
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
     // Save all the final values into var_map.
     // Exceptions may occur here.
     po::notify(var_map);
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
 
     // Go!
     Collider collider{var_map};
     collider.run_events();
   }
   catch (const po::required_option&) {
-
-//std::cout << "Made it to " << __LINE__ << std::endl;
-
     // Handle this exception separately from others.
     // This occurs e.g. when the program is executed with no arguments.
     std::cerr << usage_str << "run 'trento --help' for more information\n";
@@ -298,7 +259,6 @@ int main(int argc, char* argv[]) {
   }
   catch (const std::exception& e) {
     // For all other exceptions just output the error message.
-//std::cout << "Made it to " << __LINE__ << std::endl;
     std::cerr << e.what() << '\n';
     return 1;
   }

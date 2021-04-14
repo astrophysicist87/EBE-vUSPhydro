@@ -6,9 +6,6 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# added by Christopher Plumberg
-add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=0)
-
 option(STATIC "build static executable" OFF)
 if(CMAKE_CXX_FLAGS MATCHES "(^| )-static($| )")
   set(STATIC ON)
@@ -20,12 +17,8 @@ if(STATIC)
 endif()
 
 # Find and use Boost.
-#set(Boost_DIR "/usr/local/boost/1.71.0/lib/cmake/Boost-1.71.0/")
 find_package(Boost 1.50 REQUIRED COMPONENTS filesystem program_options system)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-#include_directories(${Boost_INCLUDE_DIRS})
-#include_directories("/usr/local/boost/1.71.0/include" "/usr/local/boost/1.71.0/include/boost")
-#link_directories("/usr/local/boost/1.71.0/lib")
 
 # Find the HDF5 C++ library.  The CMake FindHDF5 module does not work reliably,
 # e.g. sometimes it links unnecessary libraries, other times it fails to include
@@ -124,7 +117,7 @@ if(NATIVE)
   endif()
 endif()
 
-string(APPEND CMAKE_CXX_FLAGS " -g -Wall -Wextra")
+string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
 option(MORE_WARNINGS "enable more compiler warnings" ON)
 if(MORE_WARNINGS AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

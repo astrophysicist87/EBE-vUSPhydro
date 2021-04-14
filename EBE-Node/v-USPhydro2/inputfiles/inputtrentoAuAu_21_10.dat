@@ -1,0 +1,20 @@
+h: 0.3	dt: 0.06
+equationsofmotion: shear+bulk EOS: table
+temp21.dat
+derv21.dat
+low: off
+etaconst: 1
+viscfac_bulk_shear: 0 0.05
+t0: 0.6
+freezeoutT: 150
+trento 42
+ICs: trento/AuAu200GeV/10
+QM_fluc: 3
+output_folder: trento/AuAu200GeV/shear/EOS21_150/10
+5 5
+freezeout: 1
+dfinputfilename: trentoinputAuAu_21_10.dat
+df_cor_file: input/MHlistall.dat
+range(ptmax,ptstepsize,phisteps): input/ptphipoints.dat
+hadronl_list: input/resoweakPDG2016Plus.dat
+had_check: input/numbers16p.dat

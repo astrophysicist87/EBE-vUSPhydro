@@ -192,26 +192,15 @@ double partonic_cross_section(const VarMap& var_map) {
   auto cache_path = cache_dir / "cross_section.cache";
   fs::create_directory(cache_dir);
 
-/*bool successTest = false;
-try {
-        //successTest = fs::exists(cache_path.string());
-        successTest = fs::exists(cache_path);
-    } catch (std::exception const& e) {
-	std::cout << "Looks like we had a problem..." << std::endl;
-        std::cout << e.what() << std::endl;
-exit(-1);
-    }*/
-
-if (false)
-{
   // Check if cache exists
   if (fs::exists(cache_path.string())){
+
     // Open cache read only
     std::fstream cache_read(cache_path.string(), std::ios_base::in);
 
     // Check cache for previously tabulated cross section parameters
     while(!cache_read.eof()) {
-     cache_read >> constituent_number_ >> nucleon_width_ >>
+      cache_read >> constituent_number_ >> nucleon_width_ >>
         constituent_width_ >> sigma_nn_ >> sigma_partonic;
       if (almost_equal(nucleon_width, nucleon_width_) &&
           almost_equal(constituent_width, constituent_width_) &&
@@ -224,10 +213,8 @@ if (false)
     // Close read-only file stream
     cache_read.close();
   }
-}
 
   // Open cache with write access
-  std::cout << "Writing to cache" << std::endl;
   std::fstream cache_write(cache_path.string(),
       std::ios_base::out | std::ios_base::app);
 
@@ -252,8 +239,6 @@ if (false)
               << std::right << setw(10) << fixed << sigma_nn
               << std::right << setw(14) << scientific << sigma_partonic
               << endl;
-
-std::cout << "Wrote to cache" << std::endl;
 
   return sigma_partonic;
 }

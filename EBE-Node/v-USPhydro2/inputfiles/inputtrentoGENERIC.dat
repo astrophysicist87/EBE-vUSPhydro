@@ -1,0 +1,20 @@
+h: 0.3	dt: GRID
+equationsofmotion: shear+bulk EOS: table
+temp21.dat
+derv21.dat
+low: off
+etaconst: 1
+viscfac_bulk_shear: 0 ETAIN
+t0: 0.6
+freezeoutT: FZOUT
+trento CONSTANT
+ICs: trento/DIRECTORY/BINN
+QM_fluc: QMFF
+output_folder: trento/DIRECTORY/shear/VARYFOLDER/BINN
+5 5
+freezeout: 1
+dfinputfilename: trentoinputGENERIC_BINN.dat
+df_cor_file: input/MHlistall.dat
+range(ptmax,ptstepsize,phisteps): input/ptphipoints.dat
+hadronl_list: input/resoweakPDG2016Plus.dat
+had_check: input/numbers16p.dat
