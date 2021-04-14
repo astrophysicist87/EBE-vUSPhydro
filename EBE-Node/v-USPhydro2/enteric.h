@@ -188,7 +188,11 @@ void manualenter(_inputIC &ics, LinkList<D> &linklist)
   	   {
   	   	fscanf(openmanf,"%*s %s \n",charin);
   	   	string dfpre,dffile=charin;
-  	   	if (df==1) dfpre="df/input/";  
+
+        // Added by Christopher Plumberg - 04/14/2021
+        // If df < 0, assume df is one level higher in directory structure
+        string directoryPrefix = (df < 0) ? "../" : "";
+  	   	if (df==1) dfpre="df2/input/";  
   	   	else if (df==2) dfpre="sampling/input/"; 
   	   	else cout << "Error: undefined df calcualtion type " << df <<  endl;
   	   	string dfout=dfpre+dffile;
