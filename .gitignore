@@ -1,5 +1,6 @@
 PlayGround/*
 RESULTS/*
+__pycache__/*
 *.zip
 *.o
 *.e
