@@ -280,7 +280,7 @@ def hydroWithInitialCondition(aFile):
     for aFile in file_list:
         # check if this file worth storing, then copy to event result folder
         if aFile in worthStoring:
-            print('Saving', aFile)
+            #print('Saving', aFile)
             copy(aFile, controlParameterList['eventResultDir'])
         # yield it
         yield path.join(hydroResultsDirectory, aFile)
@@ -335,7 +335,7 @@ def freezeOutWithHydroResultFiles(fileList):
     #print("CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable)
         
     for hydroResultFile in fileList:
-        print('Copying hydro file:', hydroResultFile)
+        #print('Copying hydro file:', hydroResultFile)
         copy( hydroResultFile, FOInputDirectory )
 
     # execute!
@@ -500,6 +500,8 @@ def sequentialEventDriverShell():
 
             # print current progress to terminal
             print("Starting event %d..." % event_id)
+            print("CHECK0")
+            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
             if initialConditionGeneratorControl['saveICFile']:
                 ICGenDataDirectory = path.join(
                     controlParameterList['rootDir'], 
@@ -511,6 +513,9 @@ def sequentialEventDriverShell():
                     copy(aFile, controlParameterList['eventResultDir'])
             #aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
 
+            print("CHECK1")
+            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+
             generate_vUSPhydro_input_from_dict()
         
             #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
@@ -520,11 +525,20 @@ def sequentialEventDriverShell():
             
             #print(controlParameterList['rootDir'] )
             
+            print("CHECK2")
+            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+
             hydroResultFiles = [aFile for aFile in hydroWithInitialCondition(aInitialConditionFile)]
             
+            print("CHECK3")
+            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+
             #print('hydroResultFiles:', hydroResultFiles)
             freezeOutWithHydroResultFiles(hydroResultFiles)
     
+            print("CHECK4")
+            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+
             # print current progress to terminal
             stdout.write("PROGRESS: %d events out of %d finished.\n" 
                             % (event_id, nev))
