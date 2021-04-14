@@ -269,14 +269,16 @@ def hydroWithInitialCondition(aFile):
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + hydroExecutable + assignments)
 
-    print("CHECK1a")
+    print("\n\n\n\nCHECK1a")
     run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+    print("\n\n\n\n")
 
     # execute!
     run(executableString, cwd=hydroDirectory)
 
-    print("CHECK1b")
+    print("\n\n\n\nCHECK1b")
     run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+    print("\n\n\n\n")
 
     # yield result files
     worthStoring = []
@@ -284,14 +286,9 @@ def hydroWithInitialCondition(aFile):
         worthStoring.extend(glob(path.join(hydroResultsDirectory, aGlob)))
     file_list = glob(path.join(hydroResultsDirectory, 
                                hydroControl['resultFiles']))
-    print("CHECK1c")
-    run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
-
     for aFile in file_list:
         # check if this file worth storing, then copy to event result folder
         if aFile in worthStoring:
-            print("CHECK1d")
-            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
             #print('Saving', aFile)
             copy(aFile, controlParameterList['eventResultDir'])
         # yield it
