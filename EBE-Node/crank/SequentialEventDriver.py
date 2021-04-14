@@ -268,8 +268,15 @@ def hydroWithInitialCondition(aFile):
     # form executable string
     executableString = ("nice -n %d ./" % (ProcessNiceness) 
                         + hydroExecutable + assignments)
+
+    print("CHECK1a")
+    run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+
     # execute!
     run(executableString, cwd=hydroDirectory)
+
+    print("CHECK1b")
+    run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
 
     # yield result files
     worthStoring = []
@@ -277,9 +284,14 @@ def hydroWithInitialCondition(aFile):
         worthStoring.extend(glob(path.join(hydroResultsDirectory, aGlob)))
     file_list = glob(path.join(hydroResultsDirectory, 
                                hydroControl['resultFiles']))
+    print("CHECK1c")
+    run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
+
     for aFile in file_list:
         # check if this file worth storing, then copy to event result folder
         if aFile in worthStoring:
+            print("CHECK1d")
+            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
             #print('Saving', aFile)
             copy(aFile, controlParameterList['eventResultDir'])
         # yield it
@@ -500,8 +512,6 @@ def sequentialEventDriverShell():
 
             # print current progress to terminal
             print("Starting event %d..." % event_id)
-            print("CHECK0")
-            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
             if initialConditionGeneratorControl['saveICFile']:
                 ICGenDataDirectory = path.join(
                     controlParameterList['rootDir'], 
@@ -513,9 +523,6 @@ def sequentialEventDriverShell():
                     copy(aFile, controlParameterList['eventResultDir'])
             #aInitialConditionFile = '/projects/jnorhos/plumberg/EBE-vUSPhydro/EBE-Node/v-USPhydro/inputfiles/settings.inp'
 
-            print("CHECK1")
-            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
-
             generate_vUSPhydro_input_from_dict()
         
             #copy(aInitialConditionFile, controlParameterList['eventResultDir'])
@@ -525,20 +532,17 @@ def sequentialEventDriverShell():
             
             #print(controlParameterList['rootDir'] )
             
-            print("CHECK2")
+            print("CHECK0")
             run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
 
             hydroResultFiles = [aFile for aFile in hydroWithInitialCondition(aInitialConditionFile)]
             
-            print("CHECK3")
+            print("CHECK2")
             run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
 
             #print('hydroResultFiles:', hydroResultFiles)
             freezeOutWithHydroResultFiles(hydroResultFiles)
     
-            print("CHECK4")
-            run("find /projects/jnorhos/plumberg/EBE-vUSPhydro -name dfinput.dat")
-
             # print current progress to terminal
             stdout.write("PROGRESS: %d events out of %d finished.\n" 
                             % (event_id, nev))
