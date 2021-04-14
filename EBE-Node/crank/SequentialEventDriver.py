@@ -333,6 +333,8 @@ def freezeOutWithHydroResultFiles(fileList):
     #      path.join( FOInputDirectory, freezeOutControl['inputFile'] ) )
     #print("CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable)
     
+    print('fileList=',fileList)
+    
     for hydroResultFile in fileList:
         copy( hydroResultFile, FOInputDirectory )
 
