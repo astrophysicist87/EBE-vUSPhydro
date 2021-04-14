@@ -280,6 +280,7 @@ def hydroWithInitialCondition(aFile):
     for aFile in file_list:
         # check if this file worth storing, then copy to event result folder
         if aFile in worthStoring:
+            print('Saving', aFile)
             copy(aFile, controlParameterList['eventResultDir'])
         # yield it
         yield path.join(hydroResultsDirectory, aFile)
@@ -334,6 +335,7 @@ def freezeOutWithHydroResultFiles(fileList):
     #print("CHECK: nice -n %d ./" % (ProcessNiceness) + FOExecutable)
         
     for hydroResultFile in fileList:
+        print('Copying hydro file:', hydroResultFile)
         copy( hydroResultFile, FOInputDirectory )
 
     # execute!
