@@ -1297,9 +1297,6 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		}
 	}
 
-	
-
-
 	I1=2*out1*eperp;
 	I2=2*out2;
 	
