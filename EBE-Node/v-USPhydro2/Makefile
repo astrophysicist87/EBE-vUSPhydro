@@ -26,8 +26,8 @@ random.o: random.cpp random.h
 	$(CC) $(CFLAGS) random.cpp
 
 # deletes all .o files in case of error in makefile.  This should not be something needed regularly, only if you are updating the code and run into an error.	
-#clean:
-#	\rm *.o *~ vusphydro
+clean:
+	\rm -rf *.o *~ vusphydro
 
 # puts all the files in a vusphydro.tar file
 #tar:
