@@ -102,7 +102,9 @@ def checkExecutables():
         path.join("jaki_trento", "bin", "trento"),
         path.join("trento", "bin", "trento"),
         path.join("v-USPhydro", "vusphydro"),
+        path.join("v-USPhydro2", "vusphydro"),
         path.join("df", "fo"),
+        path.join("df2", "fo"),
     )
 
     # check for existence of all executables
