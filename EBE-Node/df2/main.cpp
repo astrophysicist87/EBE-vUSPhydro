@@ -7,6 +7,7 @@
 #include <sstream>
 #include <cmath>
 #include <vector>
+#include <map>
 
 #include "SPH.h"
 #include "int.h"
@@ -221,48 +222,50 @@ int main (int argc, char *argv[])
 		for (int ps=0;ps<l.pTmax;ps++)
 		{
 			for(int i=0;i<l.phimax;i++)
+			{
 				l.dNdpdphi.x[ps][i]
 					= sph.dNdpdphi( l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h],
 									do_HBT_on_this_particle and set_spacetime_moments);
-					if ( do_HBT_on_this_particle and set_spacetime_moments )
-					{						
-						l.stm_S.x[ps][i]   = sph.ST_out[0];
-						l.stm_xS.x[ps][i]  = sph.ST_out[1];
-						l.stm_yS.x[ps][i]  = sph.ST_out[2];
-						l.stm_zS.x[ps][i]  = sph.ST_out[3];
-						l.stm_tS.x[ps][i]  = sph.ST_out[4];
-						l.stm_x2S.x[ps][i] = sph.ST_out[5];
-						l.stm_xyS.x[ps][i] = sph.ST_out[6];
-						l.stm_y2S.x[ps][i] = sph.ST_out[7];
-						l.stm_xzS.x[ps][i] = sph.ST_out[8];
-						l.stm_yzS.x[ps][i] = sph.ST_out[9];
-						l.stm_z2S.x[ps][i] = sph.ST_out[10];
-						l.stm_xtS.x[ps][i] = sph.ST_out[11];
-						l.stm_ytS.x[ps][i] = sph.ST_out[12];
-						l.stm_ztS.x[ps][i] = sph.ST_out[13];
-						l.stm_t2S.x[ps][i] = sph.ST_out[14];
+				if ( do_HBT_on_this_particle and set_spacetime_moments )
+				{						
+					l.stm_S.x[ps][i]   = sph.ST_out[0];
+					l.stm_xS.x[ps][i]  = sph.ST_out[1];
+					l.stm_yS.x[ps][i]  = sph.ST_out[2];
+					l.stm_zS.x[ps][i]  = sph.ST_out[3];
+					l.stm_tS.x[ps][i]  = sph.ST_out[4];
+					l.stm_x2S.x[ps][i] = sph.ST_out[5];
+					l.stm_xyS.x[ps][i] = sph.ST_out[6];
+					l.stm_y2S.x[ps][i] = sph.ST_out[7];
+					l.stm_xzS.x[ps][i] = sph.ST_out[8];
+					l.stm_yzS.x[ps][i] = sph.ST_out[9];
+					l.stm_z2S.x[ps][i] = sph.ST_out[10];
+					l.stm_xtS.x[ps][i] = sph.ST_out[11];
+					l.stm_ytS.x[ps][i] = sph.ST_out[12];
+					l.stm_ztS.x[ps][i] = sph.ST_out[13];
+					l.stm_t2S.x[ps][i] = sph.ST_out[14];
 
-						// switch from XYZ --> OSL
-						const double ckp     = cos(l.phi.x[ps][i]),
-									 skp     = sin(l.phi.x[ps][i]);
-						const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_xS.x[ps][i];
-						const double x2Sloc  = l.stm_x2S.x[ps][i], xySloc = l.stm_xyS.x[ps][i],
-									 y2Sloc  = l.stm_y2S.x[ps][i];
-						const double xtSloc  = l.stm_xtS.x[ps][i], ytSloc = l.stm_ytS.x[ps][i],
-									 xzSloc  = l.stm_xtS.x[ps][i], yzSloc = l.stm_ytS.x[ps][i];
-						l.stm_xoS.x[ps][i]   = ckp*xSloc+skp*ySloc;
-						l.stm_xsS.x[ps][i]   = ckp*ySloc-skp*xSloc;
-						l.stm_xlS.x[ps][i]   = l.stm_zS.x[ps][i];
-						l.stm_xo2S.x[ps][i]  = ckp*ckp*x2Sloc+skp*skp*y2Sloc+2.0*ckp*skp*xySloc;
-						l.stm_xs2S.x[ps][i]  = ckp*ckp*y2Sloc+skp*skp*x2Sloc-2.0*ckp*skp*xySloc;
-						l.stm_xl2S.x[ps][i]  = l.stm_z2S.x[ps][i];
-						l.stm_xoxsS.x[ps][i] = (ckp*ckp*-skp*skp)*xySloc+ckp*skp*(y2Sloc-x2Sloc);
-						l.stm_xotS.x[ps][i]  = ckp*xtSloc+skp*ytSloc;
-						l.stm_xstS.x[ps][i]  = ckp*ytSloc-skp*xtSloc;
-						l.stm_xltS.x[ps][i]  = l.stm_ztS.x[ps][i];
-						l.stm_xoxlS.x[ps][i] = ckp*xzSloc+skp*yzSloc;
-						l.stm_xsxlS.x[ps][i] = ckp*yzSloc-skp*xzSloc;
-					}
+					// switch from XYZ --> OSL
+					const double ckp     = cos(l.phi.x[ps][i]),
+								 skp     = sin(l.phi.x[ps][i]);
+					const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_xS.x[ps][i];
+					const double x2Sloc  = l.stm_x2S.x[ps][i], xySloc = l.stm_xyS.x[ps][i],
+								 y2Sloc  = l.stm_y2S.x[ps][i];
+					const double xtSloc  = l.stm_xtS.x[ps][i], ytSloc = l.stm_ytS.x[ps][i],
+								 xzSloc  = l.stm_xtS.x[ps][i], yzSloc = l.stm_ytS.x[ps][i];
+					l.stm_xoS.x[ps][i]   = ckp*xSloc+skp*ySloc;
+					l.stm_xsS.x[ps][i]   = ckp*ySloc-skp*xSloc;
+					l.stm_xlS.x[ps][i]   = l.stm_zS.x[ps][i];
+					l.stm_xo2S.x[ps][i]  = ckp*ckp*x2Sloc+skp*skp*y2Sloc+2.0*ckp*skp*xySloc;
+					l.stm_xs2S.x[ps][i]  = ckp*ckp*y2Sloc+skp*skp*x2Sloc-2.0*ckp*skp*xySloc;
+					l.stm_xl2S.x[ps][i]  = l.stm_z2S.x[ps][i];
+					l.stm_xoxsS.x[ps][i] = (ckp*ckp*-skp*skp)*xySloc+ckp*skp*(y2Sloc-x2Sloc);
+					l.stm_xotS.x[ps][i]  = ckp*xtSloc+skp*ytSloc;
+					l.stm_xstS.x[ps][i]  = ckp*ytSloc-skp*xtSloc;
+					l.stm_xltS.x[ps][i]  = l.stm_ztS.x[ps][i];
+					l.stm_xoxlS.x[ps][i] = ckp*xzSloc+skp*yzSloc;
+					l.stm_xsxlS.x[ps][i] = ckp*yzSloc-skp*xzSloc;
+				}
+			}
 
 	 	}
 	 	}

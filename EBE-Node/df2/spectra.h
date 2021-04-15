@@ -300,12 +300,11 @@ void list::destroyc()
 	R2sl_c.destroy();
 }
 
-void list::setup(vector<double> ptp,vector<double> phip) {
-            
-            
-            int si=ptp.size();
-        for (int i=0;i<si;i++){
-       
+void list::setup(vector<double> & ptp, vector<double> & phip)
+{
+    int si=ptp.size();
+    for (int i=0;i<si;i++)
+	{
   		pt.setpT(i,ptp[i]);
   	}
   	si=phip.size();

@@ -12,6 +12,9 @@ public:
 	double K0(double x);
 	double K1(double x);
 	double Kn(int n, double x);
+
+	// useful if K0 and K1 have already been computed!
+	double Kn(int n, double K0, double K1, double x);
 };
 
 #endif

@@ -159,6 +159,6 @@ double Bessel::Kn(int n, double K0_in, double K1_in, double x)
 	}
 
 	return bk;
-}   
+}
 
 #endif
