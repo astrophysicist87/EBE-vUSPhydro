@@ -1,6 +1,6 @@
 OBJS = main.o bessel.o gamma.o bessik.o bessjy.o cbessik.o cbessjy.o
 CC = c++
-DEBUG = -g 
+DEBUG = -g -pg
 CFLAGS = -Wall -std=c++98 -c $(DEBUG)
 LFLAGS = -Wall $(DEBUG)
 
