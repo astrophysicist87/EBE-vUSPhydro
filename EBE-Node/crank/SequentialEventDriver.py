@@ -69,7 +69,7 @@ initialConditionGeneratorParameters = {
 }
 
 hydroControl = {
-    'mainDir'               :   'v-USPhydro2',  # options - 'v-USPhydro', 'v-USPhydro2'
+    'mainDir'               :   'v-USPhydro',  # options - 'v-USPhydro', 'v-USPhydro2'
     'initialConditionDir'   :   'inputfiles', # hydro initial condition folder, relative
     'initialConditionFile'  :   'ic0.dat', # IC filename
     'settingsFile'          :   'settings.inp', # settings filename
@@ -111,7 +111,7 @@ hydroParameters = {
 }
 
 freezeOutControl = {
-    'mainDir'               :   'df2',  # options - 'df', 'df2'
+    'mainDir'               :   'df',  # options - 'df', 'df2'
     'inputDir'              :   'input', # hydro initial condition folder, relative
     'inputFile'             :   'dfinput.dat', # settings filename
     'resultDir'             :   'out', # hydro results folder, relative
