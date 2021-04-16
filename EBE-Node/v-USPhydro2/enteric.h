@@ -195,7 +195,7 @@ void manualenter(_inputIC &ics, LinkList<D> &linklist)
   	   	if (abs(df)==1) dfpre="df2/input/";  
   	   	else if (abs(df)==2) dfpre="sampling/input/"; 
   	   	else cout << "Error: undefined df calcualtion type " << df <<  endl;
-  	   	string dfout=dfpre+dffile;
+  	   	string dfout=directoryPrefix+dfpre+dffile;
   	   	
   	   	
   	   	
