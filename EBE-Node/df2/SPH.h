@@ -1371,7 +1371,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	double px2=px*px, py2=py*py, pxy=2*px*py;
 	double mT2=mT*mT;
 	double mT3=mT2*mT/4.;
-	double T_over_gamma=T/gamma;
+	double T_over_gamma=par[nsph].T/gamma;
 	double bfac=mT/T_over_gamma;
 
 	complex<double> b0, b1, b2;
@@ -1388,7 +1388,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		I2sc_comp=0;
 	}
 
-	double expT=exp(pd/T);
+	double expT=exp(pd/par[nsph].T);
 	
 	for (int nn=0;nn<=Nmax;nn++)
 	{
