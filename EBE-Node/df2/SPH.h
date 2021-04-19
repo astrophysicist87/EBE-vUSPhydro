@@ -810,7 +810,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 		std::fill( ST_I2.begin(), ST_I2.end(), 0.0 );
 
 		Iout(I1,I2,p,phi,cur,i, set_spacetime_moments);
-		if (cur.id==211) cout << "Check Iout(1): " << I1 << "   " << I2 << endl;
+		//if (cur.id==211) cout << "Check Iout(1): " << I1 << "   " << I2 << endl;
 		
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
@@ -980,8 +980,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		//double pRap = 0.0;	// take y = 0 for right now
 		Iout(I1, I2, p, phi, cur, i);
 		IoutFT(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
-		if (cur.id==211) cout << "Check Iout(2): " << I1 << "   " << I2 << endl;
-		if (cur.id==211) cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
+		//if (cur.id==211) cout << "Check Iout(2): " << I1 << "   " << I2 << endl;
+		//if (cur.id==211) cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
 		
@@ -1072,8 +1072,8 @@ template <int D,int DD>
 void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 					 int nsph, bool set_spacetime_moments /*= false*/)
 {
-	cout << "Check Iout(inside): " << I1 << "   " << I2 << "   " << p << "   "
-			<< phi << "   " << cur.id << "   " << nsph << endl;
+	//cout << "Check Iout(inside): " << I1 << "   " << I2 << "   " << p << "   "
+	//		<< phi << "   " << cur.id << "   " << nsph << endl;
 	double out1=0,out2=0;
 	double out1c=0,out2c=0;
 	double pd=pperp(p,phi,par[nsph].u);
@@ -1358,12 +1358,12 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		}
 	}
 	
-	cout << "Check real: " << I1 << "   " << I2 << "   "
+	/*cout << "Check real: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
-		<< I1sc << "   " << I2sc /*<< "   "
+		<< I1sc << "   " << I2sc << "   "
 		<< ST_I1[0] << "   " << ST_I2[0] << "   "
 		<< ST_I1c[0] << "   " << ST_I2c[0] << "   "
-		<< ST_I1sc[0] << "   " << ST_I2sc[0]*/ << endl;
+		<< ST_I1sc[0] << "   " << ST_I2sc[0] << endl;*/
 	
 //	if ((pd/par[nsph].T)>64) {I1=0;
 //	I2=0;
@@ -1451,9 +1451,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		b0 = ck0;
 		b1 = ck1;
 
-		cout << "Check Bessel: "
+		/*cout << "Check Bessel: "
 				<< bsub << "   " << beta_tilde << "   " << gamma_tilde << "   "
-				<< at_m_i_bt << "   " << z1 << "   " << b0 << "   " << b1 << endl;
+				<< at_m_i_bt << "   " << z1 << "   " << b0 << "   " << b1 << endl;*/
 		/*Bessel bes;
 		cout << setprecision(16) << "Check Bessel: " << bsub << "   "
 			<< bes.K0(bsub) << "   " << b0.real() << "   "
@@ -1508,7 +1508,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	I1c_comp=out1c;
 	I2c_comp=out2c;
 
-	cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
+	/*cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
 		<< I1c_comp << "   " << I2c_comp << "   "
 		<< I1sc_comp << "   " << I2sc_comp << endl;
 	
@@ -1518,7 +1518,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		I2_comp=0;
 		I1c_comp=0;
 		I2c_comp=0;	
-	}
+	}*/
 
 	return;
 }
