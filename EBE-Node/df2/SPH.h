@@ -65,7 +65,8 @@ public:
 	// size depends on the grid size, so we need to set the grid sizes and also
 	// have an index to keep track of where we are in the grid.
 	int NQZ, iQZ, current_HBT_CACHE_index;
-	vector<complex<double> > HBT_CACHE;
+	vector<complex<double> > HBT_CACHE_out1, HBT_CACHE_out2, HBT_CACHE_out1c,
+							 HBT_CACHE_out2c, HBT_CACHE_out1sc, HBT_CACHE_out2sc;
 	vector<bool> HBT_CACHE_IS_SET;
 	
 	struct PAR

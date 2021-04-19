@@ -393,7 +393,7 @@ int main (int argc, char *argv[])
 									 skp   = sin(Kphi);
 
 						// use HBT cache to speed things up
-						sph.NQZ = NQZ;
+						sph.NQZ = nQZ;
 						sph.set_HBT_CACHE();
 		
 						for ( int iQX = 0; iQX < nQX; iQX++ )
