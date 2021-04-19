@@ -1356,12 +1356,12 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		}
 	}
 	
-	/*cout << "Check real: " << I1 << "   " << I2 << "   "
+	cout << "Check real: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
-		<< I1sc << "   " << I2sc << "   "
+		<< I1sc << "   " << I2sc /*<< "   "
 		<< ST_I1[0] << "   " << ST_I2[0] << "   "
 		<< ST_I1c[0] << "   " << ST_I2c[0] << "   "
-		<< ST_I1sc[0] << "   " << ST_I2sc[0] << endl;*/
+		<< ST_I1sc[0] << "   " << ST_I2sc[0]*/ << endl;
 	
 //	if ((pd/par[nsph].T)>64) {I1=0;
 //	I2=0;
@@ -1506,9 +1506,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	I1c_comp=out1c;
 	I2c_comp=out2c;
 
-	//cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
-	//	<< I1c_comp << "   " << I2c_comp << "   "
-	//	<< I1sc_comp << "   " << I2sc_comp << endl;
+	cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
+		<< I1c_comp << "   " << I2c_comp << "   "
+		<< I1sc_comp << "   " << I2sc_comp << endl;
 	
 	if ((pd/T)>64)
 	{
