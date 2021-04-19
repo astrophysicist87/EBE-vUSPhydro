@@ -1072,6 +1072,8 @@ template <int D,int DD>
 void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 					 int nsph, bool set_spacetime_moments /*= false*/)
 {
+	cout << "Check Iout(inside): " << I1 << "   " << I2 << "   " << p << "   "
+			<< phi << "   " << cur.id << "   " << nsph << endl;
 	double out1=0,out2=0;
 	double out1c=0,out2c=0;
 	double pd=pperp(p,phi,par[nsph].u);
