@@ -810,7 +810,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 		std::fill( ST_I2.begin(), ST_I2.end(), 0.0 );
 
 		Iout(I1,I2,p,phi,cur,i, set_spacetime_moments);
-		//if (cur.id==211) cout << "Check Iout(1): " << I1 << "   " << I2 << endl;
+		if (cur.id==211) cout << "Check Iout(1): " << I1 << "   " << I2 << endl;
 		
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
@@ -920,7 +920,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 				ST_outc[ii] = vfac*ST_outc[ii]+cur.svfac*ST_outsc[ii];
 	}
 
-//cout << "Check here(3): " << out << "   " << ST_out[0] << endl;
+cout << "Check here(1): " << out << endl;
 
 
 	if ( set_spacetime_moments )
@@ -980,8 +980,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		//double pRap = 0.0;	// take y = 0 for right now
 		Iout(I1, I2, p, phi, cur, i);
 		IoutFT(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
-		//if (cur.id==211) cout << "Check Iout(2): " << I1 << "   " << I2 << endl;
-		//if (cur.id==211) cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
+		if (cur.id==211) cout << "Check Iout(2): " << I1 << "   " << I2 << endl;
+		if (cur.id==211) cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
 		
@@ -1044,9 +1044,9 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 
 	if (isnan(out)==1) cout << out << endl;	
 
-/*cout << "Check here: " << out << "   " << out_comp << "   "
+cout << "Check here(2): " << out << "   " << out_comp << "   "
 		<< outc << "   " << outc_comp << "   "
-		<< outsc << "   " << outsc_comp << endl;*/
+		<< outsc << "   " << outsc_comp << endl;
 
 	if (typ==1)  outc_comp*=vfac;
 	else if (typ==2) outc_comp=vfac*out_comp+cur.svfac*outsc_comp;
