@@ -202,7 +202,7 @@ def generateInitialConditions(numberOfEvents):
     #assignments = formAssignmentStringFromDict(initialConditionGeneratorParameters)
     assignments = ' ' + initialConditionGeneratorParameters['projectile'] + ' '\
                   + initialConditionGeneratorParameters['target'] + ' '\
-                  + str(numberOfEvents) + ' --output ' + initialConditionDataDirectory
+                  + str(numberOfEvents) + '--random-seed 0 --output ' + initialConditionDataDirectory
     print('='*80)
     print('assignments = ', assignments)
     print('='*80)
