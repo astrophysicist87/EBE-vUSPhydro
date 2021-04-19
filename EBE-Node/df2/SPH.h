@@ -940,7 +940,7 @@ template <int D,int DD>
 void SPH<D,DD>::set_HBT_CACHE()
 {
 	HBT_CACHE_IS_SET.clear();
-	HBT_CACHE_IS_SET = vector<bool>( NQZ * sph.evn, false );
+	HBT_CACHE_IS_SET = vector<bool>( NQZ * evn, false );
 
 	HBT_CACHE_out1.clear();
 	HBT_CACHE_out2.clear();
@@ -949,12 +949,12 @@ void SPH<D,DD>::set_HBT_CACHE()
 	HBT_CACHE_out1sc.clear();
 	HBT_CACHE_out2sc.clear();
 
-	HBT_CACHE_out1   = vector<complex<double> >( NQZ * sph.evn, 0.0 );
-	HBT_CACHE_out2   = vector<complex<double> >( NQZ * sph.evn, 0.0 );
-	HBT_CACHE_out1c  = vector<complex<double> >( NQZ * sph.evn, 0.0 );
-	HBT_CACHE_out2c  = vector<complex<double> >( NQZ * sph.evn, 0.0 );
-	HBT_CACHE_out1sc = vector<complex<double> >( NQZ * sph.evn, 0.0 );
-	HBT_CACHE_out2sc = vector<complex<double> >( NQZ * sph.evn, 0.0 );
+	HBT_CACHE_out1   = vector<complex<double> >( NQZ * evn, 0.0 );
+	HBT_CACHE_out2   = vector<complex<double> >( NQZ * evn, 0.0 );
+	HBT_CACHE_out1c  = vector<complex<double> >( NQZ * evn, 0.0 );
+	HBT_CACHE_out2c  = vector<complex<double> >( NQZ * evn, 0.0 );
+	HBT_CACHE_out1sc = vector<complex<double> >( NQZ * evn, 0.0 );
+	HBT_CACHE_out2sc = vector<complex<double> >( NQZ * evn, 0.0 );
 
 	return;
 }
