@@ -1004,14 +1004,14 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		{
 			double sub2=qv[i].x[0]*I1c+qp*I2c;
 			complex<double> sub2_comp = qv[i].x[0]*I1c_comp+qp*I2c_comp;
-			if (isnan(sub2))
+			/*if (isnan(sub2))
 			{
 				sub2 = 0;
 				sub2_comp = 0;
-			}
+			}*/
 			if (neg!=negc)
 			{
-				if ((sub2<0)||qtot<0||isnan(sub2)||sub2>100)
+				if ((sub2<0)||qtot<0||isnan(sub2))
 				{
 					sub2 = 0;
 					sub2_comp = 0;
@@ -1024,14 +1024,14 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		{
 			double sub3=(qv[i].x[0]*I1sc+qp*I2sc)/par[i].s;
 			complex<double> sub3_comp = (qv[i].x[0]*I1sc_comp+qp*I2sc_comp)/par[i].s;
-			if (isnan(sub3))
+			/*if (isnan(sub3))
 			{
 				sub3=0;
 				sub3_comp=0;
-			}
+			}*/
 			if (neg!=negc)
 			{
-				if ((sub3<0)||qtot<0||isnan(sub3)||sub3>100)
+				if ((sub3<0)||qtot<0||isnan(sub3))
 				{
 					sub3=0;
 					sub3_comp=0;
