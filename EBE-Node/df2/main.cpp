@@ -350,15 +350,16 @@ int main (int argc, char *argv[])
 						l.stm_xoxlSc.x[ps][i] = ckp*xzScloc+skp*yzScloc;
 						l.stm_xsxlSc.x[ps][i] = ckp*yzScloc-skp*xzScloc;
 
-	/*cout << "HBT (ideal): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
-			<< "   " << l.dNdpdphi.x[ps][i];
-	for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
-	cout << endl << "HBT (viscous): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
-			<< "   " << l.dNdpdphic.x[ps][i];
-	for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_outc[ii];
-	cout << endl;*/
+						/*cout << "HBT (ideal): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
+								<< "   " << l.dNdpdphi.x[ps][i];
+						for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
+						cout << endl << "HBT (viscous): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i]
+								<< "   " << l.dNdpdphic.x[ps][i];
+						for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_outc[ii];
+						cout << endl;*/
 	
 					}
+
 					/*cout << "Check spectra: "
 						<< sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h]) << endl;
 					cout << "Check FT spectra: "
@@ -390,11 +391,16 @@ int main (int argc, char *argv[])
 						const double KYrap = 0.0;
 						const double ckp   = cos(Kphi),
 									 skp   = sin(Kphi);
+
+						// use HBT cache to speed things up
+						sph.NQZ = NQZ;
+						sph.set_HBT_CACHE();
 		
 						for ( int iQX = 0; iQX < nQX; iQX++ )
 						for ( int iQY = 0; iQY < nQY; iQY++ )
 						for ( int iQZ = 0; iQZ < nQZ; iQZ++ )
 						{
+							sph.iQZ = iQZ;
 							const double xi2  = mass*mass + KT*KT
 												+ 0.25*( QXpts[iQX]*QXpts[iQX]
 														+ QYpts[iQY]*QYpts[iQY]
