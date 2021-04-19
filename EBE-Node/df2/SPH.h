@@ -980,7 +980,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		//double pRap = 0.0;	// take y = 0 for right now
 		Iout(I1, I2, p, phi, cur, i);
 		IoutFT(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
-		//cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
+		cout << "Check IoutFT: " << I1 << "   " << I2 << endl;
+		cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
 		
@@ -1577,7 +1578,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 		// Evaluate functions entering bulk df corrections
 		if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
 		
-		double expT=exp(pd/par[nsph].T);
+		double expT = exp(pd/par[nsph].T);
 		double pre = expT;
 		
 		for (int nn=0;nn<=Nmax;nn++)
