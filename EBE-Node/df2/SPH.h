@@ -1505,37 +1505,43 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 //	const complex<double> iComplex(0.0, 1.0);
 //
 //	// set space-time and momentum info for SPH particle
-//	double tau_SPH     = par[nsph].tau; 
 //	double x_SPH       = par[nsph].r.x[0];
 //	double y_SPH       = par[nsph].r.x[1];
+//	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH)/hbarc_local);
+//
+//	double tau_SPH     = par[nsph].tau; 
 //	double chy         = cosh(pRap),
 //           shy         = sinh(pRap);
 //	complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy)/hbarc_local, 0.0);
 //	complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy)/hbarc_local, 0.0);
 //
-//	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH)/hbarc_local);
 //
-//	// continue calculation as Jaki's Iout (some variables renamed or made complex)
 //	complex<double> out1=0, out2=0;
 //	complex<double> out1c=0, out2c=0;
-//	double pd=pperp(pT,phi,par[nsph].u);
-//	double mT=Eperp(pT,cur.mass);
-//	double gamma=par[nsph].u.x[0];
-//	double px=pT*cos(phi);
-//	double py=pT*sin(phi);
-//	double px2=px*px, py2=py*py, pxy=2*px*py;
-//	double mT2=mT*mT;
-//	double mT3=mT2*mT/4.;
-//	double T_over_gamma=par[nsph].T/gamma;
-//	double bfac=mT/T_over_gamma;
 //
-//	complex<double> b0, b1, b2;
-//	double bsub;
-//	double f0s, f1s, f2s;
-//	double F0c, F1c, F2c;
+//	if ( HBT_CACHE_IS_SET[current_Q_index3D] )
+//	{
 //
-//	//if ( HBT_corr_func_cache_is_not_set )
-//	//{
+//	}
+//	else
+//	{
+//		// continue calculation as Jaki's Iout (some variables renamed or made complex)
+//		double pd=pperp(pT,phi,par[nsph].u);
+//		double mT=Eperp(pT,cur.mass);
+//		double gamma=par[nsph].u.x[0];
+//		double px=pT*cos(phi);
+//		double py=pT*sin(phi);
+//		double px2=px*px, py2=py*py, pxy=2*px*py;
+//		double mT2=mT*mT;
+//		double mT3=mT2*mT/4.;
+//		double T_over_gamma=par[nsph].T/gamma;
+//		double bfac=mT/T_over_gamma;
+//	
+//		complex<double> b0, b1, b2;
+//		double bsub;
+//		double f0s, f1s, f2s;
+//		double F0c, F1c, F2c;
+//	
 //		// Evaluate functions entering bulk df corrections
 //		if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
 //	
@@ -1601,7 +1607,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 //				I2sc_comp +=        G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP;
 //			}
 //		}
-//	//}
+//	}
 //
 //	I1_comp=out1;
 //	I2_comp=out2;
