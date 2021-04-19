@@ -369,6 +369,11 @@ int main (int argc, char *argv[])
 					// if this is one of the HBT particles, do HBT!
 					if ( do_HBT_on_this_particle )
 					{
+						cout << "Getting HBT correlation function for "
+								<< HBTparticleNames[sph.had[h].id] << " particles "
+								<< "at KT = " << l.pt.x[ps][i] << " and Kphi = "
+								<< l.phi.x[ps][i] << endl;
+
 						// set grid.params file as well
 						string particleName = HBTparticleNames[sph.had[h].id];
 						string gridParamsFilename = ofolder + "/" + particleName
