@@ -200,7 +200,7 @@ def generateInitialConditions(numberOfEvents):
     initialConditionGeneratorParameters[nevParamName] = (numberOfEvents)
     # form assignment string
     #assignments = formAssignmentStringFromDict(initialConditionGeneratorParameters)
-    assignments = ' --random-seed 1 ' + ' --output ' + initialConditionDataDirectory\
+    assignments = ' --random-seed 1 ' + ' --output ' + initialConditionDataDirectory + ' '\
                   + initialConditionGeneratorParameters['projectile'] + ' '\
                   + initialConditionGeneratorParameters['target'] + ' '\
                   + str(numberOfEvents)
