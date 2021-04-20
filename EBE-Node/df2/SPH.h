@@ -1365,7 +1365,7 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		<< ST_I1c[0] << "   " << ST_I2c[0] << "   "
 		<< ST_I1sc[0] << "   " << ST_I2sc[0] << endl;*/
 
-	cout << "Check OLD: " << << I1 << "   " << I2 << "   "
+	cout << "Check OLD: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
 		<< I1sc << "   " << I2sc << endl;
 
