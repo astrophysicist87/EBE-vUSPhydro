@@ -1608,7 +1608,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 			//pre *= -cur.theta * expT;
 			pre=pow(-cur.theta,nn)*pow(expT,add);
 
-cout << "Check Bessel OLD: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
+cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
 
 			b0 = pre * ck0;
 			b1 = pre * ck1;
