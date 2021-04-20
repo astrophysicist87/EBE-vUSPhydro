@@ -1115,7 +1115,7 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		b0=bes.K0(bsub);
 		b1=bes.K1(bsub);
 
-cout << "Check Bessel OLD: " << bsub << "   " << b0 << "   " << b1 << endl;
+if (cur.id==211) cout << "Check Bessel OLD: " << bsub << "   " << b0 << "   " << b1 << endl;
 		
 		// N.B. - Christopher Plumberg:
 		// define my own Bessel function evaluations so
@@ -1608,7 +1608,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 			//pre *= -cur.theta * expT;
 			pre=pow(-cur.theta,nn)*pow(expT,add);
 
-cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
+if (cur.id==211) cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
 
 			b0 = pre * ck0;
 			b1 = pre * ck1;
