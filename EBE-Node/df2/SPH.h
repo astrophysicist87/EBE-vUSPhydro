@@ -810,7 +810,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 		std::fill( ST_I2.begin(), ST_I2.end(), 0.0 );
 
 		Iout(I1,I2,p,phi,cur,i, set_spacetime_moments);
-		if (cur.id==211) cout << "Check Iout(1): " << I1 << "   " << I2 << endl;
+		//if (cur.id==211) cout << "Check Iout(1): " << I1 << "   " << I2 << endl;
 		
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
@@ -980,8 +980,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		//double pRap = 0.0;	// take y = 0 for right now
 		Iout(I1, I2, p, phi, cur, i);
 		IoutFT(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
-		if (cur.id==211) cout << "Check Iout(2): " << I1 << "   " << I2 << endl;
-		if (cur.id==211) cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
+		//if (cur.id==211) cout << "Check Iout(2): " << I1 << "   " << I2 << endl;
+		//if (cur.id==211) cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
 		
@@ -1115,7 +1115,7 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		b0=bes.K0(bsub);
 		b1=bes.K1(bsub);
 
-if (cur.id==211) cout << "Check Bessel OLD: " << bsub << "   " << b0 << "   " << b1 << endl;
+//if (cur.id==211) cout << "Check Bessel OLD: " << bsub << "   " << b0 << "   " << b1 << endl;
 		
 		// N.B. - Christopher Plumberg:
 		// define my own Bessel function evaluations so
@@ -1367,9 +1367,9 @@ if (cur.id==211) cout << "Check Bessel OLD: " << bsub << "   " << b0 << "   " <<
 		<< ST_I1c[0] << "   " << ST_I2c[0] << "   "
 		<< ST_I1sc[0] << "   " << ST_I2sc[0] << endl;*/
 
-	cout << "Check OLD: " << I1 << "   " << I2 << "   "
+	/*cout << "Check OLD: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
-		<< I1sc << "   " << I2sc << endl;
+		<< I1sc << "   " << I2sc << endl;*/
 
 	
 //	if ((pd/par[nsph].T)>64) {I1=0;
@@ -1608,7 +1608,7 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 			//pre *= -cur.theta * expT;
 			pre=pow(-cur.theta,nn)*pow(expT,add);
 
-if (cur.id==211) cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
+//if (cur.id==211) cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
 
 			b0 = pre * ck0;
 			b1 = pre * ck1;
@@ -1666,9 +1666,9 @@ if (cur.id==211) cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << 
 	I1sc_comp = trans_phase * out1sc;
 	I2sc_comp = trans_phase * out2sc;
 
-	cout << "Check NEW: " << I1_comp.real() << "   " << I2_comp.real() << "   "
+	/*cout << "Check NEW: " << I1_comp.real() << "   " << I2_comp.real() << "   "
 		<< I1c_comp.real() << "   " << I2c_comp.real() << "   "
-		<< I1sc_comp.real() << "   " << I2sc_comp.real() << endl;
+		<< I1sc_comp.real() << "   " << I2sc_comp.real() << endl;*/
 
 	return;
 }
