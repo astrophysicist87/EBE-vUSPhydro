@@ -982,8 +982,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		complex<double> I1_comp, I2_comp;
 		//double pRap = 0.0;	// take y = 0 for right now
 		Iout(I1, I2, p, phi, cur, i);
-		IoutFTOLD(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
-		//IoutFTNEW(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
+		//IoutFTOLD(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
+		IoutFTNEW(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
 		if (cur.id==211) cout << "Check Iout(2): " << I1 << "   " << I2 << endl;
 		if (cur.id==211) cout << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
