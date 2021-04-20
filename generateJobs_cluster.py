@@ -39,7 +39,7 @@ try:
     if len(argv)>=argId+1: # set wall time
         walltime = argv[argId]
     else:
-        walltime = "%d:00:00" % (2*numberOfEventsPerJob) # 3 hours per job
+        walltime = "%d:00:00" % (8*numberOfEventsPerJob) # 8 hours per job
 
     argId += 1
     if len(argv)>=argId+1: # whether to compress final results folder
