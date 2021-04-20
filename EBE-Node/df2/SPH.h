@@ -1383,155 +1383,6 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 
 
 
-template <int D,int DD>
-void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
-						double pT, double phi, double pRap, HAD cur, int nsph,
-						double Q0, double QX, double QY, double QZ )
-{
-	// eventually define this globally
-	const double hbarc_local = 0.19733;
-	const complex<double> iComplex(0.0, 1.0);
-
-	// set space-time and momentum info for SPH particle
-	//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
-	//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
-	//double eta_SPH     = 0.5*log( abs(par[nsph].r.x[0]+par[nsph].r.x[3])
-    //                             /(abs(par[nsph].r.x[0]-par[nsph].r.x[3])+1e-100) ); 
-	//double x_SPH       = par[nsph].r.x[1];
-	//double y_SPH       = par[nsph].r.x[2];
-	double tau_SPH     = par[nsph].tau; 
-	double x_SPH       = par[nsph].r.x[0];
-	double y_SPH       = par[nsph].r.x[1];
-	double chy         = cosh(pRap),
-           shy         = sinh(pRap);
-	complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy)/hbarc_local, 0.0);
-	complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy)/hbarc_local, 0.0);
-
-	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH)/hbarc_local);
-
-	// continue calculation as Jaki's Iout (some variables renamed or made complex)
-	complex<double> out1=0, out2=0;
-	complex<double> out1c=0, out2c=0;
-	double pd=pperp(pT,phi,par[nsph].u);
-	double mT=Eperp(pT,cur.mass);
-	double gamma=par[nsph].u.x[0];
-	double px=pT*cos(phi);
-	double py=pT*sin(phi);
-	double px2=px*px, py2=py*py, pxy=2*px*py;
-	double mT2=mT*mT;
-	double mT3=mT2*mT/4.;
-	double T_over_gamma=par[nsph].T/gamma;
-	double bfac=mT/T_over_gamma;
-
-	complex<double> b0, b1, b2;
-	double bsub, fac, pre;
-	double f0s, f1s, f2s;
-	double F0c, F1c, F2c;
-
-	// Evaluate functions entering bulk df corrections
-	if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
-
-	if (typ>1)
-	{
-		I1sc_comp=0;
-		I2sc_comp=0;
-	}
-
-	double expT=exp(pd/par[nsph].T);
-	
-	for (int nn=0;nn<=Nmax;nn++)
-	{
-		double add=(nn+1);
-		bsub=add*bfac;
-		complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
-		complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
-		complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
-		//complex<double> at_m_i_bt = complex<double>(bsub, -beta_tilde);
-		complex<double> z1 = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
-		int success = BesselFunction::cbessik01( z1, ci0,  ci1,  ck0,  ck1,
-													 ci0p, ci1p, ck0p, ck1p );
-		complex<double> z2 = z1*z1;
-		complex<double> z3 = z2*z1;
-		complex<double> z5 = z2*z3;
-
-		// set K0 and K1 evaluations; no need to compute K2 or K3
-		b0 = ck0;
-		b1 = ck1;
-
-		/*cout << "Check Bessel: "
-				<< bsub << "   " << beta_tilde << "   " << gamma_tilde << "   "
-				<< at_m_i_bt << "   " << z1 << "   " << b0 << "   " << b1 << endl;*/
-		/*Bessel bes;
-		cout << setprecision(16) << "Check Bessel: " << bsub << "   "
-			<< bes.K0(bsub) << "   " << b0.real() << "   "
-			<< bes.K1(bsub) << "   " << b1.real() << endl;*/
-
-		complex<double> I0_CP = 2.0*b0;
-		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z1;
-		complex<double> I2_CP = 2.0*( at_m_i_bt*at_m_i_bt*b0/z2
-									  + (z2-2.0*gamma_tilde*gamma_tilde)*b1/z3);
-		complex<double> I3_CP = 2.0*(at_m_i_bt/z5)
-								* ( z1*(z2-4.0*gamma_tilde*gamma_tilde)*b0
-									+ ( z2*(z2+2.0)+gamma_tilde*gamma_tilde*(8.0-z2) )*b1 );
-		
-		pre=pow(-cur.theta,nn)*pow(expT,add);
-		complex<double> preb1=2.0*pre*mT*b1;
-		out1 += trans_phase * preb1;
-		complex<double> preb0=2.0*pre*b0;
-		out2 += trans_phase * preb0;
-		
-		if ((typ==1)||(typ==3))	// if including bulk
-		{
-			fac=T_over_gamma/add;
-			double G0bulk = add*f0s;
-			double G1bulk = add*f1s;
-			double G2bulk = add*f2s;
-
-			out1c += pre * mT * trans_phase
-					 * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
-			out2c += pre * trans_phase
-					 * ( I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk );
-		}
-		if (typ>1)				// if including shear
-		{
-			//double pred=pre*add;
-			double spi1=par[nsph].pi00 + par[nsph].pi33;
-			double spi3=px2*par[nsph].pi11 + py2*par[nsph].pi22 + pxy*par[nsph].pi12;
-
-			complex<double> G0shear = 0.5*add*( spi3 - mT*mT*par[nsph].pi33 );
-			complex<double> G1shear = 0.0;
-			complex<double> G2shear = 0.5*add*mT*mT*spi1;
-			
-			I1sc_comp += pre * mT * trans_phase
-						 * ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
-			I2sc_comp += pre * trans_phase
-						 * ( G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP );
-		}
-	}
-
-	I1_comp=out1;
-	I2_comp=out2;
-	
-	I1c_comp=out1c;
-	I2c_comp=out2c;
-
-	/*cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
-		<< I1c_comp << "   " << I2c_comp << "   "
-		<< I1sc_comp << "   " << I2sc_comp << endl;
-	
-	if ((pd/T)>64)
-	{
-		I1_comp=0;
-		I2_comp=0;
-		I1c_comp=0;
-		I2c_comp=0;	
-	}*/
-
-	return;
-}
-
-
-
 //template <int D,int DD>
 //void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 //						double pT, double phi, double pRap, HAD cur, int nsph,
@@ -1542,139 +1393,288 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 //	const complex<double> iComplex(0.0, 1.0);
 //
 //	// set space-time and momentum info for SPH particle
+//	//double tau_SPH     = sqrt( abs( par[nsph].r.x[0]*par[nsph].r.x[0]
+//	//					     - par[nsph].r.x[3]*par[nsph].r.x[3] ) ); 
+//	//double eta_SPH     = 0.5*log( abs(par[nsph].r.x[0]+par[nsph].r.x[3])
+//    //                             /(abs(par[nsph].r.x[0]-par[nsph].r.x[3])+1e-100) ); 
+//	//double x_SPH       = par[nsph].r.x[1];
+//	//double y_SPH       = par[nsph].r.x[2];
+//	double tau_SPH     = par[nsph].tau; 
 //	double x_SPH       = par[nsph].r.x[0];
 //	double y_SPH       = par[nsph].r.x[1];
+//	double chy         = cosh(pRap),
+//           shy         = sinh(pRap);
+//	complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy)/hbarc_local, 0.0);
+//	complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy)/hbarc_local, 0.0);
+//
 //	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH)/hbarc_local);
 //
+//	// continue calculation as Jaki's Iout (some variables renamed or made complex)
 //	complex<double> out1=0, out2=0;
 //	complex<double> out1c=0, out2c=0;
-//	complex<double> out1sc=0, out2sc=0;
+//	double pd=pperp(pT,phi,par[nsph].u);
+//	double mT=Eperp(pT,cur.mass);
+//	double gamma=par[nsph].u.x[0];
+//	double px=pT*cos(phi);
+//	double py=pT*sin(phi);
+//	double px2=px*px, py2=py*py, pxy=2*px*py;
+//	double mT2=mT*mT;
+//	double mT3=mT2*mT/4.;
+//	double T_over_gamma=par[nsph].T/gamma;
+//	double bfac=mT/T_over_gamma;
 //
-//	if ( HBT_CACHE_IS_SET[current_HBT_CACHE_index] )
+//	complex<double> b0, b1, b2;
+//	double bsub, fac, pre;
+//	double f0s, f1s, f2s;
+//	double F0c, F1c, F2c;
+//
+//	// Evaluate functions entering bulk df corrections
+//	if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
+//
+//	if (typ>1)
 //	{
-//		out1   = HBT_CACHE_out1[current_HBT_CACHE_index];
-//		out2   = HBT_CACHE_out2[current_HBT_CACHE_index];
-//		out1c  = HBT_CACHE_out1c[current_HBT_CACHE_index];
-//		out2c  = HBT_CACHE_out2c[current_HBT_CACHE_index];
-//		out1sc = HBT_CACHE_out1sc[current_HBT_CACHE_index];
-//		out2sc = HBT_CACHE_out2sc[current_HBT_CACHE_index];
+//		I1sc_comp=0;
+//		I2sc_comp=0;
 //	}
-//	else
-//	{
-//		double tau_SPH     = par[nsph].tau; 
-//		double chy         = cosh(pRap),
-//	           shy         = sinh(pRap);
-//		complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy)/hbarc_local, 0.0);
-//		complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy)/hbarc_local, 0.0);
 //
-//		// continue calculation as Jaki's Iout (some variables renamed or made complex)
-//		double pd=pperp(pT,phi,par[nsph].u);
-//		double mT=Eperp(pT,cur.mass);
-//		double gamma=par[nsph].u.x[0];
-//		double px=pT*cos(phi);
-//		double py=pT*sin(phi);
-//		double px2=px*px, py2=py*py, pxy=2*px*py;
-//		double mT2=mT*mT;
-//		double mT3=mT2*mT/4.;
-//		double T_over_gamma=par[nsph].T/gamma;
-//		double bfac=mT/T_over_gamma;
+//	double expT=exp(pd/par[nsph].T);
 //	
-//		complex<double> b0, b1, b2;
-//		double bsub;
-//		double f0s, f1s, f2s;
-//		double F0c, F1c, F2c;
-//	
-//		// Evaluate functions entering bulk df corrections
-//		if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
+//	for (int nn=0;nn<=Nmax;nn++)
+//	{
+//		double add=(nn+1);
+//		bsub=add*bfac;
+//		complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
+//		complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
+//		complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
+//		//complex<double> at_m_i_bt = complex<double>(bsub, -beta_tilde);
+//		complex<double> z1 = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
+//		int success = BesselFunction::cbessik01( z1, ci0,  ci1,  ck0,  ck1,
+//													 ci0p, ci1p, ck0p, ck1p );
+//		complex<double> z2 = z1*z1;
+//		complex<double> z3 = z2*z1;
+//		complex<double> z5 = z2*z3;
+//
+//		// set K0 and K1 evaluations; no need to compute K2 or K3
+//		b0 = ck0;
+//		b1 = ck1;
+//
+//		/*cout << "Check Bessel: "
+//				<< bsub << "   " << beta_tilde << "   " << gamma_tilde << "   "
+//				<< at_m_i_bt << "   " << z1 << "   " << b0 << "   " << b1 << endl;*/
+//		/*Bessel bes;
+//		cout << setprecision(16) << "Check Bessel: " << bsub << "   "
+//			<< bes.K0(bsub) << "   " << b0.real() << "   "
+//			<< bes.K1(bsub) << "   " << b1.real() << endl;*/
+//
+//		complex<double> I0_CP = 2.0*b0;
+//		complex<double> I1_CP = 2.0*at_m_i_bt*b1/z1;
+//		complex<double> I2_CP = 2.0*( at_m_i_bt*at_m_i_bt*b0/z2
+//									  + (z2-2.0*gamma_tilde*gamma_tilde)*b1/z3);
+//		complex<double> I3_CP = 2.0*(at_m_i_bt/z5)
+//								* ( z1*(z2-4.0*gamma_tilde*gamma_tilde)*b0
+//									+ ( z2*(z2+2.0)+gamma_tilde*gamma_tilde*(8.0-z2) )*b1 );
 //		
-//		double expT = exp(pd/par[nsph].T);
-//		double pre = expT, preCheck = expT;
+//		pre=pow(-cur.theta,nn)*pow(expT,add);
+//		complex<double> preb1=2.0*pre*mT*b1;
+//		out1 += trans_phase * preb1;
+//		complex<double> preb0=2.0*pre*b0;
+//		out2 += trans_phase * preb0;
 //		
-//		for (int nn=0;nn<=Nmax;nn++)
+//		if ((typ==1)||(typ==3))	// if including bulk
 //		{
-//			double add=(nn+1);
-//			bsub=add*bfac;
-//			complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
-//			complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
-//			complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
-//			complex<double> z1 = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
-//			int success = BesselFunction::cbessik01( z1, ci0,  ci1,  ck0,  ck1,
-//														 ci0p, ci1p, ck0p, ck1p );
-//			complex<double> z2 = z1*z1;
-//			complex<double> z3 = z2*z1;
-//			complex<double> z5 = z2*z3;
-//	
-//			// set K0 and K1 evaluations; no need to compute K2 or K3
-//			//pre=pow(-cur.theta,nn)*pow(expT,add);
-////if (cur.id==211) cout << preCheck << "   " << pre << endl;
+//			fac=T_over_gamma/add;
+//			double G0bulk = add*f0s;
+//			double G1bulk = add*f1s;
+//			double G2bulk = add*f2s;
 //
-////if (cur.id==211) cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
-//
-//			b0 = pre * ck0;
-//			b1 = pre * ck1;
-//	
-//			complex<double> I0_CP = 2.0*b0;
-//			complex<double> I1_CP = 2.0*at_m_i_bt*b1/z1;
-//			complex<double> I2_CP = 2.0*( at_m_i_bt*at_m_i_bt*b0/z2
-//										  + (z2-2.0*gamma_tilde*gamma_tilde)*b1/z3);
-//			complex<double> I3_CP = 2.0*(at_m_i_bt/z5)
-//									* ( z1*(z2-4.0*gamma_tilde*gamma_tilde)*b0
-//										+ ( z2*(z2+2.0)+gamma_tilde*gamma_tilde*(8.0-z2) )*b1 );
-//			
-//			out1 += 2.0*mT*b1;
-//			out2 += 2.0*b0;
-//			
-//			if ((typ==1)||(typ==3))	// if including bulk
-//			{
-//				double G0bulk = add*f0s;
-//				double G1bulk = add*f1s;
-//				double G2bulk = add*f2s;
-//	
-//				out1c += mT * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
-//				out2c +=        I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk;
-//			}
-//			if (typ>1)				// if including shear
-//			{
-//				//double pred=pre*add;
-//				double spi1=par[nsph].pi00 + par[nsph].pi33;
-//				double spi3=px2*par[nsph].pi11 + py2*par[nsph].pi22 + pxy*par[nsph].pi12;
-//	
-//				complex<double> G0shear = 0.5*add*( spi3 - mT*mT*par[nsph].pi33 );
-//				complex<double> G1shear = 0.0;
-//				complex<double> G2shear = 0.5*add*mT*mT*spi1;
-//				
-//				out1sc += mT * ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
-//				out2sc +=        G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP;
-//			}
-//
-//			// update for next loop
-//			pre *= -cur.theta * expT;
+//			out1c += pre * mT * trans_phase
+//					 * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
+//			out2c += pre * trans_phase
+//					 * ( I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk );
 //		}
+//		if (typ>1)				// if including shear
+//		{
+//			//double pred=pre*add;
+//			double spi1=par[nsph].pi00 + par[nsph].pi33;
+//			double spi3=px2*par[nsph].pi11 + py2*par[nsph].pi22 + pxy*par[nsph].pi12;
 //
-//		// finally, make sure results are properly stored
-//		HBT_CACHE_out1[current_HBT_CACHE_index]   = out1;
-//		HBT_CACHE_out2[current_HBT_CACHE_index]   = out2;
-//		HBT_CACHE_out1c[current_HBT_CACHE_index]  = out1c;
-//		HBT_CACHE_out2c[current_HBT_CACHE_index]  = out2c;
-//		HBT_CACHE_out1sc[current_HBT_CACHE_index] = out1sc;
-//		HBT_CACHE_out2sc[current_HBT_CACHE_index] = out2sc;
-//		HBT_CACHE_IS_SET[current_HBT_CACHE_index] = true;
+//			complex<double> G0shear = 0.5*add*( spi3 - mT*mT*par[nsph].pi33 );
+//			complex<double> G1shear = 0.0;
+//			complex<double> G2shear = 0.5*add*mT*mT*spi1;
+//			
+//			I1sc_comp += pre * mT * trans_phase
+//						 * ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
+//			I2sc_comp += pre * trans_phase
+//						 * ( G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP );
+//		}
 //	}
 //
-//	// store results
-//	I1_comp   = trans_phase * out1;
-//	I2_comp   = trans_phase * out2;
-//	I1c_comp  = trans_phase * out1c;
-//	I2c_comp  = trans_phase * out2c;
-//	I1sc_comp = trans_phase * out1sc;
-//	I2sc_comp = trans_phase * out2sc;
+//	I1_comp=out1;
+//	I2_comp=out2;
+//	
+//	I1c_comp=out1c;
+//	I2c_comp=out2c;
 //
-//	/*cout << "Check NEW: " << I1_comp.real() << "   " << I2_comp.real() << "   "
-//		<< I1c_comp.real() << "   " << I2c_comp.real() << "   "
-//		<< I1sc_comp.real() << "   " << I2sc_comp.real() << endl;*/
+//	/*cout << "Check complex: " << I1_comp << "   " << I2_comp << "   "
+//		<< I1c_comp << "   " << I2c_comp << "   "
+//		<< I1sc_comp << "   " << I2sc_comp << endl;
+//	
+//	if ((pd/T)>64)
+//	{
+//		I1_comp=0;
+//		I2_comp=0;
+//		I1c_comp=0;
+//		I2c_comp=0;	
+//	}*/
 //
 //	return;
 //}
+
+
+
+template <int D,int DD>
+void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
+						double pT, double phi, double pRap, HAD cur, int nsph,
+						double Q0, double QX, double QY, double QZ )
+{
+	// eventually define this globally
+	const double hbarc_local = 0.19733;
+	const complex<double> iComplex(0.0, 1.0);
+
+	// set space-time and momentum info for SPH particle
+	double x_SPH       = par[nsph].r.x[0];
+	double y_SPH       = par[nsph].r.x[1];
+	complex<double> trans_phase = exp(-iComplex*(QX*x_SPH + QY*y_SPH)/hbarc_local);
+
+	complex<double> out1=0, out2=0;
+	complex<double> out1c=0, out2c=0;
+	complex<double> out1sc=0, out2sc=0;
+
+	if ( HBT_CACHE_IS_SET[current_HBT_CACHE_index] )
+	{
+		out1   = HBT_CACHE_out1[current_HBT_CACHE_index];
+		out2   = HBT_CACHE_out2[current_HBT_CACHE_index];
+		out1c  = HBT_CACHE_out1c[current_HBT_CACHE_index];
+		out2c  = HBT_CACHE_out2c[current_HBT_CACHE_index];
+		out1sc = HBT_CACHE_out1sc[current_HBT_CACHE_index];
+		out2sc = HBT_CACHE_out2sc[current_HBT_CACHE_index];
+	}
+	else
+	{
+		double tau_SPH     = par[nsph].tau; 
+		double chy         = cosh(pRap),
+	           shy         = sinh(pRap);
+		complex<double> beta_tilde( tau_SPH*(Q0*chy - QZ*shy)/hbarc_local, 0.0);
+		complex<double> gamma_tilde( tau_SPH*(Q0*shy - QZ*chy)/hbarc_local, 0.0);
+
+		// continue calculation as Jaki's Iout (some variables renamed or made complex)
+		double pd=pperp(pT,phi,par[nsph].u);
+		double mT=Eperp(pT,cur.mass);
+		double gamma=par[nsph].u.x[0];
+		double px=pT*cos(phi);
+		double py=pT*sin(phi);
+		double px2=px*px, py2=py*py, pxy=2*px*py;
+		double mT2=mT*mT;
+		double mT3=mT2*mT/4.;
+		double T_over_gamma=par[nsph].T/gamma;
+		double bfac=mT/T_over_gamma;
+	
+		complex<double> b0, b1, b2;
+		double bsub;
+		double f0s, f1s, f2s;
+		double F0c, F1c, F2c;
+	
+		// Evaluate functions entering bulk df corrections
+		if ((typ==1)||(typ==3)) calcF2(cur,nsph,pd,f0s,f1s,f2s);
+		
+		double expT = exp(pd/par[nsph].T);
+		double pre = expT, preCheck = expT;
+		
+		for (int nn=0;nn<=Nmax;nn++)
+		{
+			double add=(nn+1);
+			bsub=add*bfac;
+			complex<double> ci0  = 0.0, ci1  = 0.0, ck0  = 0.0, ck1  = 0.0;
+			complex<double> ci0p = 0.0, ci1p = 0.0, ck0p = 0.0, ck1p = 0.0;
+			complex<double> at_m_i_bt = complex<double>(bsub, 0.0) - iComplex*beta_tilde;
+			complex<double> z1 = sqrt( at_m_i_bt*at_m_i_bt + gamma_tilde*gamma_tilde );
+			int success = BesselFunction::cbessik01( z1, ci0,  ci1,  ck0,  ck1,
+														 ci0p, ci1p, ck0p, ck1p );
+			complex<double> z2 = z1*z1;
+			complex<double> z3 = z2*z1;
+			complex<double> z5 = z2*z3;
+	
+			// set K0 and K1 evaluations; no need to compute K2 or K3
+			//pre=pow(-cur.theta,nn)*pow(expT,add);
+//if (cur.id==211) cout << preCheck << "   " << pre << endl;
+
+//if (cur.id==211) cout << "Check Bessel NEW: " << bsub << "   " << ck0.real() << "   " << ck1.real() << endl;
+
+			b0 = pre * ck0;
+			b1 = pre * ck1;
+	
+			complex<double> I0_CP = 2.0*b0;
+			complex<double> I1_CP = 2.0*at_m_i_bt*b1/z1;
+			complex<double> I2_CP = 2.0*( at_m_i_bt*at_m_i_bt*b0/z2
+										  + (z2-2.0*gamma_tilde*gamma_tilde)*b1/z3);
+			complex<double> I3_CP = 2.0*(at_m_i_bt/z5)
+									* ( z1*(z2-4.0*gamma_tilde*gamma_tilde)*b0
+										+ ( z2*(z2+2.0)+gamma_tilde*gamma_tilde*(8.0-z2) )*b1 );
+			
+			out1 += 2.0*mT*b1;
+			out2 += 2.0*b0;
+			
+			if ((typ==1)||(typ==3))	// if including bulk
+			{
+				double G0bulk = add*f0s;
+				double G1bulk = add*f1s;
+				double G2bulk = add*f2s;
+	
+				out1c += mT * ( I1_CP * (1.0+G0bulk) + I2_CP * G1bulk + I3_CP * G2bulk );
+				out2c +=        I0_CP * (1.0+G0bulk) + I1_CP * G1bulk + I2_CP * G2bulk;
+			}
+			if (typ>1)				// if including shear
+			{
+				//double pred=pre*add;
+				double spi1=par[nsph].pi00 + par[nsph].pi33;
+				double spi3=px2*par[nsph].pi11 + py2*par[nsph].pi22 + pxy*par[nsph].pi12;
+	
+				complex<double> G0shear = 0.5*add*( spi3 - mT*mT*par[nsph].pi33 );
+				complex<double> G1shear = 0.0;
+				complex<double> G2shear = 0.5*add*mT*mT*spi1;
+				
+				out1sc += mT * ( G0shear * I1_CP + G1shear * I2_CP + G2shear * I3_CP );
+				out2sc +=        G0shear * I0_CP + G1shear * I1_CP + G2shear * I2_CP;
+			}
+
+			// update for next loop
+			pre *= -cur.theta * expT;
+		}
+
+		// finally, make sure results are properly stored
+		HBT_CACHE_out1[current_HBT_CACHE_index]   = out1;
+		HBT_CACHE_out2[current_HBT_CACHE_index]   = out2;
+		HBT_CACHE_out1c[current_HBT_CACHE_index]  = out1c;
+		HBT_CACHE_out2c[current_HBT_CACHE_index]  = out2c;
+		HBT_CACHE_out1sc[current_HBT_CACHE_index] = out1sc;
+		HBT_CACHE_out2sc[current_HBT_CACHE_index] = out2sc;
+		HBT_CACHE_IS_SET[current_HBT_CACHE_index] = true;
+	}
+
+	// store results
+	I1_comp   = trans_phase * out1;
+	I2_comp   = trans_phase * out2;
+	I1c_comp  = trans_phase * out1c;
+	I2c_comp  = trans_phase * out2c;
+	I1sc_comp = trans_phase * out1sc;
+	I2sc_comp = trans_phase * out2sc;
+
+	/*cout << "Check NEW: " << I1_comp.real() << "   " << I2_comp.real() << "   "
+		<< I1c_comp.real() << "   " << I2c_comp.real() << "   "
+		<< I1sc_comp.real() << "   " << I2sc_comp.real() << endl;*/
+
+	return;
+}
 
 
 
