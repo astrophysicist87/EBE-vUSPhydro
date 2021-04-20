@@ -920,7 +920,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 				ST_outc[ii] = vfac*ST_outc[ii]+cur.svfac*ST_outsc[ii];
 	}
 
-cout << "Check here(1): " << out << endl;
+//cout << "Check here(1): " << out << endl;
 
 
 	if ( set_spacetime_moments )
@@ -1044,9 +1044,9 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 
 	if (isnan(out)==1) cout << out << endl;	
 
-cout << "Check here(2): " << out << "   " << out_comp << "   "
+/*cout << "Check here(2): " << out << "   " << out_comp << "   "
 		<< outc << "   " << outc_comp << "   "
-		<< outsc << "   " << outsc_comp << endl;
+		<< outsc << "   " << outsc_comp << endl;*/
 
 	if (typ==1)  outc_comp*=vfac;
 	else if (typ==2) outc_comp=vfac*out_comp+cur.svfac*outsc_comp;
@@ -1364,6 +1364,11 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		<< ST_I1[0] << "   " << ST_I2[0] << "   "
 		<< ST_I1c[0] << "   " << ST_I2c[0] << "   "
 		<< ST_I1sc[0] << "   " << ST_I2sc[0] << endl;*/
+
+	cout << "Check OLD: " << << I1 << "   " << I2 << "   "
+		<< I1c << "   " << I2c << "   "
+		<< I1sc << "   " << I2sc << endl;
+
 	
 //	if ((pd/par[nsph].T)>64) {I1=0;
 //	I2=0;
@@ -1598,7 +1603,9 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 			complex<double> z5 = z2*z3;
 	
 			// set K0 and K1 evaluations; no need to compute K2 or K3
-			pre *= -cur.theta * expT;
+			//pre *= -cur.theta * expT;
+			pre=pow(-cur.theta,nn)*pow(expT,add);
+
 			b0 = pre * ck0;
 			b1 = pre * ck1;
 	
@@ -1654,6 +1661,10 @@ void SPH<D,DD>::IoutFT( complex<double> &I1_comp, complex<double> &I2_comp,
 	I2c_comp  = trans_phase * out2c;
 	I1sc_comp = trans_phase * out1sc;
 	I2sc_comp = trans_phase * out2sc;
+
+	cout << "Check NEW: " << I1_comp << "   " << I2_comp << "   "
+		<< I1c_comp << "   " << I2c_comp << "   "
+		<< I1sc_comp << "   " << I2sc_comp << endl;
 
 	return;
 }
