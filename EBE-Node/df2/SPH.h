@@ -982,8 +982,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		complex<double> I1_comp, I2_comp;
 		//double pRap = 0.0;	// take y = 0 for right now
 		Iout(I1, I2, p, phi, cur, i);
-		//IoutFTOLD(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
-		IoutFTNEW(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
+		IoutFTOLD(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
+		//IoutFTNEW(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
 		if (cur.id==211) cout << setprecision(16) << "Check Iout(2): " << I1 << "   " << I2 << endl;
 		if (cur.id==211) cout << setprecision(16) << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
@@ -1364,12 +1364,12 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 		}
 	}
 	
-	/*cout << "Check real: " << I1 << "   " << I2 << "   "
+	cout << "Check real: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
 		<< I1sc << "   " << I2sc << "   "
 		<< ST_I1[0] << "   " << ST_I2[0] << "   "
 		<< ST_I1c[0] << "   " << ST_I2c[0] << "   "
-		<< ST_I1sc[0] << "   " << ST_I2sc[0] << endl;*/
+		<< ST_I1sc[0] << "   " << ST_I2sc[0] << endl;
 
 	/*cout << "Check OLD: " << I1 << "   " << I2 << "   "
 		<< I1c << "   " << I2c << "   "
@@ -1639,7 +1639,6 @@ void SPH<D,DD>::IoutFTNEW( complex<double> &I1_comp, complex<double> &I2_comp,
 			}
 			if (typ>1)				// if including shear
 			{
-				//double pred=pre*add;
 				double spi1=par[nsph].pi00 + par[nsph].pi33;
 				double spi3=px2*par[nsph].pi11 + py2*par[nsph].pi22 + pxy*par[nsph].pi12;
 	
