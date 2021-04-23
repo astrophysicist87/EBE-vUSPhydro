@@ -813,7 +813,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 		std::fill( ST_I2.begin(), ST_I2.end(), 0.0 );
 
 		Iout(I1,I2,p,phi,cur,i, set_spacetime_moments);
-		if (cur.id==211) cout << setprecision(16) << "Check Iout(1): " << I1 << "   " << I2 << endl;
+		//if (cur.id==211) cout << setprecision(16) << "Check Iout(1): " << I1 << "   " << I2 << endl;
 		
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
@@ -984,8 +984,8 @@ complex<double> SPH<D,DD>::dNdpdphi_FT( double p, double phi, double pRap, HAD c
 		Iout(I1, I2, p, phi, cur, i);
 		IoutFTOLD(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
 		//IoutFTNEW(I1_comp, I2_comp, p, phi, pRap, cur, i, Q0, QX, QY, QZ);
-		if (cur.id==211) cout << setprecision(16) << "Check Iout(2): " << I1 << "   " << I2 << endl;
-		if (cur.id==211) cout << setprecision(16) << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
+		//if (cur.id==211) cout << setprecision(16) << "Check Iout(2): " << I1 << "   " << I2 << endl;
+		//if (cur.id==211) cout << setprecision(16) << "Check IoutFT: " << I1_comp << "   " << I2_comp << endl;
 		
 		double qp=p*cos(phi)*qv[i].x[1]+p*sin(phi)*qv[i].x[2];
 		
@@ -1076,6 +1076,8 @@ template <int D,int DD>
 void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 					 int nsph, bool set_spacetime_moments /*= false*/)
 {
+	cout << "Check: set_spacetime_moments = " << set_spacetime_moments << endl;
+
 	//cout << "Check Iout(inside): " << I1 << "   " << I2 << "   " << p << "   "
 	//		<< phi << "   " << cur.id << "   " << nsph << endl;
 	double out1=0,out2=0;
