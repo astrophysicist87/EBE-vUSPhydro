@@ -923,7 +923,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 				ST_outc[ii] = vfac*ST_outc[ii]+cur.svfac*ST_outsc[ii];
 	}
 
-cout << setprecision(16) << "Check here(1): " << out << endl;
+//cout << setprecision(16) << "Check here(1): " << out << endl;
 
 
 	if ( set_spacetime_moments )
@@ -1076,7 +1076,7 @@ template <int D,int DD>
 void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 					 int nsph, bool set_spacetime_moments /*= false*/)
 {
-	cout << "Check: set_spacetime_moments = " << set_spacetime_moments << endl;
+	//cout << "Check: set_spacetime_moments = " << set_spacetime_moments << endl;
 
 	//cout << "Check Iout(inside): " << I1 << "   " << I2 << "   " << p << "   "
 	//		<< phi << "   " << cur.id << "   " << nsph << endl;

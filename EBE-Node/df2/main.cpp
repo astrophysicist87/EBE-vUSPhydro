@@ -225,8 +225,8 @@ int main (int argc, char *argv[])
 			{
 				l.dNdpdphi.x[ps][i]
 					= sph.dNdpdphi( l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h],
-									do_HBT_on_this_particle and set_spacetime_moments);
-				if ( do_HBT_on_this_particle and set_spacetime_moments )
+									/*do_HBT_on_this_particle and*/ set_spacetime_moments);
+				if ( /*do_HBT_on_this_particle and*/ set_spacetime_moments )
 				{						
 					l.stm_S.x[ps][i]   = sph.ST_out[0];
 					l.stm_xS.x[ps][i]  = sph.ST_out[1];
@@ -275,9 +275,9 @@ int main (int argc, char *argv[])
 			for(int i=0;i<l.phimax;i++) {
 			l.dNdpdphi.x[ps][i]
 				= sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h],
-										do_HBT_on_this_particle and set_spacetime_moments );
+										/*do_HBT_on_this_particle and*/ set_spacetime_moments );
 			l.dNdpdphic.x[ps][i]=sph.outc;
-					if ( do_HBT_on_this_particle and set_spacetime_moments )
+					if ( /*do_HBT_on_this_particle and*/ set_spacetime_moments )
 					{						
 						l.stm_S.x[ps][i]    = sph.ST_out[0];
 						l.stm_xS.x[ps][i]   = sph.ST_out[1];
