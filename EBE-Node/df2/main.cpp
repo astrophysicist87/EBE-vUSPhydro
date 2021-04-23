@@ -113,7 +113,7 @@ int main (int argc, char *argv[])
   	
   	// set up calculation of correlation function
 	const double deltaQ = 0.075; // GeV
-	const int nQX = 3, nQY = 3, nQZ = 3;	// should all be odd to guarantee Q=0 included
+	const int nQX = 1, nQY = 1, nQZ = 1;	// should all be odd to guarantee Q=0 included
 	vector<double> QXpts(nQX), QYpts(nQY), QZpts(nQZ);
 	for (int iQX = 0; iQX < nQX; iQX++) QXpts[iQX] = -0.5*(nQX-1)*deltaQ + deltaQ*iQX;
 	for (int iQY = 0; iQY < nQY; iQY++) QYpts[iQY] = -0.5*(nQY-1)*deltaQ + deltaQ*iQY;
@@ -209,10 +209,10 @@ int main (int argc, char *argv[])
 	for (int h=0;h<sph.NHAD;h++) // runs over the number of hadrons
 	{
 		
-		const bool do_HBT_on_this_particle = false;
-//					= bool( std::count( HBTparticleIDs.begin(),
-//										HBTparticleIDs.end(),
-//										sph.had[h].id ) > 0 );
+		const bool do_HBT_on_this_particle
+					= bool( std::count( HBTparticleIDs.begin(),
+										HBTparticleIDs.end(),
+										sph.had[h].id ) > 0 );
 		
 	  //		cout << "\r" << sph.had[h].id << " " << h << "= Hadron #"  <<flush;
 
@@ -225,8 +225,8 @@ int main (int argc, char *argv[])
 			{
 				l.dNdpdphi.x[ps][i]
 					= sph.dNdpdphi( l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h],
-									/*do_HBT_on_this_particle and*/ set_spacetime_moments);
-				if ( /*do_HBT_on_this_particle and*/ set_spacetime_moments )
+									do_HBT_on_this_particle and set_spacetime_moments);
+				if ( do_HBT_on_this_particle and set_spacetime_moments )
 				{						
 					l.stm_S.x[ps][i]   = sph.ST_out[0];
 					l.stm_xS.x[ps][i]  = sph.ST_out[1];
@@ -275,9 +275,9 @@ int main (int argc, char *argv[])
 			for(int i=0;i<l.phimax;i++) {
 			l.dNdpdphi.x[ps][i]
 				= sph.dNdpdphi(l.pt.x[ps][i],l.phi.x[ps][i],sph.had[h],
-										/*do_HBT_on_this_particle and*/ set_spacetime_moments );
+										do_HBT_on_this_particle and set_spacetime_moments );
 			l.dNdpdphic.x[ps][i]=sph.outc;
-					if ( /*do_HBT_on_this_particle and*/ set_spacetime_moments )
+					if ( do_HBT_on_this_particle and set_spacetime_moments )
 					{						
 						l.stm_S.x[ps][i]    = sph.ST_out[0];
 						l.stm_xS.x[ps][i]   = sph.ST_out[1];
