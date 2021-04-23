@@ -1162,11 +1162,13 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 			ST_out1[7] += pre * STb1 * y_SPH * y_SPH;						// y^2 S
 			//ST_out1[8] += 0.0;											// x z S
 			//ST_out1[9] += 0.0;											// y z S
-			ST_out1[10] += pre * 0.25*(STb3-STb0) * tau_SPH * tau_SPH;		// z^2 S
+			//ST_out1[10] += pre * 0.25*(STb3-STb0) * tau_SPH * tau_SPH;
+			ST_out1[10] += pre * 0.25*(STb3-STb1) * tau_SPH * tau_SPH;		// z^2 S
 			ST_out1[11] += pre * 0.5*(STb0+STb2) * x_SPH * tau_SPH;			// x t S
 			ST_out1[12] += pre * 0.5*(STb0+STb2) * y_SPH * tau_SPH;			// y t S
 			//ST_out1[13] += 0.0;											// z t S
-			ST_out1[14] += pre * 0.25*(STb3+3.0*STb0) * tau_SPH * tau_SPH;	// t^2 S
+			//ST_out1[14] += pre * 0.25*(STb3+3.0*STb0) * tau_SPH * tau_SPH;
+			ST_out1[14] += pre * 0.25*(STb3+3.0*STb1) * tau_SPH * tau_SPH;	// t^2 S
 
 			// moments from second term
 			ST_out2[0] += pre * STb0 * 1.0;									// S
@@ -1230,8 +1232,12 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 				ST_out1c[7] += (K0coeff*STb0+K1coeff*STb1+K2coeff*STb2) * y_SPH * y_SPH;	// y^2 S
 				//ST_out1c[8] += 0.0;														// x z S
 				//ST_out1c[9] += 0.0;														// y z S
+				//ST_out1c[10] += (K0coeff*0.5*(STb2-STb0)
+				//					+ K1coeff*0.25*(STb3-STb0)
+				//					+ K2coeff*0.25*(STb4-2.0*STb2+STb0))
+				//				* tau_SPH * tau_SPH;
 				ST_out1c[10] += (K0coeff*0.5*(STb2-STb0)
-									+ K1coeff*0.25*(STb3-STb0)
+									+ K1coeff*0.25*(STb3-STb1)
 									+ K2coeff*0.25*(STb4-2.0*STb2+STb0))
 								* tau_SPH * tau_SPH;										// z^2 S
 				ST_out1c[11] += (K0coeff*STb1
@@ -1241,10 +1247,14 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 									+ K1coeff*0.5*(STb2+STb0)
 									+ K2coeff*0.5*(STb3+STb1)) * y_SPH * tau_SPH;			// y t S
 				//ST_out1c[13] += 0.0;														// z t S
+				//ST_out1c[14] += (K0coeff*0.5*(STb2+STb0)
+				//					+ K1coeff*0.25*(STb3+3.0*STb0)
+				//					+ K2coeff*0.25*(STb4+2.0*STb2+STb0))
+				//				* tau_SPH * tau_SPH;
 				ST_out1c[14] += (K0coeff*0.5*(STb2+STb0)
-									+ K1coeff*0.25*(STb3+3.0*STb0)
+									+ K1coeff*0.25*(STb3+3.0*STb1)
 									+ K2coeff*0.25*(STb4+2.0*STb2+STb0))
-								* tau_SPH * tau_SPH;	// t^2 S
+								* tau_SPH * tau_SPH;										// t^2 S
 	
 
 				// reset Bessel function coefficients
@@ -1262,13 +1272,17 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 				ST_out2c[7] += (K0coeff*STb0+K1coeff*STb1) * y_SPH * y_SPH;					// y^2 S
 				//ST_out2c[8] += 0.0;														// x z S
 				//ST_out2c[9] += 0.0;														// y z S
+				//ST_out2c[10] += (K0coeff*0.5*(STb2-STb0)
+				//				+K1coeff*0.25*(STb3-STb0)) * tau_SPH * tau_SPH;
 				ST_out2c[10] += (K0coeff*0.5*(STb2-STb0)
-								+K1coeff*0.25*(STb3-STb0)) * tau_SPH * tau_SPH;				// z^2 S
+								+K1coeff*0.25*(STb3-STb1)) * tau_SPH * tau_SPH;				// z^2 S
 				ST_out2c[11] += (K0coeff*STb1+K1coeff*0.5*(STb2+STb0)) * x_SPH * tau_SPH;	// x t S
 				ST_out2c[12] += (K0coeff*STb1+K1coeff*0.5*(STb2+STb0)) * y_SPH * tau_SPH;	// y t S
 				//ST_out2c[13] += 0.0;														// z t S
+				//ST_out2c[14] += (K0coeff*0.5*(STb2+STb0)
+				//				+K1coeff*0.25*(STb3+3.0*STb0)) * tau_SPH * tau_SPH;
 				ST_out2c[14] += (K0coeff*0.5*(STb2+STb0)
-								+K1coeff*0.25*(STb3+3.0*STb0)) * tau_SPH * tau_SPH;			// t^2 S
+								+K1coeff*0.25*(STb3+3.0*STb1)) * tau_SPH * tau_SPH;			// t^2 S
 			}
 		}
 		if (typ>1)
@@ -1303,22 +1317,32 @@ void SPH<D,DD>::Iout(double &I1, double &I2, double p, double phi, HAD cur,
 				ST_I1sc[1] += (K3coeff*STb3 + K1coeff*STb1) * x_SPH;					// x S
 				ST_I1sc[2] += (K3coeff*STb3 + K1coeff*STb1) * y_SPH;					// y S
 				//ST_I1sc[3] += 0.0;													// z S
-				ST_I1sc[4] += (K3coeff*0.5*(STb4-STb2)
+				//ST_I1sc[4] += (K3coeff*0.5*(STb4-STb2)
+				//				+ K1coeff*0.5*(STb2+STb0)) * tau_SPH;
+				ST_I1sc[4] += (K3coeff*0.5*(STb4+STb2)
 								+ K1coeff*0.5*(STb2+STb0)) * tau_SPH;					// t S
 				ST_I1sc[5] += (K3coeff*STb3 + K1coeff*STb1) * x_SPH * x_SPH;			// x^2 S
 				ST_I1sc[6] += (K3coeff*STb3 + K1coeff*STb1) * x_SPH * y_SPH;			// x y S
 				ST_I1sc[7] += (K3coeff*STb3 + K1coeff*STb1) * y_SPH * y_SPH;			// y^2 S
 				//ST_I1sc[8] += 0.0;													// x z S
 				//ST_I1sc[9] += 0.0;													// y z S
+				//ST_I1sc[10] += (K3coeff*0.25*(STb5-2.0*STb3+STb1)
+				//				+ K1coeff*0.25*(STb3-STb0)) * tau_SPH * tau_SPH;
 				ST_I1sc[10] += (K3coeff*0.25*(STb5-2.0*STb3+STb1)
-								+ K1coeff*0.25*(STb3-STb0)) * tau_SPH * tau_SPH;		// z^2 S
-				ST_I1sc[11] += (K3coeff*0.5*(STb4-STb2)
+								+ K1coeff*0.25*(STb3-STb1)) * tau_SPH * tau_SPH;		// z^2 S
+				//ST_I1sc[11] += (K3coeff*0.5*(STb4-STb2)
+				//				+ K1coeff*0.5*(STb2+STb0)) * x_SPH * tau_SPH;
+				ST_I1sc[11] += (K3coeff*0.5*(STb4+STb2)
 								+ K1coeff*0.5*(STb2+STb0)) * x_SPH * tau_SPH;			// x t S
-				ST_I1sc[12] += (K3coeff*0.5*(STb4-STb2)
+				//ST_I1sc[12] += (K3coeff*0.5*(STb4-STb2)
+				//				+ K1coeff*0.5*(STb2+STb0)) * y_SPH * tau_SPH;
+				ST_I1sc[12] += (K3coeff*0.5*(STb4+STb2)
 								+ K1coeff*0.5*(STb2+STb0)) * y_SPH * tau_SPH;			// y t S
 				//ST_I1sc[13] += 0.0;													// z t S
+				//ST_I1sc[14] += (K3coeff*0.25*(STb5+2.0*STb3+STb1)
+				//				+ K1coeff*0.25*(STb3+3.0*STb0)) * tau_SPH * tau_SPH;	// t^2 S
 				ST_I1sc[14] += (K3coeff*0.25*(STb5+2.0*STb3+STb1)
-								+ K1coeff*0.25*(STb3+3.0*STb0)) * tau_SPH * tau_SPH;	// t^2 S
+								+ K1coeff*0.25*(STb3+3.0*STb1)) * tau_SPH * tau_SPH;	// t^2 S
 	
 				// set needed Bessel function coefficients
 				double K2coeff = 0.5*pred*ep2*spi1;
