@@ -85,9 +85,6 @@ if(NOT CMAKE_CXX_FLAGS MATCHES "-march|-mtune")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 endif()
 
-# added by Christopher Plumberg
-add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=0)
-
 # warnings adapted from http://stackoverflow.com/a/9862800
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Wmissing-declarations -Wmissing-include-dirs -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wsign-conversion -Wsign-promo -Wstrict-overflow=2 -Wundef")
 
