@@ -247,11 +247,11 @@ int main (int argc, char *argv[])
 					// switch from XYZ --> OSL
 					const double ckp     = cos(l.phi.x[ps][i]),
 								 skp     = sin(l.phi.x[ps][i]);
-					const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_xS.x[ps][i];
+					const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_yS.x[ps][i];
 					const double x2Sloc  = l.stm_x2S.x[ps][i], xySloc = l.stm_xyS.x[ps][i],
 								 y2Sloc  = l.stm_y2S.x[ps][i];
 					const double xtSloc  = l.stm_xtS.x[ps][i], ytSloc = l.stm_ytS.x[ps][i],
-								 xzSloc  = l.stm_xtS.x[ps][i], yzSloc = l.stm_ytS.x[ps][i];
+								 xzSloc  = l.stm_xzS.x[ps][i], yzSloc = l.stm_yzS.x[ps][i];
 					l.stm_xoS.x[ps][i]   = ckp*xSloc+skp*ySloc;
 					l.stm_xsS.x[ps][i]   = ckp*ySloc-skp*xSloc;
 					l.stm_xlS.x[ps][i]   = l.stm_zS.x[ps][i];
@@ -324,11 +324,11 @@ cout << endl;
 						// switch from XYZ --> OSL
 						const double ckp     = cos(l.phi.x[ps][i]),
 									 skp     = sin(l.phi.x[ps][i]);
-						const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_xS.x[ps][i];
+						const double xSloc   = l.stm_xS.x[ps][i],  ySloc  = l.stm_yS.x[ps][i];
 						const double x2Sloc  = l.stm_x2S.x[ps][i], xySloc = l.stm_xyS.x[ps][i],
 									 y2Sloc  = l.stm_y2S.x[ps][i];
 						const double xtSloc  = l.stm_xtS.x[ps][i], ytSloc = l.stm_ytS.x[ps][i],
-									 xzSloc  = l.stm_xtS.x[ps][i], yzSloc = l.stm_ytS.x[ps][i];
+									 xzSloc  = l.stm_xzS.x[ps][i], yzSloc = l.stm_yzS.x[ps][i];
 						l.stm_xoS.x[ps][i]   = ckp*xSloc+skp*ySloc;
 						l.stm_xsS.x[ps][i]   = ckp*ySloc-skp*xSloc;
 						l.stm_xlS.x[ps][i]   = l.stm_zS.x[ps][i];
@@ -354,11 +354,11 @@ cout << "CHECK SIDE(OSL): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
 
 
 
-						const double xScloc   = l.stm_xSc.x[ps][i],  yScloc  = l.stm_xSc.x[ps][i];
+						const double xScloc   = l.stm_xSc.x[ps][i],  yScloc  = l.stm_ySc.x[ps][i];
 						const double x2Scloc  = l.stm_x2Sc.x[ps][i], xyScloc = l.stm_xySc.x[ps][i],
 									 y2Scloc  = l.stm_y2Sc.x[ps][i];
 						const double xtScloc  = l.stm_xtSc.x[ps][i], ytScloc = l.stm_ytSc.x[ps][i],
-									 xzScloc  = l.stm_xtSc.x[ps][i], yzScloc = l.stm_ytSc.x[ps][i];
+									 xzScloc  = l.stm_xzSc.x[ps][i], yzScloc = l.stm_yzSc.x[ps][i];
 						l.stm_xoSc.x[ps][i]   = ckp*xScloc+skp*yScloc;
 						l.stm_xsSc.x[ps][i]   = ckp*yScloc-skp*xScloc;
 						l.stm_xlSc.x[ps][i]   = l.stm_zSc.x[ps][i];
