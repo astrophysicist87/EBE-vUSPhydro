@@ -931,6 +931,7 @@ double SPH<D,DD>::dNdpdphi(double p, double phi, HAD cur, bool set_spacetime_mom
 		{
 			ST_out[ii] *= vfac;
 			if ( ii > 0 ) ST_out[ii] /= ST_out[0];
+			if ( typ > 0 && ii > 0 ) ST_outc[ii] /= ST_outc[0];
 		}
 
 //	cout << p << " " << phi << " " <<  out*vfac << " " << outc << " " <<  cur.svfac*outsc << endl;
