@@ -310,7 +310,17 @@ int main (int argc, char *argv[])
 						l.stm_ytSc.x[ps][i] = sph.ST_outc[12];
 						l.stm_ztSc.x[ps][i] = sph.ST_outc[13];
 						l.stm_t2Sc.x[ps][i] = sph.ST_outc[14];
-	
+
+if ( sph.had[h].id = 211 )
+{
+cout << "MOMENTS(XYZ,IDEAL): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i];
+for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_out[ii];
+cout << endl;
+cout << "MOMENTS(XYZ,CORRECTED): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i];
+for (int ii = 0; ii < 15; ii++) cout << "   " << sph.ST_outc[ii];
+cout << endl;
+}
+
 						// switch from XYZ --> OSL
 						const double ckp     = cos(l.phi.x[ps][i]),
 									 skp     = sin(l.phi.x[ps][i]);
@@ -331,6 +341,18 @@ int main (int argc, char *argv[])
 						l.stm_xltS.x[ps][i]  = l.stm_ztS.x[ps][i];
 						l.stm_xoxlS.x[ps][i] = ckp*xzSloc+skp*yzSloc;
 						l.stm_xsxlS.x[ps][i] = ckp*yzSloc-skp*xzSloc;
+
+if ( sph.had[h].id = 211 )
+{
+cout << "CHECK SIDE(XYZ): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
+		<< xSloc << "   " << ySloc << "   " << x2Sloc << "   " << xySloc << "   " << y2Sloc 
+		<< "   " << x2Sloc - xSloc*xSloc << "   " << y2Sloc - ySloc*ySloc << endl;
+cout << "CHECK SIDE(OSL): " << l.pt.x[ps][i] << "   " << l.phi.x[ps][i] << "   "
+		<< l.stm_xsS.x[ps][i] << "   " << l.stm_xs2S.x[ps][i] << "   "
+		<< l.stm_xs2S.x[ps][i]-l.stm_xsS.x[ps][i]*l.stm_xsS.x[ps][i] << endl;
+}
+
+
 
 						const double xScloc   = l.stm_xSc.x[ps][i],  yScloc  = l.stm_xSc.x[ps][i];
 						const double x2Scloc  = l.stm_x2Sc.x[ps][i], xyScloc = l.stm_xySc.x[ps][i],
