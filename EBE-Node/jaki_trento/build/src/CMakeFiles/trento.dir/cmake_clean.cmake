@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/trento.dir/trento.cxx.o"
-  "trento.pdb"
   "trento"
+  "trento.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -6,8 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/libtrento.dir/nucleus.cxx.o"
   "CMakeFiles/libtrento.dir/output.cxx.o"
   "CMakeFiles/libtrento.dir/random.cxx.o"
-  "libtrento.pdb"
   "libtrento.a"
+  "libtrento.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
